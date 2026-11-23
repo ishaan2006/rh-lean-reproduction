@@ -1012,6 +1012,99 @@ the host primes $g_0,g_1$ and word primes $T(\nu)$ split in the totally real sub
 together with \lean{Mu0Tie}). Lemma~\ref{lem:proviso} then closes \lean{ChosenProviso} completely
 without any further automorphic input.
 
+\begin{lemma}[Irreducibility decay, \texttt{delp\_of\_allRows}, \texttt{linkIRR\_of\_allRows}]\label{lem:linkIRR}
+Let $0<\eps_z\le 1$, $C_s\ge 6$, and $c>0$. At scale $x\ge\max(10, 100 C_s^2+1, 1/c)$, let
+$f,m,N,g_0,g_1,q,d\in\N$ satisfy the size regime \lean{SizesAt}:
+\begin{gather*}
+g_k\ge\exp(8 x^{\eps_z})\ (k\in\{0,1\}),\qquad \min(q,d)\ge\exp(x^{\eps_z/6}),\\
+x^2\le f\le x^{C_s},\qquad m\le x^{C_s},\qquad 100\le N\le x^{C_s}.
+\end{gather*}
+For $k\in\{0,1\}$, define the local bad-type weight
+\begin{multline}\label{eq:Wg}
+W_g(f,m,N,g_k,q,d)=\frac{3f}{g_k}+\frac{23f\log g_k}{\sqrt{g_k}}
++2fm\Bigl(\frac{1}{4\min(q,d)}+\frac{1+\log N}{g_k-1}\Bigr)\\
++\frac{N}{2}\Bigl(\frac{7}{8}\Bigr)^f+\exp\Bigl(-\frac{f}{5\log N}\Bigr),
+\end{multline}
+and put $\varepsilon_C=\exp(-c N f\log N)$. Suppose that the total row count $D_{\mathrm{all}}$,
+the good (residually irreducible) row count $D_{\mathrm{rows}}\le D_{\mathrm{all}}$ (with
+$\mathrm{del}_p\cdot D_{\mathrm{all}}=D_{\mathrm{all}}-D_{\mathrm{rows}}$), the bad-row counts
+$B_0,B_1$ at $g_0,g_1$, the main term $d_S>0$, and the local bad-cylinder shares $p_0,p_1\ge0$
+satisfy:
+\begin{enumerate}[label=(\alph*)]
+\item \textup{(Union bound)} $D_{\mathrm{all}}-D_{\mathrm{rows}}\le B_0+B_1$;
+\item \textup{(Cylinder count, \lean{CountAllRows})} $|D_{\mathrm{all}}-d_S|\le\varepsilon_C d_S$
+  and $|B_k-p_k d_S|\le\varepsilon_C p_k d_S$ for $k\in\{0,1\}$;
+\item \textup{(Local bad-share bound, \lean{WeightAllRows})}
+  $p_k\le W_g(f,m,N,g_k,q,d)$ for $k\in\{0,1\}$.
+\end{enumerate}
+Then:
+\begin{enumerate}[label=(\roman*)]
+\item $\varepsilon_C\le\frac12$ and $W_g(f,m,N,g_k,q,d)\le x^{3C_s+3}\exp(-x^{\eps_z/6})$ for
+  $k\in\{0,1\}$;
+\item $0\le\mathrm{del}_p\le \frac{1+\varepsilon_C}{1-\varepsilon_C}(W_0+W_1)\le
+  6\,x^{3C_s+3}\exp(-x^{\eps_z/6})$;
+\item for all sufficiently large $x\ge x_0(\eps_z,C_s,c)$, we have
+  $0\le\mathrm{del}_p\le\exp(-x^{\eps_z/7})$, establishing \lean{LinkIRR}.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Put $P=x^{C_s}\ge 100$, $E=x^{\eps_z}\ge 1$, $u=x^{\eps_z/6}\in[1,x]$, and $e_u=\exp(-u)$. Since
+$x\ge 10$, we have $x^3\ge 1000\ge 103$.
+
+For $\varepsilon_C\le\frac12$ (\lean{epsilon_bound_large_x}), $x\ge\max(1,1/c)$ gives
+$c f\ge c x^2\ge c x\ge 1$, and $N\ge 100>e$ gives $N\log N\ge 1$. Hence
+$c N f\log N\ge 1$, so $\varepsilon_C\le e^{-1}\le\frac12$.
+
+For the bound on $W_k=W_g(f,m,N,g_k,q,d)$ (\lean{weight_numbers_bound}), fix $g=g_k$. Since
+$g\ge\exp(8E)\ge 1+8E\ge 9$ and $8E\ge u$, we have $e_u g\ge\exp(8E-u)\ge 1$, so $1/g\le e_u$. We
+bound the five terms of \eqref{eq:Wg} in turn:
+\begin{enumerate}[label=\arabic*.]
+\item $3f/g\le 3P e_u$ since $f\le P$ and $1/g\le e_u$.
+\item Set $s=g^{1/4}\ge\exp(2E)\ge e^u$, so $1/s\le e_u$. Using $\log s\le s-1\le s$, we get
+  $\log g=4\log s\le 4s$, whence $23f\log g/\sqrt{g}=23f\log g/s^2\le 92f/s\le 92P e_u$.
+\item Since $\min(q,d)\ge e^u$, we have $\frac{1}{4\min(q,d)}\le e_u$. Moreover, $e_u g\ge 1$ and
+  $g\ge 9$ give $e_u(g-1)\ge\frac{8}{9}>\frac12$, while $1+\log N\le N\le P$, so
+  $(1+\log N)/(g-1)\le 2P e_u$. Since $f,m\le P$, the third term is at most
+  $2P^2(e_u+2P e_u)=2P^2 e_u+4P^3 e_u$.
+\item Since $7/8\le e^{-1/8}$ and $f\ge x^2\ge 8x\ge 8u$ (as $x\ge 10$), we have
+  $(7/8)^f\le e^{-f/8}\le e_u$, so $(N/2)(7/8)^f\le P e_u$.
+\item Since $N\le x^{C_s}$ and $\log x=2\log(\sqrt x)\le 2\sqrt x$, we have
+  $\log N\le C_s\log x\le 2 C_s\sqrt x$. Because $x\ge 100 C_s^2+1$, we have $10 C_s\le\sqrt x$,
+  hence $5\log N\le 10 C_s\sqrt x\le x$ and $u\cdot 5\log N\le x^2\le f$. Thus
+  $\exp(-f/(5\log N))\le e_u$.
+\end{enumerate}
+Summing these five bounds and using $1\le P\le P^2\le P^3$ and $103\le x^3$ (\lean{wsum}) gives
+\[
+W_k\le (3P+92P+2P^2+4P^3+P+1)e_u\le 103 P^3 e_u\le P^3 x^3 e_u=x^{3C_s+3}\exp(-x^{\eps_z/6}),
+\]
+proving (i).
+
+For (ii) (\lean{delp_of_allRows}, \lean{share_from_count}), hypothesis~(b) gives
+$D_{\mathrm{all}}\ge(1-\varepsilon_C)d_S>0$ and $B_k\le(1+\varepsilon_C)p_k d_S\le(1+\varepsilon_C)W_k d_S$
+by (c). Since $D_{\mathrm{rows}}\le D_{\mathrm{all}}$, we have $\mathrm{del}_p\ge 0$, and by (a),
+\[
+\mathrm{del}_p=\frac{D_{\mathrm{all}}-D_{\mathrm{rows}}}{D_{\mathrm{all}}}
+\le\frac{B_0+B_1}{D_{\mathrm{all}}}
+\le\frac{1+\varepsilon_C}{1-\varepsilon_C}(W_0+W_1).
+\]
+Since $\varepsilon_C\le\frac12$, $\frac{1+\varepsilon_C}{1-\varepsilon_C}\le 3$
+(\lean{numbers_dominant_large}), so (i) yields $\mathrm{del}_p\le 6\,x^{3C_s+3}\exp(-x^{\eps_z/6})$.
+
+Finally, for (iii), since $\eps_z/6>\eps_z/7$, we have $6\,x^{3C_s+3}\exp(x^{\eps_z/7}-x^{\eps_z/6})\to 0$
+as $x\to\infty$ (\lean{dominant_numbers_sharp_holds}), giving $\mathrm{del}_p\le\exp(-x^{\eps_z/7})$
+for $x\ge x_0(\eps_z,C_s,c)$.
+\end{proof}
+
+\noindent In the live Lean closure, \lean{sizesRec_at} (\lean{LinkIRROfJoinEx.lean:83}) verifies
+\lean{SizesAt} with $C_s=6$ directly from the scale windows of Section~\ref{sec:host}, while
+\lean{locShare_le_Wg} (\lean{ConcNWeight.lean:284}) establishes hypothesis~(c) from Green's
+cuspidal parametrisation (\lean{admLq}, \lean{GlobalTheory.GLq.Green}), comparison transfer
+($(1-1/g_k)P(c)\le w_J(v,c)$), and the finite-field polynomial irreducibility estimate
+(\lean{property_W_of_estimates}). Combined with the cylinder count \lean{CountAllRows} from
+\ref{C8}, Lemma~\ref{lem:linkIRR} closes \lean{LinkIRR} (\lean{closed_linkIRR_of_join_count},
+\lean{LinkIrr.lean:60}).
+
 \begin{proposition}[Verification of \texttt{LinkS} and (S8)--(S10)]\label{prop:S8S10}
 Assume \ref{C8} and put $\Gamma=\exp(C_\Gamma m^5 f L)$. Then for $x\ge x_0(\eps)$:
 \begin{enumerate}[label=(\roman*)]
@@ -1026,7 +1119,7 @@ Assume \ref{C8} and put $\Gamma=\exp(C_\Gamma m^5 f L)$. Then for $x\ge x_0(\eps
   \|K(\nu,\nu')\|_{HS}^2\le(1+\eta_0)\frac{d(\nu)d(\nu')}{D^\ast}\quad(\nu\neq\nu'),\\
   \|K(\nu,\nu)-I\|_{HS}^2\le e_0\,d(\nu),\qquad D_{\mathrm{all}}\le(1+\eta_1)D^\ast.
   \end{gather*}
-\item \textup{(Irreducibility decay, \lean{LinkIRR})} Independently from \ref{C8}, the
+\item \textup{(Irreducibility decay, \lean{LinkIRR})} By Lemma~\ref{lem:linkIRR}, the
   irreducibility error satisfies $0\le\delta_u=\mathrm{del}_p\le\exp(-x^{\eps/7})$.
 \item Feeding (i)--(iii) and Lemma~\ref{lem:diagnondeg} into Theorem~9.2 of Part~I (Frame theorem)
   yields \textup{(S8)}, \textup{(S9)}, and \textup{(S10)} with
@@ -1037,8 +1130,9 @@ Assume \ref{C8} and put $\Gamma=\exp(C_\Gamma m^5 f L)$. Then for $x\ge x_0(\eps
 \begin{proof}
 Part (i) follows directly from Lemma~\ref{lem:proviso} (\lean{proviso_e}, yielding
 \lean{chosenProviso_4f} from \lean{LinkB.RankM} and the word prime window \lean{D.T_win}), part
-(ii) is \lean{theoremS_link_concrete} (\lean{LinkSPos.lean:151}), and part (iii) is \lean{LinkIRR}
-(\lean{GlobalTheoremInputs.lean:64}). For $x\ge1$ we have $\sqrt{e_0}\le\exp(-x^{\eps/8})<1$, so
+(ii) is \lean{theoremS_link_concrete} (\lean{LinkSPos.lean:151}), and part (iii) follows from
+Lemma~\ref{lem:linkIRR} (\lean{linkIRR_of_allRows}, \lean{closed_linkIRR_of_join_count}, yielding
+\lean{LinkIRR} of \lean{GlobalTheoremInputs.lean:64}). For $x\ge1$ we have $\sqrt{e_0}\le\exp(-x^{\eps/8})<1$, so
 $e_0<1$; since $d(\nu)>0$ by (i), Lemma~\ref{lem:diagnondeg} gives $c_0(\nu)>0$ and
 $D_{\mathrm{all}}>0$ (\lean{matKF_of}, \lean{rrRankF_of}). For $x\ge x_0(\eps)$, part~(iii) gives
 $\delta_u\le\exp(-x^{\eps/7})<1/2$, while part~(ii) gives $0\le e_u\le\frac14$ and
@@ -1332,7 +1426,7 @@ Lemmas~\ref{lem:heightchain}--\ref{lem:linkNgd}, Thm.~\ref{thm:S1} & \lean{heigh
 Lemmas~\ref{lem:lettersplace}--\ref{lem:C2off}, Prop.~\ref{prop:S2S5} & \lean{letters_place}, \lean{nuAbs_place_fine}, \lean{degree_fine}, \lean{C2off_of}, \lean{secondComplement_of_inputs}, \lean{C2atG_of} & \lean{FockDegreeGapBound.lean:204}, \lean{NuAbsPlaceFine.lean:101, 136, 177}, \lean{WeightDegreeSizes.lean:400, 460} \\
 Prop.~\ref{prop:S6} & \lean{NprimeMuR}, \lean{LinkMu}, \lean{Places_at}, \lean{slopesN_at_of} & \lean{SR/GlobalTheoremInputs.lean:69}, \lean{SR/GlobalSchurBounds/TopDensityNGeSixteen.lean:1529} \\
 Lemmas~\ref{lem:kWord}--\ref{lem:orbitsum}, Thm.~\ref{thm:S7} & \lean{LinkG_at}, \lean{key_minor_dvd}, \lean{kW_ord}, \lean{key3Ord}, \lean{caseD_arith}, \lean{caseE_arith}, \lean{St.starAll_of}, \lean{gain_bound_all_of_star} & \lean{KeyMinorDvd.lean:181, 207, 273}, \lean{PartnerCountOfCentral.lean:539, 587, 884}, \lean{NotSingularOfCentral.lean:777} \\
-Lemmas~\ref{lem:diagnondeg}--\ref{lem:proviso}, Prop.~\ref{prop:S8S10} & \lean{unfolding_constant_pos_of_diagonal}, \lean{dall_pos}, \lean{mass_corollary}, \lean{proviso_e}, \lean{RankTiesF}, \lean{ClassNumberFormula}$_2$, \lean{VolSigIndep}, \lean{matKF_of}, \lean{LinkS_at}, \lean{LinkIRR}, \lean{ChosenProviso}, \lean{theoremS_link_concrete} & \lean{OneAddInvPowLeExpOne.lean:56, 64}, \lean{MainSup.lean:135, 189}, \lean{ClassNumberClosed.lean:48}, \texttt{VolumeSignatureIndep\allowbreak AndClassNumberItems.lean:53}, \lean{LwRankTies.lean:54}, \lean{TopDensityNGeSixteen.lean:1343, 1357, 1411}, \lean{SR/GlobalTheoremInputs.lean:64}, \lean{LinkSPos.lean:151} \\
+Lemmas~\ref{lem:diagnondeg}--\ref{lem:linkIRR}, Prop.~\ref{prop:S8S10} & \lean{unfolding_constant_pos_of_diagonal}, \lean{dall_pos}, \lean{mass_corollary}, \lean{proviso_e}, \lean{RankTiesF}, \lean{ClassNumberFormula}$_2$, \lean{VolSigIndep}, \lean{weight_numbers_bound}, \lean{epsilon_bound_large_x}, \lean{delp_of_allRows}, \lean{linkIRR_of_allRows}, \lean{locShare_le_Wg}, \lean{sizesRec_at}, \lean{closed_linkIRR_of_join_count}, \lean{matKF_of}, \lean{LinkS_at}, \lean{LinkIRR}, \lean{ChosenProviso}, \lean{theoremS_link_concrete} & \lean{OneAddInvPowLeExpOne.lean:56, 64}, \lean{MainSup.lean:135, 189}, \lean{ClassNumberClosed.lean:48}, \texttt{VolumeSignatureIndep\allowbreak AndClassNumberItems.lean:53}, \lean{LwRankTies.lean:54}, \lean{ConcNP.lean:59, 102, 276, 321, 459}, \lean{ConcNWeight.lean:284, 391}, \lean{LinkIRROfJoinEx.lean:61, 83}, \lean{LinkIrr.lean:60}, \lean{TopDensityNGeSixteen.lean:1343, 1357, 1411}, \lean{SR/GlobalTheoremInputs.lean:64}, \lean{LinkSPos.lean:151} \\
 Lemmas~\ref{lem:minuspart}--\ref{lem:pointHV}, Thm.~\ref{thm:VWin} & \lean{VWin}, \lean{VWinAt}, \lean{VVle}, \lean{vwin_of_counts}, \lean{ThmBcFree}, \lean{point_arith}, \lean{thmHV}, \lean{thmBab_of_lemmaK}, \lean{UpperTheory.V.FW.ferreroWashington} & \lean{ExistsPageN.lean:44}, \lean{ThmBcOfPsiBound.lean:220, 339}, \lean{PointArith.lean:47, 78}, \lean{FinalLe.lean:199}, \lean{ThmHV.lean:49} \\
 Section~\ref{sec:assembly} & \lean{ChainTied}, \lean{TieGlobal}, \lean{TieLocal}, \lean{TieArith}, \lean{supplyChi}, \lean{vwin_of_row} & \lean{SR/GlobalSchurBounds/TieGlobal.lean:97} \\
 \bottomrule
