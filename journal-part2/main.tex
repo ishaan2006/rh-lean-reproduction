@@ -20,7 +20,7 @@
 
 \urlstyle{tt}
 \DeclareUrlCommand\lean{\urlstyle{tt}}
-\makeatletter\g@addto@macro{\UrlBreaks}{\do\_\do\a\do\e\do\i\do\o\do\u\do\r\do\n\do\t\do\s}\mathchardef\UrlBreakPenalty=9000\makeatother
+\makeatletter\g@addto@macro{\UrlBreaks}{\do\_\do\.\do\/\do\-}\mathchardef\UrlBreakPenalty=5000\makeatother
 
 \newcommand{\CC}{\mathbb{C}}
 \newcommand{\R}{\mathbb{R}}
@@ -81,16 +81,17 @@ conditions (S0)--(S10) (Theorem~C1), and the general lattice theorems behind fou
 conditions. What remained was Theorem~C2: the existence of hosts on arbitrarily large scale windows
 $[Y,Y^{3/2}]$ carrying tied slope data satisfying (S0)--(S10) and the error windows.
 
-This paper gives a conventional account and proof of Theorem~C2, modulo eight explicitly isolated
-classical arithmetic inputs from the published literature (zero-density estimates, Behrend-type
-relation-free sets, the Chowla--Selberg formula, the Ferrero--Washington theorem, Poitou--Tate
-duality, local Bloch--Kato duality, Grothendieck deformation theory, and unitary theta-lift /
-class-number bounds). We construct the scale parameters and host windows explicitly, build the
-glued common lattice $R$ place by place, derive the structural $m^2$ Selmer-colength bound $E_b$
-behind the divisibility inequality (S1), establish the energy, local-index, gain, and
-near-orthogonality inequalities (S2)--(S10), and prove the Tate--Shafarevich window bound
-$\mathrm{VWin}$. Combined with Part~I, this yields a complete human-readable proof architecture for
-GRH for Dirichlet $L$-functions.
+This paper gives a conventional account and proof of Theorem~C2, modulo seven explicitly isolated
+classical arithmetic inputs \textup{(C1)--(C7)} from the published literature (zero-density
+estimates, Behrend-type relation-free sets, the Chowla--Selberg formula, the Ferrero--Washington
+theorem, Poitou--Tate duality, local Bloch--Kato duality, and Grothendieck deformation / Kato
+Iwasawa bounds) together with the family-specific unitary theta-lift and Gram-decorrelation
+package \textup{(C8)} verified in the Lean kernel closure. We construct the scale parameters and
+host windows explicitly, build the glued common lattice $R$ place by place, derive the structural
+$m^2$ Selmer-colength bound $E_b$ behind the divisibility inequality (S1), establish the energy,
+local-index, gain, and near-orthogonality inequalities (S2)--(S10), and prove the
+Tate--Shafarevich window bound $\mathrm{VWin}$. Combined with Part~I, this yields a complete
+human-readable proof architecture for GRH for Dirichlet $L$-functions.
 \end{abstract}
 
 \maketitle
@@ -108,6 +109,14 @@ Generalized Riemann Hypothesis for Dirichlet $L$-functions follows unconditional
 arithmetic existence statement, Theorem~C2. All notation for character families $F_\psi$,
 $(C_E,K_0,c,M)$-admissible hosts satisfying (B0)--(B7), slope data satisfying (S0)--(S10), and the
 error windows of Proposition~7.9 is taken verbatim from Part~I~\cite[\S\S5--8]{dixit-part1}.
+In particular, $u\in U$ denotes a host translate (point) and $\nu\in\mathcal W(u)$ denotes a word
+at $u$; for a finite place $w$ with ramification index $e_w$ and log-weight $\mathrm{lw}(w)$
+satisfying the product formula $\sum_{w\mid p}\mathrm{lw}(w)e_w=\log p$, we write
+$\sz(w,y)=2\,\mathrm{lw}(w)\,e_w\,y$; $N_\nu$ and $N_{\nu,0}$ are the divisible and initial
+Hermitian lattices attached to $\nu$; $D_\Gamma(\nu)$ is the stabiliser discriminant; $N_c$ is the
+class-group error parameter; and $\mathrm{Lo}(\nu)$ is the local-index error term of
+Part~I~\cite[\S7.1]{dixit-part1}. The weight parameter $c=\frac{1}{3o+1}$ is the weight assigned to
+each nonprincipal character in the cyclic family $F_\psi$ of Part~I~\cite[\S8.1]{dixit-part1}.
 
 \begin{theoremC2}[Theorem~8.2 of Part~I]\label{thm:C2}
 Let $\psi$ be a primitive Dirichlet character of order $o$. There are constants $e\ge3$ and
@@ -123,53 +132,62 @@ $W\subseteq\R$ and real numbers $x_0$, $C_E$, $K_0$, $K$, $e_K\ge0$ such that:
 \end{enumerate}
 \end{theoremC2}
 
-In the Lean~4 development~\cite{alpoge-remark}, every classical theorem used inside Theorem~C2 is
-proved from scratch from the three standard axioms (\texttt{propext}, \texttt{Quot.sound},
-\texttt{Classical.choice}). In a conventional mathematical exposition it is neither desirable nor
-appropriate to reprove classical theorems of algebraic number theory and Iwasawa theory from first
-principles. Instead, we isolate eight explicit classical arithmetic inputs \textup{(C1)--(C8)}
-below, and prove Theorem~C2 from them by following the exact architecture of the formal
-development, with every Lean correspondence recorded in Appendix~\ref{app:lean}.
+In the Lean~4 development~\cite{alpoge-remark}, every theorem used inside Theorem~C2 is proved from
+scratch from the three standard axioms (\texttt{propext}, \texttt{Quot.sound},
+\texttt{Classical.choice}). In a conventional mathematical exposition it is cleaner to isolate
+seven classical arithmetic inputs \textup{(C1)--(C7)} from the published literature together with
+one family-specific automorphic package \textup{(C8)} (verified in the live Lean closure), and to
+prove Theorem~C2 from them by following the exact architecture of the formal development, with
+every Lean correspondence recorded in Appendix~\ref{app:lean}.
 
-\subsection{The eight classical arithmetic inputs}
+\subsection{The classical inputs (C1)--(C7) and automorphic package (C8)}
 
 Every proof in Sections~\ref{sec:host}--\ref{sec:assembly} is elementary and self-contained given
-the following eight standard inputs (each of which is also proved internally inside the Lean
-archive):
+the following seven classical inputs \textup{(C1)--(C7)} and the family-specific automorphic
+package \textup{(C8)} (each of which is also proved internally inside the Lean archive):
 \begin{enumerate}[label=\textup{(C\arabic*)}, leftmargin=3.4em]
-\item\label{C1} \emph{Zero-density box estimate}~\cite[Chapter~10]{iwaniec-kowalski}: the number of
-  bad prime moduli $q\le Q$ whose quadratic twists $\chi_q$ fail to satisfy the zero-free box bound
-  $|G_{\chi_q}(y)|\le y^{1/2+\tau}$ and $|L'/L(1,\chi_q)|\le C\log Y$ on $[Y,X]$ is at most
-  $C Q^{1/4}$ (\lean{ZD.zero_density_box}, \lean{count_bad_core}).
-\item\label{C2} \emph{Behrend-type relation-free sets}: for any finite abelian group $H$ of order
-  $n$ and integer $L\ge1$, there exists a subset $T_2\subseteq H$ of size
-  $|T_2|\ge n\exp(-C\sqrt{\log n\log L})/L$ with no nontrivial 3-term linear relations
-  $j(s_2-s_1)=i(s_3-s_1)$ for $0<|i|,|j|\le L$, $i\neq j$ (\lean{hostThickExists}).
-\item\label{C3} \emph{Chowla--Selberg period formula}~\cite{chowla-selberg}: the mean archimedean
-  log-period of the CM abelian varieties attached to the quadratic field $\Q(\sqrt{-d})$ equals
+\item\label{C1} \emph{Zero-density box estimate}~\cite[Chapter~10]{iwaniec-kowalski}: for every
+  fixed primitive character $\psi$, $\tau>0$, and $J\ge2$, there is $C=C(\tau,\psi,J)>0$ such that
+  for all large $Y$ and $Q\ge Y^{\tau}$, the number of bad prime moduli $q\le Q$ (or prime moduli
+  $d\le Q$ for a fixed good $q$) for which some twist $\chi\in\{\psi^a\chi_q,\psi^a\chi_d,
+  \psi^a\chi_{qd}\}$ fails to satisfy $|G_\chi(y)|\le y^{1/2+\tau}$ and
+  $|L'/L(1,\chi)|\le C\log Y$ uniformly on $[Y,Y^J]$ is at most $C Q^{1/4}$
+  (\lean{ZD.zero_density_box}, \lean{count_bad_core}).
+\item\label{C2} \emph{Behrend-type relation-free sets}~\cite{behrend}: for any finite abelian group
+  $H$ of order $n$ and integer $L_{\mathrm{rel}}\ge1$, there exists a subset $T_2\subseteq H$ of
+  size $|T_2|\ge n\exp(-C\sqrt{\log n\log L_{\mathrm{rel}}})/L_{\mathrm{rel}}$ with no nontrivial
+  3-term linear relations $j(s_2-s_1)=i(s_3-s_1)$ for $0<|i|,|j|\le L_{\mathrm{rel}}$, $i\neq j$
+  (\lean{hostThickExists}).
+\item\label{C3} \emph{Chowla--Selberg period formula}~\cite{chowla-selberg}: for the CM datum with
+  archimedean period normalization parameter $v>0$ (Part~I, Table~1), the mean archimedean
+  log-period of the CM abelian varieties attached to $\Q(\sqrt{-d})$ equals
   $\log\Omega=\gE+\log(\pi/v)-L'(1,\chi_d)/L(1,\chi_d)$ (\lean{meanPeriod}).
 \item\label{C4} \emph{Ferrero--Washington theorem}~\cite{ferrero-washington}: for every prime
   $\ell$ and abelian number field $K$ containing $\mu_\ell$ ($\mu_4$ if $\ell=2$), the $\ell$-rank
   of $\mathrm{Cl}(K')/\mathrm{Cl}(K')^\ell$ is bounded along the cyclotomic $\Z_\ell$-tower
   $K'/K$, i.e. $\mu_\ell(K)=0$ (\lean{UpperTheory.V.FW.ferreroWashington}).
-\item\label{C5} \emph{Poitou--Tate duality and Galois cohomology}~\cite{nsw}: local Tate duality,
-  local and global Euler characteristic formulas, Greenberg--Wiles, and unramified orthogonality
-  for the minus part of cyclotomic Tate--Shafarevich groups (\lean{LitCoh}, \lean{Odd.thmBcFree_of}).
+\item\label{C5} \emph{Poitou--Tate duality and Galois cohomology}~\cite{nsw,milne}: local Tate
+  duality, local and global Euler characteristic formulas, Greenberg--Wiles, and unramified
+  orthogonality for the minus part of cyclotomic Tate--Shafarevich groups (\lean{LitCoh},
+  \lean{Odd.thmBcFree_of}).
 \item\label{C6} \emph{Local Bloch--Kato dimension formula and duality}~\cite{bloch-kato}: for a
-  crystalline $p$-adic Galois representation $T$ over $K_w$ with $H^0=0$,
-  $\dim H^1_f(K_w,V)$ equals the sum over $\tau$ of the number of non-negative Hodge--Tate weights
-  at $\tau$, with Fontaine--Laffaille lifting exponents linear in the Hodge--Tate height
-  (\lean{BlochKato.DimFormula}, \lean{rank_le_row}).
-\item\label{C7} \emph{Grothendieck deformation theory and Kato/Iwasawa bounds}~\cite{messing,diamond}:
+  crystalline $\Z_p$-lattice $T$ over $K_w$ with $V=T\otimes_{\Z_p}\Q_p$ and $H^0(K_w,V)=0$, under
+  the Hodge--Tate sign convention in which the cyclotomic character has weight $+1$,
+  $\dim_{\Q_p} H^1_f(K_w,V)$ equals the sum over embeddings $\tau$ of the number of non-negative
+  Hodge--Tate weights at $\tau$, with Fontaine--Laffaille lifting exponents linear in the
+  Hodge--Tate height (\lean{BlochKato.DimFormula}, \lean{rank_le_row}).
+\item\label{C7} \emph{Grothendieck deformation theory and Kato/Iwasawa bounds}~\cite{messing,grothendieck1974,diamond}:
   deformations of abelian schemes over nilpotent divided-power thickenings correspond to admissible
   lifts of the Hodge filtration (Messing~\cite[Ch.~V]{messing} in the $p$-nilpotent case;
-  Grothendieck's 1974 Montr\'eal notes, Ch.~V~\S4, recalled in Diamond~\cite[\S2.4]{diamond}, for
-  general nilpotent divided-power thickenings), together with the Kato-type cyclotomic Selmer
-  bounds supplying \lean{CountI}--\lean{CountV}.
-\item\label{C8} \emph{Unitary theta-lift chain and class-number / Gram estimates}: existence of the
-  $m$-step unitary theta-lift chain of signatures $(k-1,m)\to\cdots\to(k+m-1,0)$ with Hodge--Tate
-  pattern \lean{ShapeJumps}, orbitwise Witt-vector congruences feeding \lean{key_minor_dvd}, and
-  the class-number comparability and Gram matrix decorrelation estimates behind \lean{LinkS}.
+  Grothendieck's 1974 Montr\'eal notes~\cite[Ch.~V~\S4]{grothendieck1974}, recalled in
+  Diamond~\cite[\S2.4]{diamond}, for general nilpotent divided-power thickenings), together with
+  the Kato-type cyclotomic Selmer bounds supplying \lean{CountI}--\lean{CountV}.
+\item\label{C8} \emph{Family-specific unitary theta-lift and Gram-decorrelation package} (certified
+  in the live Lean closure): existence of the $m$-step unitary theta-lift chain of signatures
+  $(k-1,m)\to\cdots\to(k+m-1,0)$ with Hodge--Tate pattern \lean{ShapeJumps}, the irreducibility
+  decay \lean{LinkIRR} ($\mathrm{del}_p\le\exp(-x^{\eps/7})$), orbitwise Witt-vector congruences
+  feeding \lean{key_minor_dvd}, and the class-number comparability and Gram-matrix decorrelation
+  estimates behind \lean{LinkS}.
 \end{enumerate}
 
 % ======================================================================
@@ -260,18 +278,19 @@ For $0<\eps<1/52$ and $Y>1$, a pair of primes $(q,d)$ is a \emph{window pair} at
 
 \begin{proposition}[Host construction and verification of (B0)--(B7)]\label{prop:hostB}
 Assume \ref{C1} and \ref{C2}. Let $\psi$ be a primitive Dirichlet character of order $o$,
-$0<\eps<1/52$, and $Y\ge Y_0(\psi,\eps)$ be large. There exists a window pair $(q,d)$ at
-$(\eps,Y)$ such that for every $x\in[Y,Y^2]$:
+$0<\eps<1/52$, $J\ge2$, and $Y\ge Y_0(\psi,\eps,J)$ be large. There exists a window pair $(q,d)$
+at $(\eps,Y)$ such that for every $x\in[Y,Y^J]$:
 \begin{enumerate}[label=(\roman*)]
 \item the auxiliary quadratic characters $\chi_q$, $\chi_d$, $\chi_{qd}$ and their twists by
   $\langle\psi\rangle$ satisfy $|G_\chi(x)|\le x^{1/2+\eps}$ and $|L'/L(1,\chi)|\le C_L\log x$,
   whence $\Sigma_{\mathrm{rest}}(x)\le 4o\,x^{1/2+\eps}$;
 \item with $H$ of order $n=2^e\in[x^{2+8\eps},2x^{2+8\eps}]$ and $E_0=(\Z/2\Z)^2$ generated by the
   quadratic characters at $q,d$, the group $G=E_0\times H$ carries an arithmetic host datum with
-  $G_K=G_{F_\psi}$;
-\item there is a thick set $T_2\subseteq H$ with no short 3-term linear relations for $L=x^\eps$
-  and density $\delta_2=|T_2|/n\ge x^{-\eps}$;
-\item all host axioms \textup{(B0)--(B7)} of Part~I and domain conditions \textup{(S0)} hold.
+  $G_K=G_{F_\psi}$ and $c=\frac{1}{3o+1}$;
+\item for any polylogarithmic relation-length cutoff $L_{\mathrm{rel}}\ll(\log x)^A$, there is a
+  thick set $T_2\subseteq H$ with no short 3-term linear relations for $L_{\mathrm{rel}}$ and
+  density $\delta_2=|T_2|/n\ge x^{-\eps}$;
+\item all host axioms \textup{(B0)--(B7)} of Part~I (with $C_E=C_L$, $K_0=\max_{\xi\in F_\psi\setminus\{\mathbf 1\}}|L'/L(1,\xi)|$) and domain conditions \textup{(S0)} hold.
 \end{enumerate}
 \end{proposition}
 
@@ -279,24 +298,29 @@ $(\eps,Y)$ such that for every $x\in[Y,Y^2]$:
 By the prime number theorem in arithmetic progressions, the number of primes $q\equiv3\pmod8$ with
 $\frac12 Y^{\eps/5}<\log q\le Y^{\eps/5}$ is $\gg \exp(Y^{\eps/5})/Y^{\eps/5}$. By the zero-density
 box estimate \ref{C1} (\lean{count_bad_core}), at most $O(Q^{1/4})$ moduli $q\le Q$ fail the box
-bounds $|G_\chi(y)|\le y^{1/2+\eps}$ and $|L'/L(1,\chi)|\le C_L\log y$ on $[Y,Y^2]$. Since
+bounds $|G_\chi(y)|\le y^{1/2+\eps}$ and $|L'/L(1,\chi)|\le C_L\log y$ on $[Y,Y^J]$. Since
 $Q^{1/4}\ll Q/\log Q$, we choose a good prime $q$. Given $q$, the congruence conditions
 $d\equiv7\pmod{16}$, $d\equiv-1\pmod q$, and $d\equiv-1\pmod p$ for all odd primes
 $p\le Y^{\eps/5}$ form a single primitive residue class modulo
-$M=16q\prod_{3\le p\le Y^{\eps/5}}p$. By Chebyshev's bound,
-$\log M=(1+o(1))Y^{\eps/5}\ll Y^{\eps/5}(\log Y)^2$. Applying Linnik's theorem / the prime number
-theorem in arithmetic progressions together with \ref{C1} yields a good prime $d$ in the range
+$M=16q\prod_{3\le p\le Y^{\eps/5}}p$. By Chebyshev's bound and $\frac12 Y^{\eps/5}<\log q\le Y^{\eps/5}$,
+we have $\log M=\log(16q)+(1+o(1))Y^{\eps/5}\in\bigl((\frac32+o(1))Y^{\eps/5},(2+o(1))Y^{\eps/5}\bigr)$,
+so $Q_d=\exp(Y^{\eps/5}(\log Y)^2)=M^{\Theta((\log Y)^2)}$ lies far above any fixed Linnik power
+$M^{L_{\mathrm{Lin}}}$. Applying Linnik's lower bound for primes in arithmetic progressions
+\cite[Theorem~18.7]{iwaniec-kowalski} together with \ref{C1} yields a good prime $d$ in the range
 (b) of Definition~\ref{def:winpair}. Summing the box bounds over the non-target characters in
 $E_0\times\langle\psi\rangle$ gives $\Sigma_{\mathrm{rest}}(x)\le 4o\,x^{1/2+\eps}$, proving (i).
 
 Choosing $e=\lceil(2+8\eps)\log_2 x\rceil$ gives $n=2^e\in[x^{2+8\eps},2x^{2+8\eps}]$
 (\lean{PageN}). The Artin reciprocity map on $(\Z/N\Z)^\times$ factors through $E_0\times H$ with
-$G_K=G_{F_\psi}$, proving (ii). Applying \ref{C2} (\lean{hostThickExists}) to $H$ with
-$L=x^\eps$ produces $T_2\subseteq H$ of density
-$\delta_2\ge \exp(-C\sqrt{\log n\log L})/L=\exp(-O(\sqrt{\eps}\log x))/x^\eps$. For
-$x\ge x_0(\eps)$ and $\eps$ sufficiently small, $\delta_2\ge x^{-\eps}$ (or with $L$ scaled by
-$x^{\eps/8}$, matching \textup{(B5)}). Together with Proposition~\ref{prop:ranks}, this verifies
-(B0)--(B7) and (S0).
+$G_K=G_{F_\psi}$ and $c=\frac{1}{3o+1}$, proving (ii). Applying \ref{C2} (\lean{hostThickExists})
+to $H$ with $L_{\mathrm{rel}}\ll(\log x)^A$ gives $\log L_{\mathrm{rel}}=O(\log\log x)$ and
+produces $T_2\subseteq H$ of density
+\[
+\delta_2\ge\frac{\exp\bigl(-C\sqrt{\log n\log L_{\mathrm{rel}}}\bigr)}{L_{\mathrm{rel}}}
+=\exp\bigl(-O(\sqrt{\log x\log\log x})\bigr)=x^{-o(1)}\ge x^{-\eps}
+\]
+for all $x\ge x_0(\eps)$. Together with Proposition~\ref{prop:ranks}, this verifies (B0)--(B7) and
+(S0).
 \end{proof}
 
 % ======================================================================
@@ -305,18 +329,25 @@ $x^{\eps/8}$, matching \textup{(B5)}). Together with Proposition~\ref{prop:ranks
 
 \subsection{The CM field and the $m$-step chain}
 
-Given a primitive character $\psi$, window pair $(q,d)$, and page $e$ with $n=2^e$, let $E$ be the
-abelian number field (\lean{IsChiField}) inside $\Q(\zeta_N)$ (with $2^{e+2}, \mathrm{cond}(\psi),
-q, d\mid N$) fixed by all $\tau\in\mathrm{Gal}(\Q(\zeta_N)/\Q)$ such that $\tau(\zeta_N)=\zeta_N^a$
-satisfies
-\[
-a\equiv\pm1\pmod{2^{e+2}},\qquad \psi(a)=1,\qquad
-\Bigl(\frac{a}{q}\Bigr)=1,\qquad \Bigl(\frac{a}{d}\Bigr)=1.
-\]
-Adjoining $\sqrt{-d}$ yields the CM field $LL=E(\sqrt{-d})$ of degree $f=2n$ over $\Q$ (with $n$
-complex places).
+Given a primitive character $\psi$ of order $o$, a window pair $(q,d)$, and a page $e$ with
+$n=2^e$, we distinguish two abelian number fields inside $\Q(\zeta_N)$ (with
+$2^{e+2},\mathrm{cond}(\psi),q,d\mid N$):
+\begin{itemize}
+\item The totally real cyclotomic layer $F^+=\Q(\zeta_{2^{e+2}})^+$ of degree $n=2^e$ over $\Q$,
+  and the CM field $LL=F^+(\sqrt{-d})$ of degree $f=2n$ over $\Q$ (with $n$ complex places and
+  $f=2n$ complex embeddings), over which the Hermitian lattices and unitary theta lifts live.
+\item The composite abelian field $E$ (\lean{IsChiField}) fixed by all
+  $\tau\in\mathrm{Gal}(\Q(\zeta_N)/\Q)$ such that $\tau(\zeta_N)=\zeta_N^a$ satisfies
+  \[
+  a\equiv\pm1\pmod{2^{e+2}},\qquad \psi(a)=1,\qquad
+  \Bigl(\frac{a}{q}\Bigr)=1,\qquad \Bigl(\frac{a}{d}\Bigr)=1.
+  \]
+  Because $d\equiv7\pmod{16}$ implies $d\equiv3\pmod4$, $\Q(\sqrt{-d})\subset\Q(\zeta_d)$ is
+  already cut out by $(\frac{a}{d})=1$, so $LL\subseteq E$ and $[E:\Q]\le 4o\cdot 2^e\ll_\psi x^{2+8\eps}$.
+  This larger field $E$ is the base field of the $\Sha$-window Theorem~\ref{thm:VWin}.
+\end{itemize}
 
-By \ref{C8}, attached to each word $\nu\in\mathcal W(u)$ (encoded injectively into $k-2$ bits, so
+By \ref{C8}, attached to each word $\nu\in\mathcal W(u)$ (encoded injectively into $k-3$ bits, so
 $\log|\mathcal W(u)|\le(k-3)\log2$, matching $k\ge m^5 f L$) is a chain of $m$ theta lifts along a
 tower of unitary groups of signatures
 \begin{equation}\label{eq:sigchain}
@@ -327,13 +358,13 @@ the row count and lattice rank are
 \begin{equation}\label{eq:rowranks}
 N(j)=k+j(t+1),\qquad \rk Y(j)=r+jt\qquad (r=k+m-1).
 \end{equation}
-The archimedean Harish-Chandra row parameters at lift $j$, place $\tau$, and row $0\le r'<N(j-1)$
-take the form
+The archimedean Harish-Chandra row parameters at lift $j$, complex embedding $\tau$, and row
+$0\le r'<N(j-1)$ take the form
 \begin{equation}\label{eq:nurow}
-\nu_{\mathrm{row}}(u,j,\tau,r')=\mathrm{srcPar}(u,\tau,r')+w_{\mathrm{Sz}}(j,\tau)
+\nu_{\mathrm{row}}(\nu,j,\tau,r')=\mathrm{srcPar}(\nu,\tau,r')+w_{\mathrm{Sz}}(j,\tau)
 -\frac{N(j-1)+N(j)-1-2r'}{2},
 \end{equation}
-with $\nu_{\mathrm{abs}}(u,j,\tau)=\sum_{r'<N(j-1)}\nu_{\mathrm{row}}(u,j,\tau,r')$.
+with $\nu_{\mathrm{abs}}(\nu,j,\tau)=\sum_{r'<N(j-1)}\nu_{\mathrm{row}}(\nu,j,\tau,r')$.
 
 \subsection{Construction of the glued common lattice $R$}
 
@@ -368,14 +399,23 @@ S_w$. Hence $R$ is an $\Oc_K$-submodule of $V$.
 
 For (ii), let $\Sigma$ be the finite set of places where $S_w\neq S_0$. For each $w\in\Sigma$,
 because $S_w$ and $S_0$ are full lattices in $V$, there exist nonzero elements $c_w,c_w'\in\Oc_K$
-such that $c_w S_0\subseteq S_w\subseteq (c_w')^{-1}S_0$. By strong approximation for the Dedekind
-domain $\Oc_K$, putting $c=\prod_{w\in\Sigma}c_w$ and $c'=\prod_{w\in\Sigma}c_w'$ gives
-$c S_0\subseteq R\subseteq (c')^{-1}S_0$, so $R$ is finitely generated of full rank $m$. Finally,
-for any fixed place $w_0$, the definition \eqref{eq:prescribedR} immediately implies
-$R_{\fp_{w_0}}\subseteq (S_{w_0})_{\fp_{w_0}}$. Conversely, given $y\in S_{w_0}$, since $S_w$ is
-full and agrees with $S_0$ outside $\Sigma$, there exists $d\in\Oc_K\setminus\fp_{w_0}$ (chosen to
-have sufficiently high valuation at the finitely many places $w\in\Sigma\setminus\{w_0\}$ where
-$y\notin(S_w)_{\fp_w}$) such that $dy\in R$. Thus $(S_{w_0})_{\fp_{w_0}}\subseteq R_{\fp_{w_0}}$.
+such that $c_w S_0\subseteq S_w\subseteq (c_w')^{-1}S_0$. Put $c=\prod_{w\in\Sigma}c_w$ and
+$c'=\prod_{w\in\Sigma}c_w'$. Then $c S_0\subseteq c_w S_0\subseteq S_w$ for every $w\in\Sigma$ (and
+$cS_0\subseteq S_0=S_w$ for $w\notin\Sigma$), so $cS_0\subseteq R$ immediately (taking $d=1$).
+Conversely, for any $x\in R$ and every place $w$, there is $d_w\in\Oc_K\setminus\fp_w$ with
+$d_w x\in S_w$, hence $d_w(c'x)\in c'S_w\subseteq S_0$. Since the elements $\{d_w\}$ lie outside
+every nonzero prime ideal $\fp_w$, they generate the unit ideal $\Oc_K$, so $c'x\in S_0$. Thus
+$cS_0\subseteq R\subseteq (c')^{-1}S_0$, proving that $R$ is a full $\Oc_K$-lattice in $V$.
+
+Finally, fix any finite place $w_0$. The definition \eqref{eq:prescribedR} immediately implies
+$R_{\fp_{w_0}}\subseteq (S_{w_0})_{\fp_{w_0}}$. Conversely, let $y\in S_{w_0}$. Since $S_w=S_0$ for
+all $w\notin\Sigma$ and $y\in S_{w_0}\subseteq (c'_{w_0})^{-1}S_0$ (with $c'_{w_0}=1$ if
+$w_0\notin\Sigma$), there are only finitely many places $w\neq w_0$ (the places in
+$\Sigma\setminus\{w_0\}$ together with the prime divisors of $c'_{w_0}$) at which
+$y\notin(S_w)_{\fp_w}$. By weak approximation for the Dedekind domain $\Oc_K$, there exists
+$d\in\Oc_K\setminus\fp_{w_0}$ having sufficiently high valuation at all finitely many such places
+$w\neq w_0$ so that $dy\in(S_w)_{\fp_w}$ for every $w$; hence $dy\in R$, giving
+$(S_{w_0})_{\fp_{w_0}}\subseteq R_{\fp_{w_0}}$.
 \end{proof}
 
 % ======================================================================
@@ -390,29 +430,29 @@ the per-lift error budgets into $\mathrm{err}_B$ (\lean{errB_of_units}).
 
 \begin{lemma}[Averaged column-chain height bound, \texttt{height\_chain\_atR}]\label{lem:heightchain}
 Let $K$ be a totally complex number field with $r_\infty=|\mathrm{Pl}_\infty(K)|\ge1$ infinite
-places, and let $B_u$ factor through a column chain of $m$ maps $K_j$ with archimedean norm bounds
-$h_P$ and $h_K(\ell,v)$ ($\ell\in J$, partitioned fiberwise by $\mathrm{lf}$). Suppose that at
-every infinite place $v$,
+places, and let $B_\nu$ factor through a column chain of $m$ maps $K_s$ with archimedean norm
+bounds $h_P$ and $h_K(\ell,v)$ ($\ell\in J$, partitioned fiberwise by $\mathrm{lf}$). Suppose that
+at every infinite place $v$,
 \begin{equation}\label{eq:heightchain}
-\log\|B_u\|_v^2 \le h_P + \sum_j\sum_{\mathrm{lf}(\ell)=j} h_K(\ell,v) - \log\kappa_v -
+\log\|B_\nu\|_v^2 \le h_P + \sum_s\sum_{\mathrm{lf}(\ell)=s} h_K(\ell,v) - \log\kappa_v -
 \min_p\sum_{j\in J}\log\lambda_j(p,v),
 \end{equation}
 and $\sum_{j\in J} l_6(j)\le\min_p\sum_{j\in J}\log\lambda_j(p,v)$ for every $v$. Then, with
 $\mathrm{meanLog}(\kappa)=\frac{1}{r_\infty}\sum_v\log\kappa_v$ and
 $\overline{h_K}(j)=\frac{1}{r_\infty}\sum_v h_K(j,v)$,
 \[
-\frac{1}{r_\infty}\sum_{v\in\mathrm{Pl}_\infty(K)}\log\|B_u\|_v^2
+\frac{1}{r_\infty}\sum_{v\in\mathrm{Pl}_\infty(K)}\log\|B_\nu\|_v^2
 \le h_P + \sum_{j\in J}\overline{h_K}(j) - \sum_{j\in J} l_6(j) - \mathrm{meanLog}(\kappa).
 \]
 \end{lemma}
 
 \begin{proof}
 At every place $v$, summing fiberwise over $\mathrm{lf}$ gives
-$\sum_j\sum_{\mathrm{lf}(\ell)=j} h_K(\ell,v)=\sum_{j\in J} h_K(j,v)$. Averaging
+$\sum_s\sum_{\mathrm{lf}(\ell)=s} h_K(\ell,v)=\sum_{j\in J} h_K(j,v)$. Averaging
 \eqref{eq:heightchain} over $v\in\mathrm{Pl}_\infty(K)$ and exchanging the finite sums over $v$ and
 $j$ yields
 \[
-\frac{1}{r_\infty}\sum_v\log\|B_u\|_v^2\le h_P+\sum_{j\in J}\overline{h_K}(j)-\mathrm{meanLog}(\kappa)
+\frac{1}{r_\infty}\sum_v\log\|B_\nu\|_v^2\le h_P+\sum_{j\in J}\overline{h_K}(j)-\mathrm{meanLog}(\kappa)
 -\frac{1}{r_\infty}\sum_v\min_p\sum_{j\in J}\log\lambda_j(p,v).
 \]
 Since $\min_p\sum_j\log\lambda_j(p,v)\ge\sum_j l_6(j)$ at every $v$, the average of the minimum is
@@ -434,7 +474,10 @@ Adding $m(C\,l_{3u})\le c_3 mU$, $L_G\le c_G mU$, and $E_3\le c_E mU$ yields
 $(c_3+c_G+C+c_2+c_E)mU\le c_e mU$.
 \end{proof}
 
-Lemma~\ref{lem:heightchain} (together with $\sum_j h_X(j)\le\sum_j l_6(j)$) supplies the
+In the formal record \lean{RecNums}, the word height is defined by
+$h(\nu)=h_P+\sum_{j\in J}(\overline{h_K}(j)-h_X(j))$, where $\sum_{j\in J} h_X(j)\le\sum_{j\in J} l_6(j)$.
+Hence Lemma~\ref{lem:heightchain} yields
+$\frac{1}{r_\infty}\sum_v\log\|B_\nu\|_v^2\le h(\nu)-\mathrm{meanLog}(\kappa)$, supplying the
 local-to-global divisibility inputs (D1)--(D4) and the hypotheses of Theorem~10.7 of Part~I.
 By Proposition~10.1 and Lemma~10.2 of Part~I, the divisibility inequality (S1) follows once the
 assembled error $\mathrm{err}_B$ is bounded by $c_e m x^\eps(B_0+N_c)$ via
@@ -444,7 +487,7 @@ except two has a spare factor of at least $m$; the two terms of full size $m B_0
 
 \begin{theorem}[Per-lift Selmer colength bound $E_b$ and verification of (S1)]\label{thm:S1}
 Assume \ref{C3}, \ref{C6}, \ref{C7}, \ref{C8}, and the $\Sha$-window bound
-$\sum_\ell\log\ell\sum_{1\le e<t}\len\Sha_\ell(e)\le\sqrt{b}$ (proved in Theorem~\ref{thm:VWin}).
+$\sum_\ell\log\ell\sum_{1\le e'<t}\len\Sha_\ell(e')\le\sqrt{b}$ (proved in Theorem~\ref{thm:VWin}).
 Then:
 \begin{enumerate}[label=(\roman*)]
 \item \textup{(Signature drift)} With $p_j=k+j-1$ and $q_j=m-j$ from \eqref{eq:sigchain},
@@ -452,31 +495,36 @@ Then:
   \sum_{j=1}^m\sum_{\rho=1}^f |p_j-q_j-k|\cdot |w_{u,j}(\rho)|\cdot |\log\Omega|\le 6mB_0.
   \]
 \item \textup{(Disjoint per-lift Selmer colength $E_b$)} Each local piece $i$ belongs to a unique
-  lift $j(i)\in\{1,\dots,m\}$ (\lean{NData.locs_mem}). For every lift $j$,
+  lift $j(i)\in\{1,\dots,m\}$ (\lean{NData.locs_mem}). For every lift $j$, with $D_0=\dim R$ fixed
+  by \lean{SmallLevelRankEq},
   \[
   \eta_{\mathrm{sum}}(j)\le D_0\Bigl(C\bigl(fmbL^2+(\log x)^2 N_c\bigr)+\sqrt{b}\Bigr)
   \le C' D_0 x^\eps(B_0+N_c),
   \]
-  and summing over the $m$ lifts gives $E_b\le C'' m x^\eps(B_0+N_c)$.
-\item Combining (i), (ii), and \eqref{eq:heightchain} with Theorem~10.7 and Proposition~10.1 of
-  Part~I yields the divisibility inequality \textup{(S1)}.
+  and normalizing by $D_0$ and summing over the $m$ lifts gives $E_b\le C'' m x^\eps(B_0+N_c)$.
+\item Combining (i), (ii), and Lemma~\ref{lem:heightchain} with Theorem~10.7 and Proposition~10.1
+  of Part~I yields the divisibility inequality \textup{(S1)}.
 \end{enumerate}
 \end{theorem}
 
 \begin{proof}
 For (i), $p_j-q_j-k=(k+j-1)-(m-j)-k=2j-1-m$, so $|p_j-q_j-k|\le m$ for $1\le j\le m$. On the
 weight window we have $|w_{u,j}(\rho)|\le 2b$ and $|\log\Omega|\le 3L=3x^\eps$. Summing over $m$
-lifts and $f$ places gives at most $m\cdot f\cdot m\cdot 2b\cdot 3x^\eps=6f m^2 b x^\eps=6mB_0$.
+lifts and $f$ complex embeddings gives at most
+$m\cdot f\cdot m\cdot 2b\cdot 3x^\eps=6f m^2 b x^\eps=6mB_0$.
 
 For (ii), fix a lift $j\in\{1,\dots,m\}$. By \lean{NData.locs_mem}, the local pieces over a small
 prime $\ell$ and place $w\mid\ell$ are partitioned disjointly across the $m$ lifts, so lift $j$ is
 charged only on its own block $F.L(j,t)$ without compounding across lifts $1,\dots,j-1$. By
 \ref{C8} (\lean{ShapeJumps}), the twisted lifted representation $r_{\mathrm{Tw}}$ at every
-embedding $\tau$ has Hodge--Tate weights $C\cup L\cup[0,t)$ with multiplicity $1$, where
-$|C|=k-1$ lies in the far cloud and $|L|=m$ lies near $0$ (matching the indefinite part $m$ of the
-starting signature $(k-1,m)$). By local Bloch--Kato duality \ref{C6} (\lean{rank_le_row}),
+embedding $\tau$ has Hodge--Tate weights $\mathcal C_{\mathrm{HT}}\cup\mathcal L_{\mathrm{HT}}\cup[0,t)$
+with multiplicity $1$, where $|\mathcal C_{\mathrm{HT}}|=k-1$ lies in the far cloud and
+$|\mathcal L_{\mathrm{HT}}|=m$ lies near $0$ (matching the indefinite part $m$ of the starting
+signature $(k-1,m)$). By local Bloch--Kato duality \ref{C6} (\lean{rank_le_row}), with
+$V=T\otimes_{\Z_\ell}\Q_\ell$,
 \[
-\dim H^1_f(K_w,T)\le \operatorname{locDeg}(w)\cdot |L|=\operatorname{locDeg}(w)\cdot m.
+\rk_{\Z_\ell} H^1_f(K_w,T)=\dim_{\Q_\ell} H^1_f(K_w,V)
+\le \operatorname{locDeg}(w)\cdot |\mathcal L_{\mathrm{HT}}|=\operatorname{locDeg}(w)\cdot m.
 \]
 By \ref{C6}--\ref{C7}, the lifting exponent at $\ell$ is bounded linearly in the Hodge--Tate height
 $h_B=b+S_c+\eta_{\mathrm{Sz}}+t+2\in[b,6b]$:
@@ -489,7 +537,8 @@ Weighting by $\log\ell$ and summing over the small primes $\ell$ (with
 $\sum_\ell s_N(\ell)\log\ell\ll L^2$) contributes $O(fmbL^2)$, plus the $\Sha$-window contribution
 $\sum_\ell \mathrm{vvTerm}(\ell)\le\sqrt{b}$ (which is negligible against $B_0=fmbx^\eps$ since
 $\sqrt{b}=\exp(x^\eps/2)\ll\exp(x^\eps)=b$). Multiplying by $D_0$ gives the stated bound for
-$\eta_{\mathrm{sum}}(j)$, and summing over $j=1,\dots,m$ yields $E_b\le C'' m x^\eps(B_0+N_c)$.
+$\eta_{\mathrm{sum}}(j)$, and dividing by $D_0$ (as in the normalized slope bound) and summing over
+$j=1,\dots,m$ yields $E_b\le C'' m x^\eps(B_0+N_c)$.
 
 For (iii), substituting (i), (ii), and the Chowla--Selberg main-term identification \ref{C3} into
 Theorem~10.7 and Proposition~10.1 of Part~I gives
@@ -507,61 +556,63 @@ and the off-$g$ prime decomposition (\lean{WeightDegreeSizes.lean}), which toget
 \textup{(S2)}.
 
 \begin{lemma}[Row-sum and Fock-degree fine bound]\label{lem:nuabsfine}
-Fix a word $u$, a lift $j=i+1\in\{1,\dots,m\}$, and an archimedean place $\tau$, and write
-$N=N(m)=k+m(t+1)$. Suppose the row parameters \eqref{eq:nurow} satisfy:
+Fix a word $\nu\in\mathcal W(u)$ and a lift $j=i+1\in\{1,\dots,m\}$, with $k,m,t\ge1$,
+$S_c,\eta_{\mathrm{Sz}}\ge0$, and $N=N(m)=k+m(t+1)$. Suppose that for every complex embedding
+$\tau$ (there are $f=2n$ complex embeddings of $LL$), the row parameters \eqref{eq:nurow} satisfy:
 \begin{enumerate}[label=(\alph*)]
-\item \textup{(End rows)} $|\nu_{\mathrm{row}}(u,j,\tau,0)+\nu_{\mathrm{row}}(u,j,\tau,k-1)-w_j(\tau)-(\mathrm{topWt}(\tau)+\mathrm{offWt}_j(\tau))|\le 4S_c+2N+1+\eta_{\mathrm{Sz}}+\mathbf{1}_{\tau\text{ top}}\,b'/x$;
-\item \textup{(Middle rows)} $|\nu_{\mathrm{row}}(u,j,\tau,r')-w_j(\tau)|\le S_c+N$ for $1\le r'\le k-2$;
-\item \textup{(Block rows)} $|\nu_{\mathrm{row}}(u,j,\tau,r')|\le 2\eta_{\mathrm{Sz}}$ for $k\le r'<k+i(t+1)$;
+\item \textup{(End rows)} $|\nu_{\mathrm{row}}(\nu,j,\tau,0)+\nu_{\mathrm{row}}(\nu,j,\tau,k-1)-w_j(\tau)-(\mathrm{topWt}(\tau)+\mathrm{offWt}_j(\tau))|\le 4S_c+2N+1+\eta_{\mathrm{Sz}}+\mathbf{1}_{\tau\text{ top}}\,b'/x$;
+\item \textup{(Middle rows)} $|\nu_{\mathrm{row}}(\nu,j,\tau,r')-w_j(\tau)|\le S_c+N$ for $1\le r'\le k-2$;
+\item \textup{(Block rows)} $|\nu_{\mathrm{row}}(\nu,j,\tau,r')|\le 2\eta_{\mathrm{Sz}}$ for $k\le r'<k+i(t+1)$;
 \item \textup{(Fock letter comparison)} $|\mathrm{fockDeg}_\tau(j)-(k-1)w_j(\tau)|\le k(S_c+2N)+2m(\eta_{\mathrm{Sz}}+2N)$.
 \end{enumerate}
-Then, with $\deg_\Pi(u,j)=\sum_\tau\nu_{\mathrm{abs}}(u,j,\tau)$ and $\mathrm{fockDeg}(j)=\sum_\tau\mathrm{fockDeg}_\tau(j)$,
+Then, with $\deg_\Pi(\nu,j)=\sum_\tau\nu_{\mathrm{abs}}(\nu,j,\tau)$ and $\mathrm{fockDeg}(j)=\sum_\tau\mathrm{fockDeg}_\tau(j)$,
 \begin{equation}\label{eq:degreefine}
-\bigl|\deg_\Pi(u,j)-\mathrm{fockDeg}(j)-(S_A+\mathrm{sizeOffTops}(j))\bigr|
+\bigl|\deg_\Pi(\nu,j)-\mathrm{fockDeg}(j)-(S_A+\mathrm{sizeOffTops}(j))\bigr|
 \le 20f\bigl(kS_c+N^2+mt\eta_{\mathrm{Sz}}\bigr)+n_T\frac{b'}{x}.
 \end{equation}
 \end{lemma}
 
 \begin{proof}
-Partition the $N(i)=k+i(t+1)$ rows at embedding $\tau$ into the two end rows ($r'=0,k-1$), the
-$k-2$ middle rows ($1\le r'\le k-2$), and the $i(t+1)$ block rows ($k\le r'<k+i(t+1)$). By the
-triangle inequality applied to (a)--(c) and $i\le m$,
+Partition the $N(i)=k+i(t+1)$ rows at each complex embedding $\tau$ into the two end rows
+($r'=0,k-1$), the $k-2$ middle rows ($1\le r'\le k-2$), and the $i(t+1)$ block rows
+($k\le r'<k+i(t+1)$). By the triangle inequality applied to (a)--(c) and $i\le m$,
 \begin{align*}
-&\bigl|\nu_{\mathrm{abs}}(u,j,\tau)-(k-1)w_j(\tau)-(\mathrm{topWt}(\tau)+\mathrm{offWt}_j(\tau))\bigr|\\
+&\bigl|\nu_{\mathrm{abs}}(\nu,j,\tau)-(k-1)w_j(\tau)-(\mathrm{topWt}(\tau)+\mathrm{offWt}_j(\tau))\bigr|\\
 &\qquad\le k(S_c+N)+m(t+1)(2\eta_{\mathrm{Sz}})+(4S_c+2N+1+\eta_{\mathrm{Sz}}+\mathbf{1}_{\tau\text{ top}}\,b'/x).
 \end{align*}
-Combining this with (d) eliminates $(k-1)w_j(\tau)$. Since $k,m,t\ge1$ and $k+m\le N$, we have
-$S_c\le kS_c$, $kN\le N^2$, $mN\le N^2$, $N\le N^2$, $\eta_{\mathrm{Sz}}\le m\eta_{\mathrm{Sz}}\le mt\eta_{\mathrm{Sz}}$,
-and hence the elementary bound (\lean{FockDegreeFine.arith})
+Combining this with (d) eliminates $(k-1)w_j(\tau)$. Since $k,m,t\ge1$, $S_c,\eta_{\mathrm{Sz}}\ge0$,
+and $k+m\le N$, we have $S_c\le kS_c$, $kN\le N^2$, $mN\le N^2$, $N\le N^2$,
+$\eta_{\mathrm{Sz}}\le m\eta_{\mathrm{Sz}}\le mt\eta_{\mathrm{Sz}}$, and hence the elementary
+bound (\lean{FockDegreeFine.arith})
 \[
 k(S_c+N)+m(t+1)(2\eta_{\mathrm{Sz}})+(4S_c+2N+1+\eta_{\mathrm{Sz}})+k(S_c+2N)+2m(\eta_{\mathrm{Sz}}+2N)
 \le 20(kS_c+N^2+mt\eta_{\mathrm{Sz}}).
 \]
-Summing over all $f$ archimedean places $\tau$ (with $\sum_\tau\mathrm{topWt}(\tau)=S_A$,
+Summing over all $f$ complex embeddings $\tau$ (with $\sum_\tau\mathrm{topWt}(\tau)=S_A$,
 $\sum_\tau\mathrm{offWt}_j(\tau)=\mathrm{sizeOffTops}(j)$, and
 $\sum_\tau\mathbf{1}_{\tau\text{ top}}=n_T$) yields \eqref{eq:degreefine}.
 \end{proof}
 
 \begin{lemma}[Off-$g$ energy decomposition]\label{lem:C2off}
-Let $S=\mathrm{supp}\setminus\{w:w\mid g_0g_1\}$, split into $S_1=\{w\in S:w\mid T_u\}$ and
+Let $S=\mathrm{supp}\setminus\{w:w\mid g_0g_1\}$, split into $S_1=\{w\in S:w\mid T(\nu)\}$ and
 $S_2=S\setminus S_1$, and let $P$ be the set of residue primes of places in $S_2$. Suppose:
 \begin{enumerate}[label=(\alph*)]
-\item $\sum_{w\in S_1}\sz(w,E(u,j,w))\le C_T B_0$ (\lean{LevelPrimeBudget});
-\item $\log D_\Gamma(u)\le C_G B_0$ (\lean{StabiliserLogBound});
+\item $\sum_{w\in S_1}|\sz(w,E(\nu,j,w))|\le C_T B_0$ (\lean{LevelPrimeBudget});
+\item $\log D_\Gamma(\nu)\le C_G B_0$ (\lean{StabiliserLogBound});
 \item $\log d\cdot|\mathrm{Eat}_D(j)|\le C_d B_0$ (\lean{DiscriminantOffsetBound});
 \item $\sum_{p\in P,\ p\text{ small}\le X''}2\log p\cdot|\mathrm{Eat}_{CI}(j,p)|\le C_I B_0$ (\lean{InertPrimeLossBound}).
 \end{enumerate}
-Then $\sum_{w\in S}|\sz(w,E(u,j,w))|\le (C_T+2C_G+2C_d+C_I)B_0$.
+Then $\sum_{w\in S}|\sz(w,E(\nu,j,w))|\le (C_T+2C_G+2C_d+C_I)B_0$.
 \end{lemma}
 
 \begin{proof}
 The contribution of $S_1$ is bounded directly by (a). For $S_2$, recall that
 $|\sz(w,y)|=2\,\mathrm{lw}(w)\,e_w|y|$ and $\sum_{w\mid p}\mathrm{lw}(w)e_w\le\log p$. On $S_2$
-every place satisfies $|E(u,j,w)|\le v_p(D_\Gamma)+\mathbf{1}_{p=d}|\mathrm{Eat}_D(j)|+
+every place satisfies $|E(\nu,j,w)|\le v_p(D_\Gamma)+\mathbf{1}_{p=d}|\mathrm{Eat}_D(j)|+
 \mathbf{1}_{p\text{ small}\le X''}|\mathrm{Eat}_{CI}(j,p)|$. Grouping $S_2$ by residue prime
 $p\in P$ gives
 \begin{multline*}
-\sum_{w\in S_2}|\sz(w,E(u,j,w))|\le 2\sum_{p\in P}\log p\cdot v_p(D_\Gamma)
+\sum_{w\in S_2}|\sz(w,E(\nu,j,w))|\le 2\sum_{p\in P}\log p\cdot v_p(D_\Gamma)
 +2\log d\cdot|\mathrm{Eat}_D(j)|\\
 +\sum_{p\in P,\ p\text{ small}\le X''}2\log p\cdot|\mathrm{Eat}_{CI}(j,p)|.
 \end{multline*}
@@ -587,20 +638,26 @@ $w\mid g_i$ by the product formula $\sum_{w\mid g_i}\mathrm{lw}(w)e_w=\log g_i$
 \sum_{w\mid g_0 g_1}\sz(w,v_{NN})=\deg_\Pi(\nu,j)\cdot\log(g_0 g_1),
 \]
 while $F_{\mathrm{TypeG}}(j)=-\mathrm{fockDeg}(j)/2$ cancels $\mathrm{fockDeg}(j)$ inside
-$\sum_{w\mid g_0g_1}\sz(w,E)$. By Lemma~\ref{lem:nuabsfine} (with $\mathrm{sizeOffTops}(j)\ll fb$
-and the error in \eqref{eq:degreefine} dominated by $fb$), the $g$-place deviation is at most
-$2C_g B_0$ (\lean{C2atG_of}; in fact with a spare factor $\approx m x^\eps/\log(g_0g_1)$). Adding
-Lemma~\ref{lem:C2off} (\lean{secondComplement_of_inputs}) gives $|E_j(\nu)-S_A\lambda|\le c_E B_0$
-for every lift $j$, and summing over $j=1,\dots,m$ proves \textup{(S2)}.
+$\sum_{w\mid g_0g_1}\sz(w,E)$. The remaining $g$-place terms $2v_{g_i}(D_\Gamma)\log g_i\le
+2\log D_\Gamma$ and $2c_g f(N(m)^2+m^2\eta_{\mathrm{Sz}})\log g_i$ are polynomial in $x$, hence
+$o(B_0)$ against $b=\exp(x^\eps)$ (\lean{TypePrimeSizeBound}). By Lemma~\ref{lem:nuabsfine} (with
+$\mathrm{sizeOffTops}(j)\ll fb$ and the error in \eqref{eq:degreefine} dominated by $fb$), the
+$g$-place deviation is at most $2C_g B_0$ (\lean{C2atG_of}; in fact with a spare factor
+$\approx m x^\eps/\log(g_0g_1)$). Adding Lemma~\ref{lem:C2off} (\lean{secondComplement_of_inputs})
+gives $|E_j(\nu)-S_A\lambda|\le c_E B_0$ for every lift $j$, and summing over $j=1,\dots,m$ proves
+\textup{(S2)}.
 
-For \textup{(S3)} (\emph{Heights}), the word-dependent archimedean height $h(\nu)$ cancels
-$\sum_t a_t\log T(\nu)$ up to the word-independent archimedean terms and the per-lift budget
-$n_TaL_a+mB_0$ (\lean{LinkDIV_at}, final clause). For \textup{(S4)} (\emph{Counting}), the auxiliary
-prime $T(\nu)$ of each word satisfies $\Lambda(u)\le\log T(\nu)\le c_C mL$ and
-$|\log T(\nu)-\log T(\nu')|\le c_C\log k$ by the choice of the word prime window. For \textup{(S5)}
-(\emph{Reference slopes}), the initial lattice $\Lambda_0(\nu)$ of the chain has slopes controlled
-by $-c_S n_TaL_a(1+m/k)\le\mu_0(\nu)$ and $\mu_0^+(\nu)\le c_S n_TaL_a$ from the level-zero
-Hecke/volume bounds (\lean{linkGLOBAL7_min}).
+For \textup{(S3)} (\emph{Heights}), the archimedean height $h(\nu)$ is built from the
+word-independent base height plus the $m$-step chain heights and $-\sum_t a_t\log T(\nu)$; hence
+the combination $h(\nu)+\sum_t a_t\log T(\nu)$ varies across $\nu,\nu'\in\mathcal W(u)$ by at most
+the per-lift error budget $c_H(n_TaL_a+mB_0)$ (\lean{LinkDIV_at}, final clause). For \textup{(S4)}
+(\emph{Counting}), each word's auxiliary prime $T(\nu)$ is chosen in a narrow dyadic interval
+$[T_0, k^{c_C} T_0]$ with $\log T_0\in[\Lambda(u), c_C mL]$, which immediately yields both
+$\Lambda(u)\le\log T(\nu)\le c_C mL$ and $|\log T(\nu)-\log T(\nu')|\le c_C\log k$. For
+\textup{(S5)} (\emph{Reference slopes}), the initial lattice $N_{\nu,0}$ at level zero has its
+minimal and maximal slopes controlled by the level-zero Hecke/volume bounds
+(\lean{linkGLOBAL7_min}), giving $-c_S n_TaL_a(1+m/k)\le\mu_0(\nu)$ and
+$\mu_0^+(\nu)\le c_S n_TaL_a$.
 \end{proof}
 
 % ======================================================================
@@ -697,8 +754,9 @@ $t_{N1}\le C\ell_x$ directly into the left-hand side:
 \end{proof}
 
 \begin{lemma}[Summation of orbitwise gain bounds, \texttt{gain\_bound\_all\_of\_star}]\label{lem:orbitsum}
-Fix an inert or signal prime $p\le X''$, a set of orbit representatives $V\subseteq\mathrm{reps}(p)$,
-and nonnegative real quantities $\mathrm{dl}(p,t_0)\ge0$, $\mathrm{ep}(p)\ge0$, and
+Fix an integer $m\ge1$, an inert or signal prime $p\le X''$, a set of orbit representatives
+$V\subseteq\mathrm{reps}(p)$ whose top sets $\mathrm{tops}(t_0)$ ($t_0\in V$) are pairwise
+disjoint, and nonnegative real quantities $\mathrm{dl}(p,t_0)\ge0$, $\mathrm{ep}(p)\ge0$, and
 $g_0(p,j,t_0)$. Suppose that:
 \begin{enumerate}[label=(\alph*)]
 \item \textup{(Orbitwise bound, \lean{StarAt})} For every $t_0\in V$ and lift $j\in\{1,\dots,m\}$,
@@ -707,8 +765,11 @@ $g_0(p,j,t_0)$. Suppose that:
   \bigl(g_U(p,j,t_0)-\mathrm{Pr}(p,j,t_0)\bigr)+\mathrm{dl}(p,t_0)-(\lceil\mathrm{tv}(p,t_0)\rceil+D_p+1);
   \]
 \item \textup{(Gain and tau definitions)}
-  $\mathrm{gain}_p(j)=\sum_{t_0\in V}\max\bigl(g_U-\mathrm{Pr},\max(g_0,0)\bigr)+\sum_{t_0\notin V}\max(g_0,0)$
-  and $\tau_p=\mathrm{ep}(p)+m\sum_{t_0\in V}(\lceil\mathrm{tv}(p,t_0)\rceil+D_p+1)$ when $V\neq\emptyset$;
+  \[
+  \mathrm{gain}_p(j)=\sum_{t_0\in V}\max\bigl(g_U-\mathrm{Pr},\max(g_0,0)\bigr)+\sum_{t_0\notin V}\max(g_0,0),
+  \]
+  and $\tau_p=\mathrm{ep}(p)+m\sum_{t_0\in V}(\lceil\mathrm{tv}(p,t_0)\rceil+D_p+1)$ when
+  $V\neq\emptyset$, while $\tau_p=0$ when $V=\emptyset$;
 \item \textup{(Floor budget)} $\mathrm{ep}(p)+\sum_{t_0\in\mathrm{reps}(p)}\mathrm{dl}(p,t_0)\le\mathrm{fl}_G(p)$.
 \end{enumerate}
 Then, with $\mathrm{TTP}(p)=\bigsqcup_{t_0\in V}\mathrm{tops}(t_0)$ the served top set,
@@ -720,11 +781,11 @@ Then, with $\mathrm{TTP}(p)=\bigsqcup_{t_0\in V}\mathrm{tops}(t_0)$ the served t
 
 \begin{proof}
 When $V=\emptyset$, $\mathrm{TTP}(p)=\emptyset$ (or $p$ is singular / $p\ge X'$, where
-$\mathrm{ask}_p\le\mathrm{lo}_G$ or the unserved bound holds) and $\tau_p=0$, while
+$\mathrm{ask}_p\le\mathrm{lo}_G$ or the unserved bound holds) and $\tau_p=0$ by (b), while
 $\mathrm{gain}_p(j)\ge0$ and $m\,\mathrm{fl}_G(p)\ge0$, so \eqref{eq:orbitsum} is immediate.
 
-Assume $V\neq\emptyset$. Summing (a) over $t_0\in V$ and then over all $m$ lifts $j\in\{1,\dots,m\}$
-yields
+Assume $V\neq\emptyset$. Because the sets $\mathrm{tops}(t_0)$ ($t_0\in V$) are pairwise disjoint,
+summing (a) over $t_0\in V$ and then over all $m$ lifts $j\in\{1,\dots,m\}$ yields
 \[
 \sum_{j=1}^m\sum_{s\in\mathrm{TTP}(p)}\bigl(\mathrm{ask}_p(j,s)-\mathrm{lo}_G(p)\bigr)
 \le \sum_{j=1}^m\sum_{t_0\in V}\bigl(g_U-\mathrm{Pr}\bigr)
@@ -753,10 +814,13 @@ establishing \textup{(S7)}.
 \begin{proof}
 Lemma~\ref{lem:kWord} (\lean{kW_ord}) together with \lean{kS_ord} establishes
 \lean{CoarseMultiplicityOrderBound} (\lean{key3Ord}), supplying a half-unit of $p$-adic valuation
-at every odd exponent $p^e$ in
-$\mathrm{vonMangoldtClassSum}_{j,t}(p)=\sum_{i\text{ odd}}\max(0,a_t/p^i-w_{\mathrm{part}}(j,t,p,i))$.
-Splitting at $p_0(k)$ (cases D and E in \lean{St.starAll_of}) establishes the orbitwise bound (a)
-of Lemma~\ref{lem:orbitsum}, and Lemma~\ref{lem:orbitsum} produces \eqref{eq:orbitsum}.
+at every odd exponent $p^e$ in the prime-power sum
+\[
+\mathrm{vonMangoldtClassSum}_{j,t}(p)=\sum_{i\text{ odd}}\max\bigl(0,\,a_t/p^i-w_{\mathrm{part}}(j,t,p,i)\bigr).
+\]
+Splitting at $p_0(k)$ (cases D and E via Lemma~\ref{lem:caseDE} in \lean{St.starAll_of})
+establishes the orbitwise bound (a) of Lemma~\ref{lem:orbitsum}, and Lemma~\ref{lem:orbitsum}
+produces \eqref{eq:orbitsum}.
 
 Recall from Part~I that
 $\ASK=\sum_{j,t}\bigl(\sum_{p\text{ inert}}2\log p\cdot\mathrm{vonMangoldtClassSum}_{j,t}(p)
@@ -764,8 +828,10 @@ $\ASK=\sum_{j,t}\bigl(\sum_{p\text{ inert}}2\log p\cdot\mathrm{vonMangoldtClassS
 Multiplying \eqref{eq:orbitsum} by $2\mathrm{lw}(w)e_w$ and summing over all places $w\mid p$
 uses $\sum_{w\mid p}\mathrm{lw}(w)e_w=\log p$. The error terms $\mathrm{lo}_G(p)$ and
 $\mathrm{fl}_G(p)$ (recorded in \lean{GlobalTheoremInputs.lean}) sum over $p\le X''$ to at most
-$c_L n_T m b\,x^{e_L\eps}=L_P$ (absorbing $b^{\delta(x)}$ into $x^{e_L\eps}$ since
-$\delta(x)\to0$). Similarly, the local inclusion length satisfies $I(u)\le L_P$
+$c_L n_T m b\,x^{e_L\eps}=L_P$: in particular, the additive term $b_o=b^{\delta(x)}$ inside
+$\mathrm{lo}_G(p)$ satisfies $b^{\delta(x)}\le b^{1/2}\le b$ once $\delta(x)\le\frac12$ (since
+$\delta(x)\to0$ as $x\to\infty$), so its sum over $j,t,p$ is absorbed into the factor $b$ of
+$L_P=c_L n_T m b\,x^{e_L\eps}$. Similarly, the local inclusion length satisfies $I(u)\le L_P$
 (\lean{Loss.loss_bound_at}), proving \textup{(S7)}.
 \end{proof}
 
@@ -794,31 +860,34 @@ $d_u=\|K(u,u)-I_{C_u}\|_{HS}^2\le e_0 d_u<d_u$, a contradiction.
 \begin{proposition}[Verification of \texttt{LinkS} and (S8)--(S10)]\label{prop:S8S10}
 Assume \ref{C8} and put $\Gamma=\exp(C_\Gamma m^5 f L)$. Then for $x\ge x_0(\eps)$:
 \begin{enumerate}[label=(\roman*)]
-\item \textup{(Comparability proviso)} Every word $u$ satisfies
-  $C_0^{-1}\le d(u)\Gamma^2/D^\ast\le C_0$ (\lean{ChosenProviso}, via \lean{ClassNumberFormula₂});
-  in particular $d(u)>0$ since $C_0>0$.
+\item \textup{(Comparability proviso)} Every word $\nu\in\mathcal W(u)$ satisfies
+  $C_0^{-1}\le d(\nu)\Gamma^2/D^\ast\le C_0$ (\lean{ChosenProviso}, via
+  \lean{ClassNumberFormula}$_2$); in particular $d(\nu)>0$ since $C_0>0$.
 \item \textup{(Four Gram clauses and \lean{LinkS})} From the four kernel clauses
   (\lean{ClKppOff}, \lean{ClKppDiag}, \lean{ClOff}, \lean{ClDiag}), residual evaluation
-  (\lean{ResidEv}), and point counting (\lean{CountAllPointsClass}), there exist
+  (\lean{ResidEv}), and the point-counting bound (\lean{CountAllPointsClass}), there exist
   $\eta_0,\eta_1,e_0\ge0$ with $\eta_0,\eta_1,\sqrt{e_0}\le\exp(-x^{\eps/8})$ such that
   \begin{gather*}
-  \|K(u,u')\|_{HS}^2\le(1+\eta_0)\frac{d(u)d(u')}{D^\ast}\quad(u\neq u'),\\
-  \|K(u,u)-I\|_{HS}^2\le e_0\,d(u),\qquad D_{\mathrm{all}}\le(1+\eta_1)D^\ast.
+  \|K(\nu,\nu')\|_{HS}^2\le(1+\eta_0)\frac{d(\nu)d(\nu')}{D^\ast}\quad(\nu\neq\nu'),\\
+  \|K(\nu,\nu)-I\|_{HS}^2\le e_0\,d(\nu),\qquad D_{\mathrm{all}}\le(1+\eta_1)D^\ast.
   \end{gather*}
-\item Feeding (i)--(ii) and Lemma~\ref{lem:diagnondeg} into Theorem~9.2 of Part~I (Frame theorem)
+\item \textup{(Irreducibility decay, \lean{LinkIRR})} Independently from \ref{C8}, the
+  irreducibility error satisfies $0\le\delta_u=\mathrm{del}_p\le\exp(-x^{\eps/7})$.
+\item Feeding (i)--(iii) and Lemma~\ref{lem:diagnondeg} into Theorem~9.2 of Part~I (Frame theorem)
   yields \textup{(S8)}, \textup{(S9)}, and \textup{(S10)} with
   $(\bar\eta+4\sqrt{\bar e})x^{c_{HH}}\le 6$.
 \end{enumerate}
 \end{proposition}
 
 \begin{proof}
-Part (i) is \lean{chosenProviso_4f} from the class-number volume comparison \ref{C8}, and part (ii)
-is \lean{theoremS_link_concrete} (\lean{LinkSPos.lean:151}). For $x\ge1$ we have
-$\sqrt{e_0}\le\exp(-x^{\eps/8})<1$, so $e_0<1$; since $d(u)>0$ by (i), Lemma~\ref{lem:diagnondeg}
-gives $c_0(u)>0$ and $D_{\mathrm{all}}>0$ (\lean{matKF_of}, \lean{rrRankF_of}). Because
-$\eta_0,\eta_1,\sqrt{e_0}\le\exp(-x^{\eps/8})$ decay faster than any power of $x$, for
-$x\ge x_0(\eps)$ we have $\delta_u=\mathrm{del}_p\le\exp(-x^{\eps/7})<1/2$, $0\le e_u\le\frac14$,
-and $(\eta_u+4\sqrt{e_u})x^{c_{HH}}\le 6$. The height cap $0<H_\ast(u)\le x^{c_{HH}}b$ follows from
+Part (i) is \lean{chosenProviso_4f} from the class-number volume comparison \ref{C8}, part (ii) is
+\lean{theoremS_link_concrete} (\lean{LinkSPos.lean:151}), and part (iii) is \lean{LinkIRR}
+(\lean{GlobalTheoremInputs.lean:64}). For $x\ge1$ we have $\sqrt{e_0}\le\exp(-x^{\eps/8})<1$, so
+$e_0<1$; since $d(\nu)>0$ by (i), Lemma~\ref{lem:diagnondeg} gives $c_0(\nu)>0$ and
+$D_{\mathrm{all}}>0$ (\lean{matKF_of}, \lean{rrRankF_of}). For $x\ge x_0(\eps)$, part~(iii) gives
+$\delta_u\le\exp(-x^{\eps/7})<1/2$, while part~(ii) gives $0\le e_u\le\frac14$ and
+$(\eta_u+4\sqrt{e_u})x^{c_{HH}}\le 6$ (since $\exp(-x^{\eps/8})$ decays faster than any power of
+$x$). The height cap $0<H_\ast(u)\le x^{c_{HH}}b$ follows from
 $s(u)-\mu_\ast^-(u)\le s(u)+\mu_{\max}(R)\le x^{c_{HH}}b$ (\lean{LinkDIV_at}, second clause).
 Applying Theorem~9.2 of Part~I (as noted in Remark~9.3 of Part~I) immediately gives \textup{(S8)},
 \textup{(S9)}, and \textup{(S10)}.
@@ -870,65 +939,68 @@ $S_1$ bound gives \eqref{eq:minusbound}.
 \end{proof}
 
 \begin{lemma}[Combining bad and good primes, \texttt{point\_arith}]\label{lem:pointHV}
-Let $B_\chi$ be a finite set of primes of cardinality $K=|B_\chi|$, let $M=Nt\ge2$, $B\ge0$, and
-suppose:
+Let $B_\psi$ be a finite set of primes of cardinality $K=|B_\psi|$, let $M=Nt\ge2$, $B\ge0$,
+$C_0\ge0$, and suppose:
 \begin{enumerate}[label=(\alph*)]
-\item \textup{(\texttt{SumOut})} for every finite set $S'$ of odd primes disjoint from $B_\chi$,
+\item \textup{(\texttt{SumOut})} for every finite set $S'$ of odd primes disjoint from $B_\psi$,
   \[
-  \sum_{\ell\in S'}\log\ell\sum_{1\le e<t}\len\Sha_\ell^+(e)\le M^{C_0};
+  \sum_{\ell\in S'}\log\ell\sum_{1\le e'<t}\len\Sha_\ell^+(e')\le M^{C_0};
   \]
-\item \textup{(\texttt{SumIn})} for each prime $\ell\in B_\chi$, there is $C_\ell\in\N$ such that
-  $\log\ell\sum_{1\le e<t}\len\Sha_\ell^+(e)\le M^{C_\ell}+C_\ell B$.
+\item \textup{(\texttt{SumIn})} for each prime $\ell\in B_\psi$, there is $C_\ell\in\N$ such that
+  $\log\ell\sum_{1\le e'<t}\len\Sha_\ell^+(e')\le M^{C_\ell}+C_\ell B$.
 \end{enumerate}
-Put $D=\sum_{\ell\in B_\chi}C_\ell$ and $C_\ast=C_0+D+K+KD$. Then for every finite set $S$ of odd
+Put $D=\sum_{\ell\in B_\psi}C_\ell$ and $C_\ast=C_0+D+K+KD$. Then for every finite set $S$ of odd
 primes,
 \begin{equation}\label{eq:pointHV}
-\sum_{\ell\in S}\log\ell\sum_{1\le e<t}\len\Sha_\ell^+(e)\le M^{C_\ast}+C_\ast B.
+\sum_{\ell\in S}\log\ell\sum_{1\le e'<t}\len\Sha_\ell^+(e')\le M^{C_\ast}+C_\ast B.
 \end{equation}
 \end{lemma}
 
 \begin{proof}
-Split $S$ into $S_{\mathrm{in}}=S\cap B_\chi$ (of cardinality $k\le K$) and
-$S_{\mathrm{out}}=S\setminus B_\chi$. By (a), the sum over $S_{\mathrm{out}}$ is at most $M^{C_0}$.
+Split $S$ into $S_{\mathrm{in}}=S\cap B_\psi$ (of cardinality $k\le K$) and
+$S_{\mathrm{out}}=S\setminus B_\psi$. By (a), the sum over $S_{\mathrm{out}}$ is at most $M^{C_0}$.
 For each $\ell\in S_{\mathrm{in}}$, $C_\ell\le D$ and $M\ge2>1$, so (b) gives at most $M^D+DB$,
 and summing over $S_{\mathrm{in}}$ gives at most $k(M^D+DB)$. Since $M\ge2$, Bernoulli's inequality
-yields $M^K=(1+(M-1))^K\ge 1+K(M-1)\ge K+1$. Since $M^{C_0},M^D,M^{KD}\ge1$ and
-$kD\le KD\le C_\ast$, we obtain
+yields $M^K=(1+(M-1))^K\ge 1+K(M-1)\ge K+1$. Since $C_0\ge0$ gives $M^{C_0}\ge1$, and
+$M^D,M^{KD}\ge1$ with $kD\le KD\le C_\ast$, we obtain
 \[
 k(M^D+DB)+M^{C_0}\le (K+1)M^{C_0+D}+kDB\le M^{C_0+D+K+KD}+C_\ast B=M^{C_\ast}+C_\ast B. \qedhere
 \]
 \end{proof}
 
 \begin{theorem}[The $\Sha$-window \texttt{VWin}]\label{thm:VWin}
-Assume \ref{C4}, \ref{C5}, and \ref{C7}. Let $\psi$ be a primitive Dirichlet character, $C_t=401$,
-$0<\eps<1/52$, and $e(x)=\lceil(2+8\eps)\log_2 x\rceil$. Then there exist $J\ge1$ and $X_0>0$ such
-that for every $X\ge X_0$ and every window pair $(q,d)$ at $(\eps,X^{1/J})$, there exists $Y$ with
-$X^{1/J}\le Y$ and $Y^2\le X$ such that for every $x\in[Y,Y^2]$, the abelian field $E$ of
-Section~\ref{sec:glued} (\lean{IsChiField}) satisfies
+Assume \ref{C4}, \ref{C5}, and \ref{C7}. Let $\psi$ be a primitive Dirichlet character of order
+$o$, $C_t=401$, $0<\eps<1/52$, and $e(x)=\lceil(2+8\eps)\log_2 x\rceil$. Then there exist $J\ge2$
+and $X_0>0$ such that for every $X\ge X_0$ and every window pair $(q,d)$ at $(\eps,X^{1/J})$,
+there exists $Y$ with $X^{1/J}\le Y$ and $Y^2\le X$ such that for every $x\in[Y,Y^2]$, the abelian
+field $E$ of Section~\ref{sec:glued} (\lean{IsChiField}) satisfies
 \begin{equation}\label{eq:VVle}
-\sum_{\ell\text{ prime}}\log\ell\sum_{1\le e<\lfloor x^{401}\rfloor}\len\Sha_\ell(e)
+\sum_{\ell\text{ prime}}\log\ell\sum_{1\le e'<\lfloor x^{401}\rfloor}\len\Sha_\ell(e')
 \le \sqrt{\exp(x^\eps)}=\sqrt{b}.
 \end{equation}
 \end{theorem}
 
 \begin{proof}
-We split $\Sha_\ell(e)$ into its minus part $\Sha_\ell^-(e)$ and plus part $\Sha_\ell^+(e)$ under
-complex conjugation (\lean{vwin_of_counts}, \lean{JointWinOfCounts.lean:73}).
+We split $\Sha_\ell(e')$ into its minus part $\Sha_\ell^-(e')$ and plus part $\Sha_\ell^+(e')$
+under complex conjugation (\lean{vwin_of_counts}, \lean{JointWinOfCounts.lean:73}); the prime
+$\ell=2$ (both minus and plus parts) is absorbed into the $\ell=2$ Iwasawa tower bound
+(\lean{Two.twoIn}) in Step~2 below, so Step~1 treats all odd primes $\ell$.
 
-\emph{Step 1: The minus part (\lean{ThmBcFree}).}
+\emph{Step 1: The odd-prime minus part (\lean{ThmBcFree}).}
 By Poitou--Tate duality and unramified orthogonality \ref{C5} (\lean{primeBound_of}) and
 Stickelberger annihilators (\lean{stickBound}), hypotheses (a)--(b) of Lemma~\ref{lem:minuspart}
-hold for $E$ with $d_E=[E:\Q]\le 2^{e(x)+2}\ll x^{2+8\eps}$, $\log F\ll x^{\eps/5}(\log x)^2$,
-and $t=\lfloor x^{401}\rfloor$. By \eqref{eq:minusbound}, the entire minus-part sum is bounded by
-a polynomial in $x$ and $\log F$, hence is $o(\exp(x^\eps/2))$ for $x\ge X_0$.
+hold for $E$ with $d_E=[E:\Q]\le 4o\cdot 2^{e(x)}\ll_\psi x^{2+8\eps}$,
+$\log F\ll x^{\eps/5}(\log x)^2$, and $t=\lfloor x^{401}\rfloor$. By \eqref{eq:minusbound}, the
+entire odd-prime minus-part sum is bounded by a polynomial in $x$ and $\log F$, hence is
+$o(\exp(x^\eps/2))$ for $x\ge X_0$.
 
-\emph{Step 2: The plus part (\lean{ThmBab} and \lean{JointWinOfCounts}).}
+\emph{Step 2: The plus part and $\ell=2$ (\lean{ThmBab} and \lean{JointWinOfCounts}).}
 By \ref{C4} (\lean{UpperTheory.V.FW.ferreroWashington}) and Poitou--Tate duality \ref{C5}
 (\lean{PropA.aBound_of_isTower}), the fixed-prime and $\ell=2$ Iwasawa tower bounds hold
 (\lean{Two.fixedIn}, \lean{Two.twoIn}), which with \lean{LemmaK} give \lean{ThmBab}
-(\lean{thmBab_of_lemmaK}). For each bad prime $\ell\in B_\chi$, decomposing the character set
-$X(e)\subseteq X(0)\cup X(1)$ (\lean{FinalLe.lean}) into odd-order characters $\mathcal O$
-(at most $\mathrm{cond}(\chi)$ characters, each bounded by $B+M^{C_4}$) and remaining characters
+(\lean{thmBab_of_lemmaK}). For each bad prime $\ell\in B_\psi$, decomposing the character set
+$X(e')\subseteq X(0)\cup X(1)$ (\lean{FinalLe.lean}) into odd-order characters $\mathcal O$
+(at most $\mathrm{cond}(\psi)$ characters, each bounded by $B+M^{C_4}$) and remaining characters
 (each bounded by $M^{2C_m}$), plus the finite-index loss $\le tM^6$, establishes hypothesis~(b) of
 Lemma~\ref{lem:pointHV} (\lean{SumIn}, from \lean{CountII}, \lean{CountV}, \lean{countVs},
 \lean{countIV}). Together with \lean{SumOut} (\lean{CountI}, \lean{CountZ}, \lean{CountII},
@@ -936,13 +1008,13 @@ Lemma~\ref{lem:pointHV} (\lean{SumIn}, from \lean{CountII}, \lean{CountV}, \lean
 (\lean{ThmHV.lean}) with $B=\exp(x^{4\eps/5})$.
 
 Fix $X\ge X_0$ and a window pair $(q,d)$ at $(\eps,X^{1/J})$, and partition $[X^{1/J},X]$ into
-$\asymp\log_2 J$ disjoint dyadic-exponent windows $[Y_r,Y_r^2]$ with $Y_{r+1}=Y_r^2$. Combining
-\lean{ThmBab} and \lean{ThmHV} (\lean{jointWin_of_counts}) bounds the number of exceptional scales
-where the plus-part sum exceeds $(F\cdot t)^{C_1}+C_1\exp(x^{4\eps/5})$ by a constant independent
-of $X$. For $J$ sufficiently large, the pigeonhole principle yields a window $[Y,Y^2]$ avoiding all
-exceptional scales, on which
+$\lfloor\log_2 J\rfloor$ interior-disjoint dyadic-exponent windows $[Y_r,Y_r^2]$ with
+$Y_{r+1}=Y_r^2$. Combining \lean{ThmBab} and \lean{ThmHV} (\lean{jointWin_of_counts}) bounds the
+number of exceptional scales where the plus-part (and $\ell=2$) sum exceeds
+$(F\cdot t)^{C_1}+C_1\exp(x^{4\eps/5})$ by a constant independent of $X$. For $J\ge2$ sufficiently
+large, the pigeonhole principle yields a window $[Y,Y^2]$ avoiding all exceptional scales, on which
 \[
-\sum_{\ell}\log\ell\sum_{1\le e<t}\len\Sha_\ell^+(e)\le
+\sum_{\ell}\log\ell\sum_{1\le e'<t}\len\Sha_\ell^+(e')\le
 (F\cdot t)^{C_1}+C_1\exp(x^{4\eps/5}).
 \]
 Since $\log F\ll x^{\eps/5}(\log x)^2$ and $t\le x^{401}$, both $(F\cdot t)^{C_1}$ and
@@ -955,20 +1027,23 @@ $C_1\exp(x^{4\eps/5})$ are $o(\exp(x^\eps/2))$. Adding Steps~1 and~2 gives \eqre
 
 \begin{proof}[Proof of Theorem~C2]
 Fix a primitive Dirichlet character $\psi$ of order $o$, put $\eps_1=1/52$, and let
-$0<\eps<\eps_1$. Let $e(x)=\lceil(2+8\eps)\log_2 x\rceil$. For each sufficiently large $X$,
-Proposition~\ref{prop:hostB} (using \ref{C1}) supplies a window pair $(q,d)$ at $(\eps,X^{1/J})$
-whose auxiliary characters satisfy the zero-density box bounds on $[X^{1/J},X]$. Applying
-Theorem~\ref{thm:VWin} (using \ref{C4}, \ref{C5}, \ref{C7}) produces a subwindow
-$[Y,Y^2]\subseteq[X^{1/J},X]$ on which the $\Sha$-window bound \eqref{eq:VVle} holds for every
-$x\in[Y,Y^2]$. Letting $W$ be the union of these windows $[Y,Y^2]$ over all large $X$, we obtain
-part~(i) of Theorem~C2 (since $[Y,Y^{3/2}]\subseteq[Y,Y^2]$ for $Y\ge1$).
+$0<\eps<\eps_1$. Let $e(x)=\lceil(2+8\eps)\log_2 x\rceil$. First apply Theorem~\ref{thm:VWin}
+(using \ref{C4}, \ref{C5}, \ref{C7}) to obtain $J\ge2$ and $X_0>0$. For each sufficiently large
+$X\ge\max(X_0, Y_0(\psi,\eps,J)^J)$, Proposition~\ref{prop:hostB} applied with this $J$ and
+$Y_{\mathrm{base}}=X^{1/J}$ (using \ref{C1}) supplies a window pair $(q,d)$ at $(\eps,X^{1/J})$
+whose auxiliary characters satisfy the zero-density box bounds on the full interval
+$[X^{1/J},X]=[Y_{\mathrm{base}},Y_{\mathrm{base}}^J]$. Theorem~\ref{thm:VWin} then produces a
+subwindow $[Y,Y^2]\subseteq[X^{1/J},X]$ on which the $\Sha$-window bound \eqref{eq:VVle} holds for
+every $x\in[Y,Y^2]$. Letting $W$ be the union of these windows $[Y,Y^2]$ over all large $X$, we
+obtain part~(i) of Theorem~C2 (since $[Y,Y^{3/2}]\subseteq[Y,Y^2]$ for $Y\ge1$).
 
 Now fix $x\in W$ with $x\ge x_0(\eps)$. By Proposition~\ref{prop:ranks} and
 Proposition~\ref{prop:hostB} (using \ref{C2}), we obtain a host at scale $x$ satisfying
 \textup{(B0)--(B7)} with parameters $(C_E,K_0,\frac1{3o+1},4o)$, $G_K=G_{F_\psi}$,
 $\Sigma_{\mathrm{rest}}(x)\le 4o\,x^{1/2+\eps}$, the domain conditions \textup{(S0)}, and all
-windows of Proposition~7.9 of Part~I. Using the glued common lattice $R$ of
-Theorem~\ref{thm:gluedR} and the unitary theta-lift chain of \ref{C8}, we verify the ten slope
+windows of Proposition~7.9 of Part~I (with absolute constants $K,e_K$ coming from the parameter
+bounds of Propositions~\ref{prop:ranks} and~\ref{prop:hostB}). Using the glued common lattice $R$
+of Theorem~\ref{thm:gluedR} and the unitary theta-lift chain of \ref{C8}, we verify the ten slope
 inequalities:
 \begin{itemize}
 \item \textup{(S1)} by Theorem~\ref{thm:S1} (using \ref{C3}, \ref{C6}, \ref{C7}, \ref{C8}, and
@@ -996,7 +1071,7 @@ verify how each formal statement aligns with the published literature. Table~\re
 records the 1-to-1 correspondence and fidelity notes from our \lean{PropAudit} scan~\cite{dixit-repo}.
 
 \begin{small}
-\begin{longtable}{@{}p{11mm}p{38mm}p{46mm}p{51mm}@{}}
+\begin{longtable}{@{}p{11mm}p{45mm}p{46mm}p{44mm}@{}}
 \caption{Literature-fidelity audit of classical inputs \ref{C1}--\ref{C8}.}\label{tab:litfidelity}\\
 \toprule
 Input & Lean declaration(s) & Published reference & Fidelity / scope note \\
@@ -1007,13 +1082,13 @@ Input & Lean declaration(s) & Published reference & Fidelity / scope note \\
 \midrule
 \endhead
 \ref{C1} & \lean{ZD.zero_density_box}, \lean{count_bad_core} & Iwaniec--Kowalski~\cite[Ch.~10]{iwaniec-kowalski} & Proved in Lean via mollifier/duality; matches classical $Q^{1/4}$ bad-modulus bound. \\
-\ref{C2} & \lean{hostThickExists} & Behrend (1946), sphere-packing construction & Elementary combinatorial proof in Lean; gives density $\ge\exp(-C\sqrt{\log n\log L})/L$. \\
+\ref{C2} & \lean{hostThickExists} & Behrend~\cite{behrend}, sphere-packing construction & Elementary combinatorial proof in Lean; gives density $\ge\exp(-C\sqrt{\log n\log L_{\mathrm{rel}}})/L_{\mathrm{rel}}$. \\
 \ref{C3} & \lean{meanPeriod} & Chowla--Selberg~\cite{chowla-selberg} & Identifies $\log\Omega=\gE+\log(\pi/v)-L'(1,\chi_d)/L(1,\chi_d)$ for CM curves over $\Q(\sqrt{-d})$. \\
 \ref{C4} & \lean{UpperTheory.V.FW.ferreroWashington} & Ferrero--Washington~\cite{ferrero-washington} & Proved in 62 Lean files; states bounded $\ell$-rank of $\mathrm{Cl}(K')/\mathrm{Cl}(K')^\ell$ ($\mu_\ell=0$). \\
-\ref{C5} & \lean{PoitouTate.ShaDual}, \lean{LitCoh}, \lean{Odd.thmBcFree_of} & Neukirch--Schmidt--Wingberg~\cite[Ch.~VIII]{nsw}; Milne (2006) & Proved and applied via \lean{PropAudit}; covers minus-part orthogonality and Euler characteristic. \\
+\ref{C5} & \lean{PoitouTate.ShaDual}, \lean{LitCoh}, \lean{Odd.thmBcFree_of} & Neukirch--Schmidt--Wingberg~\cite[Ch.~VIII]{nsw}; Milne~\cite{milne} & Proved and applied via \lean{PropAudit}; covers minus-part orthogonality and Euler characteristic. \\
 \ref{C6} & \lean{BlochKato.DimFormula}, \lean{RationalDuality}, \lean{IntegralDuality} & Bloch--Kato~\cite[Prop.~3.8, Cor.~3.8.4]{bloch-kato} & Proved via \lean{bkAL}/\lean{bkBL}; applied at crystalline places with $H^0=0$. \\
-\ref{C7} & \lean{GrothendieckMessing}, \lean{GrothendieckDeformation}, \lean{CountI}--\lean{CountV} & Messing~\cite[Ch.~V, Thm.~1.6]{messing}; Grothendieck (1974, Ch.~V~\S4); Diamond~\cite[\S2.4]{diamond} & Messing requires $p$ locally nilpotent (covering \lean{GrothendieckMessing}); \lean{GrothendieckDeformation} drops $p$-nilpotency, matching Grothendieck's 1974 Montr\'eal notes / Diamond (2025). \\
-\ref{C8} & \lean{ShapeJumps}, \lean{BesselId}, \lean{ClassNumberFormula₂}, \lean{theoremS_link_concrete} & Unitary theta lifts, seesaw identities, class number formula & Family-specific constructions verified in the live closure; reduction steps unpacked in Sections~\ref{sec:glued}--\ref{sec:S8VWin}. \\
+\ref{C7} & \lean{GrothendieckMessing}, \lean{GrothendieckDeformation}, \lean{CountI}--\lean{CountV} & Messing~\cite[Ch.~V, Thm.~1.6]{messing}; Grothendieck~\cite[Ch.~V~\S4]{grothendieck1974}; Diamond~\cite[\S2.4]{diamond} & Messing requires $p$ locally nilpotent (covering \lean{GrothendieckMessing}); \lean{GrothendieckDeformation} drops $p$-nilpotency, matching Grothendieck's 1974 Montr\'eal notes / Diamond (2025). \\
+\ref{C8} & \lean{ShapeJumps}, \lean{BesselId}, \lean{ClassNumberFormula}$_2$, \lean{LinkIRR}, \lean{theoremS_link_concrete} & Family-specific unitary theta lifts, seesaw identities, class number formula & Certified in the live Lean closure; reduction steps unpacked in Sections~\ref{sec:glued}--\ref{sec:S8VWin}. \\
 \bottomrule
 \end{longtable}
 \end{small}
@@ -1040,6 +1115,8 @@ were checked by the author, who takes full responsibility for the content.
 % ======================================================================
 \bibitem{alpoge-remark} L.~Alp\"oge, note accompanying the Lean development, 20 November 2026,
   \url{https://alpo.ge/remark.pdf}.
+\bibitem{behrend} F.~A.~Behrend, \emph{On sets of integers which contain no three terms in
+  arithmetical progression}, Proc. Natl. Acad. Sci. USA \textbf{32} (1946), 331--332.
 \bibitem{bloch-kato} S.~Bloch and K.~Kato, \emph{$L$-functions and Tamagawa numbers of motives},
   in: The Grothendieck Festschrift, Vol.~I, Progr. Math. \textbf{86}, Birkh\"auser, Boston, 1990,
   333--400.
@@ -1055,10 +1132,15 @@ were checked by the author, who takes full responsibility for the content.
   \url{https://github.com/ishaan2006/rh-lean-reproduction}.
 \bibitem{ferrero-washington} B.~Ferrero and L.~C.~Washington, \emph{The Iwasawa invariant $\mu_p$
   vanishes for abelian number fields}, Ann. of Math. (2) \textbf{109} (1979), 377--395.
+\bibitem{grothendieck1974} A.~Grothendieck, \emph{Groupes de Barsotti--Tate et cristaux de
+  Dieudonn\'e}, S\'eminaire de Math\'ematiques Sup\'erieures \textbf{45}, Presses de l'Universit\'e
+  de Montr\'eal, 1974.
 \bibitem{iwaniec-kowalski} H.~Iwaniec and E.~Kowalski, \emph{Analytic Number Theory}, AMS
   Colloquium Publications \textbf{53}, American Mathematical Society, Providence, RI, 2004.
 \bibitem{messing} W.~Messing, \emph{The Crystals Associated to Barsotti--Tate Groups: With
   Applications to Abelian Schemes}, Lecture Notes in Mathematics \textbf{264}, Springer, 1972.
+\bibitem{milne} J.~S.~Milne, \emph{Arithmetic Duality Theorems}, 2nd ed., BookSurge, Charleston,
+  SC, 2006.
 \bibitem{nsw} J.~Neukirch, A.~Schmidt and K.~Wingberg, \emph{Cohomology of Number Fields}, 2nd ed.,
   Grundlehren der mathematischen Wissenschaften \textbf{323}, Springer, Berlin, 2008.
 \bibitem{sutherland} A.~V.~Sutherland, build and verification page for the Lean development,
