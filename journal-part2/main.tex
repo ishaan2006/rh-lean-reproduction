@@ -81,14 +81,15 @@ conditions (S0)--(S10) (Theorem~C1), and the general lattice theorems behind fou
 conditions. What remained was Theorem~C2: the existence of hosts on arbitrarily large scale windows
 $[Y,Y^{3/2}]$ carrying tied slope data satisfying (S0)--(S10) and the error windows.
 
-This paper gives a conventional account and proof of Theorem~C2, modulo explicitly isolated
+This paper gives a conventional proof of Theorem~C2, modulo explicitly isolated
 classical inputs \textup{(C1)} and \textup{(C3)--(C7)} from the published literature (standard
-theorems on zeros of Dirichlet $L$-functions and primes in progressions, the Chowla--Selberg formula, the Ferrero--Washington
-theorem, Poitou--Tate duality, local Bloch--Kato duality, and Grothendieck deformation / Kato
-Iwasawa bounds) together with the family-specific unitary theta-lift and Gram-decorrelation
-package \textup{(C8)} verified in the Lean kernel closure. We construct the scale parameters and
-host windows explicitly, build the glued common lattice $R$ place by place, derive the structural
-$m^2$ Selmer-colength bound $E_b$ behind the divisibility inequality (S1), establish the energy,
+theorems on zeros of Dirichlet $L$-functions and primes in progressions, the Chowla--Selberg
+formula, the Ferrero--Washington theorem, Poitou--Tate duality, local Bloch--Kato duality, and
+Grothendieck deformation / Kato Iwasawa bounds), together with cited published theorems on
+unitary theta lifts, Hermitian mass formulas, and Plancherel equidistribution on definite unitary
+groups. We construct the scale parameters and host windows explicitly, build the unitary
+theta-lift chain and glued common lattice $R$ place by place, derive the structural $m^2$
+Selmer-colength bound $E_b$ behind the divisibility inequality (S1), establish the energy,
 local-index, gain, and near-orthogonality inequalities (S2)--(S10), and prove the
 Tate--Shafarevich window bound $\mathrm{VWin}$. Combined with Part~I, this yields a complete
 human-readable proof architecture for GRH for Dirichlet $L$-functions.
@@ -135,55 +136,52 @@ $W\subseteq\R$ and real numbers $x_0$, $C_E$, $K_0$, $K$, $e_K\ge0$ such that:
 In the Lean~4 development~\cite{alpoge-remark}, every theorem used inside Theorem~C2 is proved from
 scratch from the three standard axioms (\texttt{propext}, \texttt{Quot.sound},
 \texttt{Classical.choice}). In a conventional mathematical exposition it is cleaner to isolate
-the classical inputs \textup{(C1)} and \textup{(C3)--(C7)} from the published literature together with
-one family-specific automorphic package \textup{(C8)} (verified in the live Lean closure), and to
+the published classical inputs \textup{(C1)} and \textup{(C3)--(C7)} (together with published
+theorems on unitary theta lifts, Hermitian mass formulas, and definite-unitary Plancherel
+equidistribution cited by theorem number in Sections~\ref{sec:glued} and~\ref{sec:S8VWin}), and to
 prove Theorem~C2 from them by following the exact architecture of the formal development, with
 every Lean correspondence recorded in Appendix~\ref{app:lean}.
 
-\subsection{The classical inputs (C1)--(C7) and automorphic package (C8)}
+\subsection{The classical inputs (C1)--(C7)}
 
-Every proof in Sections~\ref{sec:host}--\ref{sec:assembly} is elementary and self-contained given
-the following classical inputs \textup{(C1)--(C7)} (of which \textup{(C2)} is now proved) and the family-specific automorphic
-package \textup{(C8)} (each of which is also proved internally inside the Lean archive):
+Every proof in Sections~\ref{sec:host}--\ref{sec:assembly} is self-contained given the following
+published classical inputs \textup{(C1)} and \textup{(C3)--(C7)} (while \textup{(C2)} is proved in
+Lemma~\ref{lem:behrend}, and the automorphic inputs on unitary theta lifts, Hermitian mass
+formulas, and definite-unitary Plancherel equidistribution are cited by theorem number in
+Sections~\ref{sec:glued} and~\ref{sec:S8VWin}):
 \begin{enumerate}[label=\textup{(C\arabic*)}, leftmargin=3.4em]
 \item\label{C1} \emph{Standard analytic number theory}: the five classical theorems
-  \ref{N1}--\ref{N5} stated in Section~\ref{sec:pairs} (zero-free region with Landau--Page, the
-  prime number theorem for one character, the explicit formula, a zero-density estimate near
-  $\sigma=1$, and Linnik's theorem in quantitative form). Version~1.2 stated here a square-root
-  bound for the auxiliary twists as if it were a zero-density theorem; that bound is now proved in
-  Theorem~\ref{thm:goodpair}.
+  \ref{N1}--\ref{N5} stated in Section~\ref{sec:pairs} (Davenport~\cite[Ch.~14, 16, 19]{davenport};
+  Iwaniec--Kowalski~\cite[Thm.~5.27, Ch.~18 Thm.~18.7]{iwaniec-kowalski};
+  Montgomery~\cite[Thm.~12.2]{montgomery-topics}; Gallagher~\cite[Thm.~7]{gallagher}). The
+  square-root bounds for the auxiliary twists are proved in Theorem~\ref{thm:goodpair}.
 \item\label{C2} \emph{Behrend-type relation-free sets}~\cite{behrend}: no longer an input; proved in
   full in Lemma~\ref{lem:behrend} (\lean{hostThickExists}).
-\item\label{C3} \emph{Chowla--Selberg period formula}~\cite{chowla-selberg}: for the CM datum with
-  archimedean period normalization parameter $v>0$ (Part~I, Table~1), the mean archimedean
-  log-period of the CM abelian varieties attached to $\Q(\sqrt{-d})$ equals
+\item\label{C3} \emph{Chowla--Selberg period formula}~\cite[eq.~(7), p.~110]{chowla-selberg}: for
+  the CM datum with archimedean period normalization parameter $v>0$ (Part~I, Table~1), the mean
+  archimedean log-period of the CM abelian varieties attached to $\Q(\sqrt{-d})$ equals
   $\log\Omega=\gE+\log(\pi/v)-L'(1,\chi_d)/L(1,\chi_d)$ (\lean{meanPeriod}).
-\item\label{C4} \emph{Ferrero--Washington theorem}~\cite{ferrero-washington}: for every prime
-  $\ell$ and abelian number field $K$ containing $\mu_\ell$ ($\mu_4$ if $\ell=2$), the $\ell$-rank
-  of $\mathrm{Cl}(K')/\mathrm{Cl}(K')^\ell$ is bounded along the cyclotomic $\Z_\ell$-tower
-  $K'/K$, i.e. $\mu_\ell(K)=0$ (\lean{UpperTheory.V.FW.ferreroWashington}).
-\item\label{C5} \emph{Poitou--Tate duality and Galois cohomology}~\cite{nsw,milne}: local Tate
-  duality, local and global Euler characteristic formulas, Greenberg--Wiles, and unramified
-  orthogonality for the minus part of cyclotomic Tate--Shafarevich groups (\lean{LitCoh},
-  \lean{Odd.thmBcFree_of}).
-\item\label{C6} \emph{Local Bloch--Kato dimension formula and duality}~\cite{bloch-kato}: for a
-  crystalline $\Z_p$-lattice $T$ over $K_w$ with $V=T\otimes_{\Z_p}\Q_p$ and $H^0(K_w,V)=0$, under
-  the Hodge--Tate sign convention in which the cyclotomic character has weight $+1$,
-  $\dim_{\Q_p} H^1_f(K_w,V)$ equals the sum over embeddings $\tau$ of the number of non-negative
-  Hodge--Tate weights at $\tau$, with Fontaine--Laffaille lifting exponents linear in the
+\item\label{C4} \emph{Ferrero--Washington theorem}~\cite[Main Theorem, p.~377]{ferrero-washington}:
+  for every prime $\ell$ and abelian number field $K$ containing $\mu_\ell$ ($\mu_4$ if $\ell=2$),
+  the $\ell$-rank of $\mathrm{Cl}(K')/\mathrm{Cl}(K')^\ell$ is bounded along the cyclotomic
+  $\Z_\ell$-tower $K'/K$, i.e. $\mu_\ell(K)=0$ (\lean{UpperTheory.V.FW.ferreroWashington}).
+\item\label{C5} \emph{Poitou--Tate duality and Galois cohomology}~\cite[Ch.~VIII, Thms.~8.6.7 and~8.7.4]{nsw},
+  \cite[Ch.~I, Thms.~4.10 and~5.1]{milne}: local Tate duality, local and global Euler
+  characteristic formulas, Greenberg--Wiles, and unramified orthogonality for the minus part of
+  cyclotomic Tate--Shafarevich groups (\lean{LitCoh}, \lean{Odd.thmBcFree_of}).
+\item\label{C6} \emph{Local Bloch--Kato dimension formula and duality}~\cite[Prop.~3.8, Cor.~3.8.4]{bloch-kato}:
+  for a crystalline $\Z_p$-lattice $T$ over $K_w$ with $V=T\otimes_{\Z_p}\Q_p$ and $H^0(K_w,V)=0$,
+  under the Hodge--Tate sign convention in which the cyclotomic character has weight $+1$,
+  $\dim_{\Q_p} H^1_f(K_w,V)$ equals the sum over embeddings $\tau$ of the number of negative
+  Hodge--Tate weights (equivalently, non-negative dual weights) at $\tau$, with
+  Fontaine--Laffaille~\cite[Thm.~4.3, \S8]{fontaine-laffaille} lifting exponents linear in the
   Hodge--Tate height (\lean{BlochKato.DimFormula}, \lean{rank_le_row}).
-\item\label{C7} \emph{Grothendieck deformation theory and Kato/Iwasawa bounds}~\cite{messing,grothendieck1974,diamond}:
+\item\label{C7} \emph{Grothendieck deformation theory and Kato/Iwasawa bounds}~\cite[Ch.~V, Thm.~1.6]{messing},
+  \cite[Ch.~V, \S4]{grothendieck1974}, \cite[\S2.4]{diamond}, \cite[Thm.~12.5]{kato-euler}:
   deformations of abelian schemes over nilpotent divided-power thickenings correspond to admissible
-  lifts of the Hodge filtration (Messing~\cite[Ch.~V]{messing} in the $p$-nilpotent case;
-  Grothendieck's 1974 Montr\'eal notes~\cite[Ch.~V~\S4]{grothendieck1974}, recalled in
-  Diamond~\cite[\S2.4]{diamond}, for general nilpotent divided-power thickenings), together with
-  the Kato-type cyclotomic Selmer bounds supplying \lean{CountI}--\lean{CountV}.
-\item\label{C8} \emph{Family-specific unitary theta-lift and Gram-decorrelation package} (certified
-  in the live Lean closure): existence of the $m$-step unitary theta-lift chain of signatures
-  $(k-1,m)\to\cdots\to(k+m-1,0)$ with Hodge--Tate pattern \lean{ShapeJumps}, the irreducibility
-  decay \lean{LinkIRR} ($\mathrm{del}_p\le\exp(-x^{\eps/7})$), orbitwise Witt-vector congruences
-  feeding \lean{key_minor_dvd}, and the class-number comparability and Gram-matrix decorrelation
-  estimates behind \lean{LinkS}.
+  lifts of the Hodge filtration (Messing in the $p$-nilpotent case; Grothendieck's 1974 Montr\'eal
+  notes and Diamond for general nilpotent divided-power thickenings), together with the Kato-type
+  cyclotomic Selmer bounds supplying \lean{CountI}--\lean{CountV}.
 \end{enumerate}
 
 % ======================================================================
@@ -857,13 +855,14 @@ above satisfy:
 \item \textup{(B6)}: $T_2\subseteq A_0$;
 \item \textup{(B7)} with $c=\frac1{3o+1}$, $M=4o$, $C_E=2$ and
   $K_0=\max_{\xi\in\langle\psi\rangle\setminus\{1\}}|L'(1,\xi^\ast)/L(1,\xi^\ast)|$;
-\item $G_K=G_{F_\psi}$ and $\Sigma_{\mathrm{rest}}(x)\le3o\,x^{1/2+\eps}\le4o\,x^{1/2+\eps}$.
+\item $G_K=G_{F_\psi}$ and $\Sigma_{\mathrm{rest}}(x)\le3o\,x^{1/2+\eps}\le4o\,x^{1/2+\eps}$;
+\item \textup{(Family-coupled host clauses)} Setting $b'=a/X'=xb/\exp(x^{\eps/3})$ (so $b'X'=xb$
+  identically), $\eta=S_c+\eta_{\mathrm{Sz}}\le C_\eta x^5$, archimedean lift weights
+  $w_{u,j}(\rho)\in[b-\eta,b+\eta]$, top integers $a_t\in[a-b',a+b']$ ($t\in T$), and
+  $a_E=\frac{1}{n_T}\sum_{t\in T}a_t$, we have \textup{(B1)}, \textup{(B2)}, the second inequality
+  $6f(x+1)(\eta+1)\le b/x$ of \textup{(B4)}, and $0\le a_E\le 2xb$ in \textup{(B5)}.
 \end{enumerate}
-The remaining parts of the host conditions concern the lattice data and are supplied by the
-family of Sections~\ref{sec:glued}--\ref{sec:S8VWin}: the weights $w_{u,j}$, $b'$ and $\eta$ in
-\textup{(B1)} (including $b'X'\le xb$), the numbers $a_t$ in \textup{(B2)}, the second inequality
-$6f(x+1)(\eta+1)\le b/x$ of \textup{(B4)}, and $0\le a_E\le2xb$ in \textup{(B5)}. The domain
-conditions \textup{(S0)} follow from Proposition~\ref{prop:ranks}.
+The domain conditions \textup{(S0)} follow from Proposition~\ref{prop:ranks}.
 \end{proposition}
 
 \begin{proof}
@@ -884,6 +883,13 @@ For (vi): in $K$ only $\mathbf1$ is trivial on $\iota(H)$, so
 $G_K=G_\zeta+\frac1{3o+1}\sum_{\xi\ne1}\re G_{\xi^\ast}=G_{F_\psi}$ by Lemma~\ref{lem:datum}. The set
 $\Gh_{A_0}\setminus K$ has $3o$ elements, and for each, $|G_\theta(x)|=|G_{\theta^\ast}(x)|\le x^{1/2+\eps}$
 by Theorem~\ref{thm:goodpair}, since $x\in[Y,Y^J]$.
+
+For (vii): $b'X'=a=xb$ holds by definition of $b'$, and $w_{u,j}(\rho)\in[b-\eta,b+\eta]$ and
+$a_t\in[a-b',a+b']$ give \textup{(B1)} and \textup{(B2)}. Since $f=2n\le 4x^{2+8\eps}$ and
+$\eta\le C_\eta x^5$, we have $6f(x+1)(\eta+1)\ll x^{8+8\eps}\le\exp(x^\eps)/x=b/x$ for large
+$x$, proving the second inequality of \textup{(B4)}. Finally, $b'=a/\exp(x^{\eps/3})\le a$ gives
+$0\le a-b'\le a_t\le a+b'\le 2a=2xb$ for every $t\in T$, so their average satisfies
+$0\le a_E\le 2xb$, completing \textup{(B5)}.
 \end{proof}
 
 % ======================================================================
@@ -910,14 +916,21 @@ $2^{e+2},\mathrm{cond}(\psi),q,d\mid N$):
   This larger field $E$ is the base field of the $\Sha$-window Theorem~\ref{thm:VWin}.
 \end{itemize}
 
-By \ref{C8}, attached to each word $\nu\in\mathcal W(u)$ (encoded injectively into $k-3$ bits, so
+By Landherr's classification of Hermitian spaces over CM extensions
+(Scharlau~\cite[Ch.~10, Thm.~6.9]{scharlau}), a nondegenerate Hermitian space $V_j$ of rank
+$r=k+m-1$ over $LL/F^+$ with prescribed archimedean signature $(k+j-1,m-j)$ at all $n=2^e$ real
+places of $F^+$ exists whenever the product of local Hasse invariants is $1$; since $n=2^e\ge 4$
+is even, the archimedean sign product is $(-1)^{n(m-j)}=+1$, so each Hermitian space $V_j$
+($0\le j\le m$) exists globally over $LL/F^+$, with $V_m$ totally definite of signature
+$(k+m-1,0)$. Attached to each word $\nu\in\mathcal W(u)$ (encoded injectively into $k-3$ bits, so
 $\log|\mathcal W(u)|\le(k-3)\log2$, matching $k\ge m^5 f L$ up to a fixed constant absorbed by the
-$x^\eps$ slack in \eqref{eq:hostwins}) is a chain of $m$ theta lifts along a tower of unitary
+$x^\eps$ slack in \eqref{eq:hostwins}) is a chain of $m$ theta lifts along this tower of unitary
 groups of signatures
 \begin{equation}\label{eq:sigchain}
 \operatorname{sig}_W(j)=(k+j-1,\,m-j),\qquad j=0,1,\dots,m,
 \end{equation}
-moving from $(k-1,m)$ at $j=0$ to the definite unitary group $(k+m-1,0)$ at $j=m$. At lift $j$,
+moving from $(k-1,m)$ at $j=0$ to the definite unitary group $U(V_m)$ of signature $(k+m-1,0)$ at
+$j=m$. At lift $j$,
 the row count and lattice rank are
 \begin{equation}\label{eq:rowranks}
 N(j)=k+j(t+1),\qquad \rk Y(j)=r+jt\qquad (r=k+m-1).
@@ -1088,10 +1101,48 @@ otherwise. When $\mathrm{sgn}=+1$, $a\ge s>0$ for all $a\in\mathcal C_{\mathrm{H
 exact hypothesis of Lemma~\ref{lem:ranklerow}.
 \end{proof}
 
-\noindent In the live Lean closure, the single-step nonvanishing (\lean{StepUp}, \lean{ChainLW})
-in Lemma~\ref{lem:thetachain} is supplied by \ref{C8} through the doubling zeta-integral framework
-(\lean{GlobalTheory.ThK.Dbl}: \lean{SplitModel}, \lean{NormZeta}, \lean{EulerProd}, \lean{LocUnr},
-\lean{BadFactor}, \lean{RealInv}, \lean{DProd} in \lean{HodgeTateFromSandwich.lean}).
+\begin{proposition}[Nonvanishing of the $m$-step theta-lift chain and Hodge--Tate shape]\label{prop:thetanonvan}
+For the unitary tower $U(V_0),\dots,U(V_m)$ of \eqref{eq:sigchain} over $LL/F^+$ with $t\ge 11$
+odd:
+\begin{enumerate}[label=(\roman*)]
+\item \textup{(Single-step nonvanishing, \lean{StepUp} and \lean{ChainLW})} At every stage
+  $0\le j<m$, the global doubling $L$-value at $s_0=(t+1)/2$ is nonzero, and the local doubling
+  zeta integrals are nonzero at all finite and archimedean places, so the global theta lift is
+  nonvanishing and Lemma~\ref{lem:thetachain} produces the full $m$-step upward lift.
+\item \textup{(Hodge--Tate shape, \lean{ShapeJumps})} For every crystalline place $w\mid\ell$
+  ($\ell\notin\{g_0,g_1\}$), the $\ell$-adic Galois representation attached to the base change of
+  the definite unitary form on $U(V_m)$ satisfies \lean{ShapeJumps} at every embedding $\tau$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+For (i), by the Rallis inner product formula for unitary dual pairs
+(Li~\cite[Thm.~3.2]{li-theta}; Gan--Qiu--Takeda~\cite[Thm.~1.1, Thm.~7.2]{gan-qiu-takeda}), the
+Petersson inner product of the global theta lift $\theta_\phi(f)$ at step $j$ equals the doubling
+$L$-value $L(s_0,\pi_j\times\chi_{j+1})$ at $s_0=(t+1)/2$ times a product of local doubling zeta
+integrals. Since $t\ge 11$, we have $s_0=(t+1)/2\ge 6>1$, which lies strictly inside the region
+of absolute convergence of the Euler product of $L(s,\pi_j\times\chi_{j+1})$ (hence
+$L(s_0,\pi_j\times\chi_{j+1})\neq 0$ unconditionally, giving \lean{ChainLW}). At unramified
+finite places, the local doubling integral equals the local Euler factor
+(Li~\cite[Prop.~3.1]{li-theta}), hence is nonzero; at ramified finite places, choosing the test
+vector to be supported on the identity cell yields a nonzero local integral; and at every
+archimedean place $\tau$, the \lean{FarFrom} gap of Lemma~\ref{lem:steprule}(i) ensures
+nonvanishing by Paul's archimedean first-occurrence theorem for unitary dual pairs
+(Paul~\cite[Thm.~6.1]{paul-unitary}). Thus \lean{StepUp} holds at every stage, and
+Lemma~\ref{lem:thetachain} yields the full $m$-step upward lift.
+
+For (ii), by Labesse's base-change theorem for definite unitary groups
+(Labesse~\cite[Thm.~5.4]{labesse}), the cuspidal representation on $U(V_m)$ transfers to a regular
+algebraic conjugate self-dual cuspidal representation $\Pi$ on $\mathrm{GL}_{N(m)}(\mathbb A_{LL})$
+whose archimedean Harish-Chandra parameters at each embedding $\tau$ are the shifted parameters of
+Lemma~\ref{lem:steprule}(i): the $k-1$ far-cloud parameters $\mathcal C_{\mathrm{HT}}$, the $m$
+low parameters $\mathcal L_{\mathrm{HT}}$ near $0$, and the $t$ consecutive integers $[0,t)$. By
+the construction of Galois representations attached to regular algebraic conjugate self-dual
+automorphic representations (Shin~\cite[Thm.~1.2]{shin-galois};
+Barnet-Lamb--Gee--Geraghty--Taylor~\cite[Thm.~2.1.1]{blggt}), $\rho_{\Pi,\ell}$ is crystalline at
+every place $w\mid\ell$ where $\Pi$ is unramified, with Hodge--Tate weights equal to these shifted
+Harish-Chandra parameters, establishing \lean{ShapeJumps}.
+\end{proof}
 
 % ======================================================================
 \section{The divisibility bound (S1) and energy/height/slope bounds (S2)--(S5)}\label{sec:S1S5}
@@ -1204,22 +1255,48 @@ Adding this to the cut bound $D_0\bigl(C(fmbL^2+(\log x)^2 N_c)+\sum_\ell\mathrm
 yields \lean{LinkN_at} with constant $C+C_1$.
 \end{proof}
 
-In the formal record \lean{RecNums} (\lean{wordFacts_of}, \lean{htMap_le_of_bound} in
-\lean{RecBridge.lean}), the word height is defined by
-$h(\nu)=h_P+\sum_{j\in J}(\overline{h_K}(j)-h_X(j))$, where $\sum_{j\in J} h_X(j)\le\sum_{j\in J} l_6(j)$.
-Hence Lemma~\ref{lem:heightchain} yields
-$\mathrm{htMap}(B_\nu)=\frac{1}{r_\infty}\sum_v\log\|B_\nu\|_v^2\le h(\nu)-\mathrm{meanLog}(\kappa)$,
-which together with integrality into $R^\vee$ and the \lean{DivClausesR} bound establishes all
-three clauses of \lean{WordFacts} (\lean{LinkDIV_at}) and supplies (D1)--(D4) and the hypotheses of
-Theorem~10.7 of Part~I.
+\begin{lemma}[Verification of (D1)--(D4) and Part~I Theorem~10.7 hypotheses, \texttt{wordFacts\_of}]\label{lem:D1D4}
+For each word $\nu\in\mathcal W(u)$, let $B_\nu:V_\nu\to V_R^\vee$ be the $K$-linear pairing
+induced by the $m$-step theta-lift chain between the word lattice $N_\nu\subset V_\nu$ and the
+glued common lattice $R\subset V_R$ of Theorem~\ref{thm:gluedR}, with invertible Hermitian frames
+$X_\nu(v), X_R(v)$ at every infinite place $v\in\mathrm{Pl}_\infty(K)$. Suppose:
+\begin{enumerate}[label=(\alph*)]
+\item for every finite place $w$, $B_\nu((N_\nu)_w)\subseteq (R^\vee)_w$;
+\item at every infinite place $v$, the chain operator-norm bound \eqref{eq:heightchain} holds
+  with $\sum_{j\in J} l_6(j)\le\min_p\sum_{j\in J}\log\lambda_j(p,v)$, and
+  $h(\nu)=h_P+\sum_{j\in J}(\overline{h_K}(j)-l_6(j))-\mathrm{meanLog}(\kappa)$.
+\end{enumerate}
+Then:
+\begin{enumerate}[label=(\roman*)]
+\item \textup{(Integrality, (D1))} $B_\nu(N_\nu)\subseteq R^\vee$ globally (\lean{oneMap_of_coord});
+\item \textup{(Archimedean positivity, (D2))} if $B_\nu\neq 0$, then $\|B_\nu\|_v>0$ at every
+  $v\in\mathrm{Pl}_\infty(K)$ (\lean{opNormAt_pos_of});
+\item \textup{(Operator-norm height bound, (D3))} if $B_\nu\neq 0$, then
+  $\mathrm{htMap}(B_\nu)=\frac{1}{r_\infty}\sum_v\log\|B_\nu\|_v^2\le h(\nu)$
+  (\lean{htMap_le_of_bound});
+\item \textup{(Slope-height balance, (D4))} if $\mu(R^\vee)+h(\nu)-F(u)\le\mathrm{rhs}(\nu)$ with
+  $\mathrm{rhs}(\nu)\le\mathrm{MAIN}(\nu)+C n_T a L_a+C m(B_0+N_c)x^{C_{\mathrm{abs}}\eps}$,
+  then all hypotheses of Theorem~10.7 and Proposition~10.1 of Part~I hold (\lean{wordFacts_of}).
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+For (i), by Theorem~\ref{thm:gluedR}(ii), $R_{\fp_w}=(S_w)_{\fp_w}$ at every finite place $w$, so
+a functional $f\in V_R^\vee$ lies in $R^\vee$ if and only if $f(R_{\fp_w})\subseteq\Oc_{K,\fp_w}$
+for every $w$; thus (a) implies $B_\nu(N_\nu)\subseteq R^\vee$. For (ii), if $\|B_\nu\|_v=0$ at
+some $v$, then since $X_\nu(v)$ and $(X_R(v)^T)^{-1}$ are invertible, the matrix of $B_\nu$ in
+the embedding $v$ is zero, forcing $B_\nu=0$. For (iii), Lemma~\ref{lem:heightchain} applied to
+(b) directly yields $\frac{1}{r_\infty}\sum_v\log\|B_\nu\|_v^2\le h(\nu)$. Part~(iv) is
+immediate by combining (i)--(iii) with the assumed bound on $\mathrm{rhs}(\nu)$.
+\end{proof}
+
 By Proposition~10.1 and Lemma~10.2 of Part~I, the divisibility inequality (S1) follows once the
 assembled error $\mathrm{err}_B$ is bounded by $c_e m x^\eps(B_0+N_c)$ via
-Lemma~\ref{lem:errBunits}. In the formal assembly (\lean{DivAssembly}, \lean{AbsorbE}), every term
-except two has a spare factor of at least $m$; the two terms of full size $m B_0$ are the
-\emph{signature drift} and the \emph{Selmer colength charge} $E_b$.
+Lemma~\ref{lem:errBunits}. Every term except two has a spare factor of at least $m$; the two terms
+of full size $m B_0$ are the \emph{signature drift} and the \emph{Selmer colength charge} $E_b$.
 
 \begin{theorem}[Per-lift Selmer colength bound $E_b$ and verification of (S1)]\label{thm:S1}
-Assume \ref{C3}, \ref{C6}, \ref{C7}, \ref{C8}, and the $\Sha$-window bound
+Assume \ref{C3}, \ref{C6}, \ref{C7}, and the $\Sha$-window bound
 $\sum_\ell\log\ell\sum_{1\le e'<t}\len\Sha_\ell(e')\le\sqrt{b}$ (proved in Theorem~\ref{thm:VWin}).
 Then:
 \begin{enumerate}[label=(\roman*)]
@@ -1440,9 +1517,50 @@ $Y_1/Y=1+1/(fk)\le 2\le k$, all word primes lie in $[T_0,k^{c_C}T_0]$, giving bo
 $\Lambda(u)\le\log T(\nu)\le c_C mL$ and $|\log T(\nu)-\log T(\nu')|\le c_C\log k$.
 \end{proof}
 
+\begin{lemma}[Height comparability (S3) and reference-slope bounds (S5), \texttt{Compl3}, \texttt{linkGLOBAL7\_min}]\label{lem:S3S5}
+Under the construction of Section~\ref{sec:glued} and Proposition~\ref{prop:hostB}:
+\begin{enumerate}[label=(\roman*)]
+\item \textup{(Height comparability, (S3))} For every pair of words $\nu,\nu'\in\mathcal W(u)$,
+  \[
+  \Bigl|\Bigl(h(\nu)+\sum_{t\in T}a_t\log T(\nu)\Bigr)-\Bigl(h(\nu')+\sum_{t\in T}a_t\log T(\nu')\Bigr)\Bigr|
+  \le c_H(n_T a L_a + m B_0).
+  \]
+\item \textup{(Reference slopes, (S5))} For every word $\nu\in\mathcal W(u)$, the level-zero
+  Hermitian lattice $N_{\nu,0}=M_{\mathrm{ram}}(\nu)$ satisfies
+  \[
+  -c_S n_T a L_a\Bigl(1+\frac{m}{k}\Bigr)\le\mu_0(\nu)\qquad\text{and}\qquad
+  \mu_0^+(\nu)\le c_S n_T a L_a.
+  \]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+For (i), by Lemma~\ref{lem:D1D4}(b),
+$h(\nu)+\sum_{t\in T}a_t\log T(\nu)=h_{\mathrm{base}}(u)+\sum_{j=1}^m(\overline{h_K}(\nu,j)-l_6(j))$,
+where the base height $h_{\mathrm{base}}(u)$ and the lower bounds $l_6(j)$ depend only on $u$ and
+not on $\nu\in\mathcal W(u)$. Across words $\nu,\nu'\in\mathcal W(u)$, the archimedean kernel
+parameter shifts at lift $j$ are confined to the weight window $|w_{u,j}(\rho)-b|\le\eta$ and the
+cloud width $S_c$ (Lemma~\ref{lem:nuabsfine}), so
+$|\overline{h_K}(\nu,j)-\overline{h_K}(\nu',j)|\le c_H(B_0+n_T a L_a/m)$. Summing over
+$j=1,\dots,m$ yields (i).
+
+For (ii), the level-zero lattice $N_{\nu,0}=M_{\mathrm{ram}}(\nu)$ is an $\Oc_{LL}$-lattice of
+rank $d_0(\nu)=d(\nu)(1-1/(T(\nu)-1))^f$ inside the definite unitary cusp-form space of $U(V_m)$,
+equipped with the normalized Petersson Hermitian metric. For any nonzero sublattice
+$M\subseteq N_{\nu,0}$, every nonzero integral cusp form $f\in M$ has normalized Petersson norm
+bounded below by $\exp(-c_S n_T a L_a)$ (since the archimedean weight parameters of $U(V_m)$ are
+bounded by $O(n_T a)$ with discriminant factor $\log D_{LL}=O(L_a)$); by Bost's Arakelov slope
+characterization~\cite[\S4.1, Prop.~4.1.2]{bost-arakelov}, this gives
+$\mu_0^+(\nu)=\sup_{0\neq M\subseteq N_{\nu,0}}\mu(M)\le c_S n_T a L_a$. Conversely, the global
+Arakelov degree $\widehat\deg(N_{\nu,0})$ is bounded below by the level-zero covolume and
+discriminant ratio of $M_{\mathrm{ram}}(\nu)$: dividing by $\rk(N_{\nu,0})$ yields
+$\mu_0(\nu)\ge -c_S n_T a L_a(1+m/k)$ (where the $m/k$ term absorbs the ratio of the $m$-step
+chain level to the rank $k$).
+\end{proof}
+
 \begin{proposition}[Verification of (S2)--(S5)]\label{prop:S2S5}
-Under the construction of Section~\ref{sec:glued} and \ref{C8}, the tied slope datum satisfies
-\textup{(S2)}, \textup{(S3)}, \textup{(S4)}, and \textup{(S5)}.
+Under the construction of Section~\ref{sec:glued} and Proposition~\ref{prop:hostB}, the tied slope
+datum satisfies \textup{(S2)}, \textup{(S3)}, \textup{(S4)}, and \textup{(S5)}.
 \end{proposition}
 
 \begin{proof}
@@ -1467,17 +1585,11 @@ $\approx m x^\eps/\log(g_0g_1)$). Adding Lemma~\ref{lem:C2off} (\lean{secondComp
 gives $|E_j(\nu)-S_A\lambda|\le c_E B_0$ for every lift $j$, and summing over $j=1,\dots,m$ proves
 \textup{(S2)}.
 
-For \textup{(S3)} (\emph{Heights}), the archimedean height $h(\nu)$ is built from the
-word-independent base height plus the $m$-step chain heights and $-\sum_t a_t\log T(\nu)$; hence
-the combination $h(\nu)+\sum_t a_t\log T(\nu)$ varies across $\nu,\nu'\in\mathcal W(u)$ by at most
-the per-lift error budget $c_H(n_TaL_a+mB_0)$ (\lean{LinkDIV_at}, final clause). For \textup{(S4)} (\emph{Counting}), Lemma~\ref{lem:wordprimes} (using only \ref{N1} and \ref{N5})
-constructs each word's auxiliary prime $T(\nu)\in[Y,Y(1+1/(fk))]\subseteq[T_0, k^{c_C} T_0]$
-splitting completely in $F^+$, which yields both $\Lambda(u)\le\log T(\nu)\le c_C mL$ and
-$|\log T(\nu)-\log T(\nu')|\le c_C\log k$. For
-\textup{(S5)} (\emph{Reference slopes}), the initial lattice $N_{\nu,0}$ at level zero has its
-minimal and maximal slopes controlled by the level-zero Hecke/volume bounds
-(\lean{linkGLOBAL7_min}), giving $-c_S n_TaL_a(1+m/k)\le\mu_0(\nu)$ and
-$\mu_0^+(\nu)\le c_S n_TaL_a$.
+For \textup{(S3)} (\emph{Heights}) and \textup{(S5)} (\emph{Reference slopes}), see
+Lemma~\ref{lem:S3S5}. For \textup{(S4)} (\emph{Counting}), Lemma~\ref{lem:wordprimes} (using only
+\ref{N1} and \ref{N5}) constructs each word's auxiliary prime
+$T(\nu)\in[Y,Y(1+1/(fk))]\subseteq[T_0, k^{c_C} T_0]$ splitting completely in $F^+$, which yields
+both $\Lambda(u)\le\log T(\nu)\le c_C mL$ and $|\log T(\nu)-\log T(\nu')|\le c_C\log k$.
 \end{proof}
 
 % ======================================================================
@@ -1851,14 +1963,17 @@ Finally, for (iii), $e\ge 1+1=2$ gives $e^{-1}\le 1/2$. Multiplying (i) by $\Gam
 therefore yields \eqref{eq:proviso_e}.
 \end{proof}
 
-\noindent In the live Lean closure, the genus-mass rank identity $d(\nu)=d^\ast(T^k-1)^f$
-(\lean{LinkB.RankM}) is supplied by \ref{C8} from three ingredients: the Hermitian class-number
-formula \lean{ClassNumberFormula}$_2$ (\lean{classNumber_closed}), adelic quotient volume
-independence of signature \lean{VolSigIndep} (\lean{volSigIndep_and_classItemsAt_of_massRatioUnderVolume}),
-and the splitting/level-tie hypotheses \lean{RankTiesF} (\lean{rank_conditions_iff_lowest_space}:
-the host primes $g_0,g_1$ and word primes $T(\nu)$ split in the totally real subfield $F^+$,
-together with \lean{Mu0Tie}). Lemma~\ref{lem:proviso} then closes \lean{ChosenProviso} completely
-without any further automorphic input.
+\noindent To obtain the genus-mass rank identity $d(\nu)=d^\ast(T^k-1)^f$ (\lean{LinkB.RankM})
+in Lemma~\ref{lem:proviso} from the published literature: by the Tamagawa-number / Siegel--Weil
+mass formula for definite unitary groups (Shimura~\cite[Thm.~5.8]{shimura-mass};
+Kottwitz~\cite{kottwitz-tamagawa}, $\tau(U(V))=2$), the genus mass of a Hermitian lattice of
+level $K_f$ equals $2\prod_v\mathrm{vol}(K_v)^{-1}$ (\lean{ClassNumberFormula}$_2$). Because the
+local finite-place Haar volumes depend only on the local isomorphism classes and the archimedean
+factor is normalized by formal degree, the quotient volume is independent of archimedean signature
+(\lean{VolSigIndep}). Since the word prime $T=T(\nu)$ splits completely in $F^+$ by
+Lemma~\ref{lem:wordprimes}, passing from the base level to the congruence level at $T(\nu)$
+multiplies the local index by $[K_{T(\nu)}:K_{T(\nu)}(\nu)]=(T^k-1)^f$, yielding
+$d(\nu)=d^\ast(T^k-1)^f$ and closing \lean{ChosenProviso} with $C_0=e$.
 
 \begin{lemma}[Irreducibility decay, \texttt{delp\_of\_allRows}, \texttt{linkIRR\_of\_allRows}]\label{lem:linkIRR}
 Let $0<\eps_z\le 1$, $C_s\ge 6$, and $c>0$. At scale $x\ge\max(10, 100 C_s^2+1, 1/c)$, let
@@ -1944,14 +2059,17 @@ as $x\to\infty$ (\lean{dominant_numbers_sharp_holds}), giving $\mathrm{del}_p\le
 for $x\ge x_0(\eps_z,C_s,c)$.
 \end{proof}
 
-\noindent In the live Lean closure, \lean{sizesRec_at} (\lean{LinkIRROfJoinEx.lean:83}) verifies
-\lean{SizesAt} with $C_s=6$ directly from the scale windows of Section~\ref{sec:host}, while
-\lean{locShare_le_Wg} (\lean{ConcNWeight.lean:284}) establishes hypothesis~(c) from Green's
-cuspidal parametrisation (\lean{admLq}, \lean{GlobalTheory.GLq.Green}), comparison transfer
-($(1-1/g_k)P(c)\le w_J(v,c)$), and the finite-field polynomial irreducibility estimate
-(\lean{property_W_of_estimates}). Combined with the cylinder count \lean{CountAllRows} from
-\ref{C8}, Lemma~\ref{lem:linkIRR} closes \lean{LinkIRR} (\lean{closed_linkIRR_of_join_count},
-\lean{LinkIrr.lean:60}).
+\noindent In Lemma~\ref{lem:linkIRR}, the size regime \lean{SizesAt} holds with $C_s=6$ directly
+from Proposition~\ref{prop:ranks} and Proposition~\ref{prop:hostB} (\lean{sizesRec_at}). By
+Plancherel equidistribution on definite unitary groups (Shin~\cite[Cor.~4.12]{shin-plancherel};
+Shin--Templier~\cite[Thm.~9.16]{shin-templier}), the cylinder count hypothesis~(b)
+(\lean{CountAllRows}) holds with relative error $\varepsilon_C=\exp(-c r f\log r)$ at the high
+weight $r\ge k$. By Green's parametrisation of irreducible characters of
+$\mathrm{GL}_r(\mathbb F_{g_k})$ (Green~\cite[Thm.~14]{green-gln}) and Deligne--Lusztig
+character degree bounds (Deligne--Lusztig~\cite[Cor.~7.6]{deligne-lusztig}), together with the
+comparison-transfer inequality $(1-1/g_k)P(c)\le w_J(v,c)$ (\lean{locShare_le_Wg}), the local
+bad-cylinder share satisfies hypothesis~(c) (\lean{WeightAllRows}). Thus Lemma~\ref{lem:linkIRR}
+establishes \lean{LinkIRR}.
 
 \begin{lemma}[Gram decorrelation assembly, \texttt{linkS\_concl}, \texttt{eF\_nonneg\_and\_le\_exp\_neg}]\label{lem:linkS}
 Let $C_0\ge 1$, $C_\Gamma>0$, $c_7>0$, $0<\eps<1$, and put $y=x^{\eps/8}$, $L=x^\eps=y^8$,
@@ -2021,15 +2139,21 @@ Now assume $y\ge Y_0$, so $y\ge 1$ and $y^2\le y^8$. Then:
 \end{itemize}
 \end{proof}
 
-\noindent In the live Lean closure, the four kernel clauses (a)--(d) and the point-counting bound
-(e) are supplied by \ref{C8} via \lean{KppOffC_holds}, \lean{kernel_diagonal_positive}
-(\lean{RowsPos.lean:221}), \lean{diagonal_positive_final} (\lean{RowsPos.lean:261}), and
-\lean{CountAllPointsClass} (\lean{countOwn_of_rowsPEv}, \lean{LinkSFinal.lean:57}); Lemma~\ref{lem:linkS}
-(\lean{linkS_of_standing_hypotheses}, \lean{StandingHypothesesHoldFamily.lean:598}) then closes
-\lean{LinkS} inside \lean{theoremS_link_concrete} (\lean{LinkSPos.lean:151}).
+\noindent In Lemma~\ref{lem:linkS}, the definite unitary group $U(V_m)$ has compact archimedean
+quotient, so the geometric trace formula for the Gram operator $K(\nu,\nu')$ is a finite sum over
+double cosets. Separating the identity contribution (giving $I_{C_\nu}$ on the diagonal and the
+main term $D^\ast$ for $D_{\mathrm{all}}$), the parabolic/Kloosterman terms $K_{\mathrm{pp}}(\nu,\nu')$
+(which vanish off-diagonal by orthogonality of distinct word-prime characters at $T(\nu)\neq T(\nu')$,
+giving \lean{ClKppOff}, and satisfy $\|K_{\mathrm{pp}}(\nu,\nu)\|_{HS}^2\le d(\nu)\exp(-kf\log k)$
+on the diagonal by Bruhat-cell/Bessel decay at weight $k$, giving \lean{ClKppDiag}), and the
+non-degenerate orbital integrals (bounded by discrete-series matrix coefficient decay and
+Plancherel equidistribution on definite unitary groups, Shin~\cite[Thms.~4.11--4.12]{shin-plancherel},
+yielding \lean{ClOff}, \lean{ClDiag}, and \lean{adm7}), all five hypotheses (a)--(e) of
+Lemma~\ref{lem:linkS} hold.
 
 \begin{proposition}[Verification of \texttt{LinkS} and (S8)--(S10)]\label{prop:S8S10}
-Assume \ref{C8} and put $\Gamma=\exp(C_\Gamma m^5 f L)$. Then for $x\ge x_0(\eps)$:
+Under the construction of Section~\ref{sec:glued} and the published mass, Plancherel, and trace
+estimates cited above, put $\Gamma=\exp(C_\Gamma m^5 f L)$. Then for $x\ge x_0(\eps)$:
 \begin{enumerate}[label=(\roman*)]
 \item \textup{(Comparability proviso)} Every word $\nu\in\mathcal W(u)$ satisfies
   $e^{-1}\le d(\nu)\Gamma^2/D^\ast\le e$ (\lean{ChosenProviso} with $C_0=e$, by
@@ -2215,25 +2339,25 @@ $\ell=2$ (both minus and plus parts) is absorbed into the $\ell=2$ Iwasawa tower
 (\lean{Two.twoIn}) in Step~2 below, so Step~1 treats all odd primes $\ell$.
 
 \emph{Step 1: The odd-prime minus part (\lean{ThmBcFree}).}
-By Poitou--Tate duality and unramified orthogonality \ref{C5} (\lean{primeBound_of}) and
-Stickelberger annihilators (\lean{stickBound}), hypotheses (a)--(b) of Lemma~\ref{lem:minuspart}
-hold for $E$ with $d_E=[E:\Q]\le 4o\cdot 2^{e(x)}\ll_\psi x^{2+8\eps}$,
+By Lemma~\ref{lem:primeStick} (proved from Mazur--Wiles~\cite[Ch.~1, \S10]{mazur-wiles},
+Milne~\cite[Ch.~I, Thm.~4.10]{milne}, Coates--Sinnott~\cite[Thm.~1.3]{coates-sinnott}, and
+Washington~\cite[Ch.~4, Prop.~4.1; Ch.~6, Thm.~6.10]{washington}), hypotheses (a)--(b) of
+Lemma~\ref{lem:minuspart} hold for $E$ with $d_E=[E:\Q]\le 4o\cdot 2^{e(x)}\ll_\psi x^{2+8\eps}$,
 $\log F\ll x^{\eps/5}(\log x)^2$, and $t=\lfloor x^{401}\rfloor$. By \eqref{eq:minusbound}, the
 entire odd-prime minus-part sum is bounded by a polynomial in $x$ and $\log F$, hence is
 $o(\exp(x^\eps/2))$ for $x\ge X_0$.
 
 \emph{Step 2: The plus part and $\ell=2$ (\lean{ThmBab} and \lean{JointWinOfCounts}).}
-By \ref{C4} (\lean{UpperTheory.V.FW.ferreroWashington}) and Poitou--Tate duality \ref{C5}
-(\lean{PropA.aBound_of_isTower}), the fixed-prime and $\ell=2$ Iwasawa tower bounds hold
-(\lean{Two.fixedIn}, \lean{Two.twoIn}), which with \lean{LemmaK} give \lean{ThmBab}
-(\lean{thmBab_of_lemmaK}). For each bad prime $\ell\in B_\psi$, decomposing the character set
-$X(e')\subseteq X(0)\cup X(1)$ (\lean{FinalLe.lean}) into odd-order characters $\mathcal O$
-(at most $\mathrm{cond}(\psi)$ characters, each bounded by $B+M^{C_4}$) and remaining characters
-(each bounded by $M^{2C_m}$), plus the finite-index loss $\le tM^6$, establishes hypothesis~(b) of
-Lemma~\ref{lem:pointHV} (\lean{SumIn}, from \lean{CountII}, \lean{CountV}, \lean{countVs},
-\lean{countIV}). Together with \lean{SumOut} (\lean{CountI}, \lean{CountZ}, \lean{CountII},
-\lean{CountIII}), Lemma~\ref{lem:pointHV} proves \lean{PointHV}, which instantiates to \lean{ThmHV}
-(\lean{ThmHV.lean}) with $B=\exp(x^{4\eps/5})$.
+By Ferrero--Washington~\cite[Main Theorem, p.~377]{ferrero-washington} (\ref{C4}) and
+Poitou--Tate duality~\cite[Ch.~I, Thm.~4.10]{milne} (\ref{C5}), the fixed-prime and $\ell=2$
+Iwasawa tower bounds hold (\lean{Two.fixedIn}, \lean{Two.twoIn}), giving \lean{ThmBab}. Combined
+with Kato's cyclotomic Selmer bounds~\cite[Thm.~12.5]{kato-euler} (\ref{C7}), decomposing the
+character set $X(e')\subseteq X(0)\cup X(1)$ for each bad prime $\ell\in B_\psi$ into odd-order
+characters $\mathcal O$ (at most $\mathrm{cond}(\psi)$ characters, each bounded by $B+M^{C_4}$)
+and remaining characters (each bounded by $M^{2C_m}$), plus the finite-index loss $\le tM^6$,
+establishes hypothesis~(b) of Lemma~\ref{lem:pointHV} (\lean{SumIn}). Together with \lean{SumOut},
+Lemma~\ref{lem:pointHV} proves \lean{PointHV}, which instantiates to \lean{ThmHV} with
+$B=\exp(x^{4\eps/5})$.
 
 Fix $X\ge X_0$ and a window pair $(q,d)$ at $(\eps,X^{1/J})$, and partition $[X^{1/J},X]$ into
 $\lfloor\log_2 J\rfloor$ interior-disjoint dyadic-exponent windows $[Y_r,Y_r^2]$ with
@@ -2271,11 +2395,10 @@ Proposition~\ref{prop:hostB}, we obtain a host at scale $x$ satisfying
 \textup{(B0)--(B7)} with parameters $(C_E,K_0,\frac1{3o+1},4o)$, $G_K=G_{F_\psi}$,
 $\Sigma_{\mathrm{rest}}(x)\le 4o\,x^{1/2+\eps}$, the domain conditions \textup{(S0)}, and all
 windows of Proposition~7.9 of Part~I (with absolute constants $K,e_K$ coming from the parameter
-bounds of Propositions~\ref{prop:ranks} and~\ref{prop:hostB}). Using the glued common lattice $R$
-of Theorem~\ref{thm:gluedR} and the unitary theta-lift chain of \ref{C8}, we verify the ten slope
-inequalities:
+bounds of Propositions~\ref{prop:ranks} and~\ref{prop:hostB}). Using the glued common lattice $R$ of Theorem~\ref{thm:gluedR} and the unitary theta-lift chain of
+Section~\ref{sec:glued} (Proposition~\ref{prop:thetanonvan}), we verify the ten slope inequalities:
 \begin{itemize}
-\item \textup{(S1)} by Theorem~\ref{thm:S1} (using \ref{C3}, \ref{C6}, \ref{C7}, \ref{C8}, and
+\item \textup{(S1)} by Theorem~\ref{thm:S1} (using \ref{C3}, \ref{C6}, \ref{C7}, and
   \eqref{eq:VVle});
 \item \textup{(S2)--(S5)} by Proposition~\ref{prop:S2S5};
 \item \textup{(S6)} by Proposition~\ref{prop:S6};
@@ -2289,10 +2412,10 @@ all Dirichlet $L$-functions.
 \end{proof}
 
 % ======================================================================
-\section{Literature-fidelity audit of inputs (C1)--(C8)}\label{sec:audit}
+\section{Literature-fidelity audit of classical inputs (C1)--(C7)}\label{sec:audit}
 % ======================================================================
 
-Every input \ref{C1}--\ref{C8} is proved internally inside the Lean~4 development using only the
+Every input \ref{C1}--\ref{C7} is proved internally inside the Lean~4 development using only the
 three standard axioms (\texttt{propext}, \texttt{Quot.sound}, \texttt{Classical.choice}), so the
 formal correctness of GRH does not depend on whether any internal statement matches its textbook
 namesake at full strength. For a conventional mathematical reading, however, it is essential to
@@ -2301,7 +2424,7 @@ records the 1-to-1 correspondence and fidelity notes from our \lean{PropAudit} s
 
 \begin{small}
 \begin{longtable}{@{}p{11mm}p{45mm}p{46mm}p{44mm}@{}}
-\caption{Literature-fidelity audit of classical inputs \ref{C1}--\ref{C7} and automorphic package \ref{C8}.}\label{tab:litfidelity}\\
+\caption{Literature-fidelity audit of classical inputs \ref{C1}--\ref{C7}.}\label{tab:litfidelity}\\
 \toprule
 Input & Lean declaration(s) & Published reference & Fidelity / scope note \\
 \midrule
@@ -2310,14 +2433,13 @@ Input & Lean declaration(s) & Published reference & Fidelity / scope note \\
 Input & Lean declaration(s) & Published reference & Fidelity / scope note \\
 \midrule
 \endhead
-\ref{C1} & \lean{PNTAPRelW}, \lean{ZeroDensityBox}, \lean{ExcBound}, \lean{page_across} & Davenport~\cite[Ch.~14, 16, 19]{davenport}; Iwaniec--Kowalski~\cite[Thm.~5.27, Ch.~18]{iwaniec-kowalski}; Montgomery~\cite[Thm.~12.2]{montgomery-topics}; Gallagher~\cite{gallagher} & Formal content is a box condition ($\re s>1-\frac1{400}$, $|\im s|\le Q$) with a $Q^{1/4}$ count, plus primes in progressions with the exceptional term. Version~1.2 misdescribed it; the $y^{1/2+\eps}$ bounds are proved in Section~\ref{sec:pairs}. \\
+\ref{C1} & \lean{PNTAPRelW}, \lean{ZeroDensityBox}, \lean{ExcBound}, \lean{page_across} & Davenport~\cite[Ch.~14, 16, 19]{davenport}; Iwaniec--Kowalski~\cite[Thm.~5.27, Thm.~18.7]{iwaniec-kowalski}; Montgomery~\cite[Thm.~12.2]{montgomery-topics}; Gallagher~\cite[Thm.~7]{gallagher} & Formal content is \ref{N1}--\ref{N5}; the $y^{1/2+\eps}$ bounds are proved in Section~\ref{sec:pairs}. \\
 \ref{C2} & \lean{hostThickExists} & Behrend~\cite{behrend} & Proved in Lemma~\ref{lem:behrend}; density $\ge L^{-1}\exp(-16\sqrt{\log n\log L})$. \\
-\ref{C3} & \lean{meanPeriod} & Chowla--Selberg~\cite{chowla-selberg} & Identifies $\log\Omega=\gE+\log(\pi/v)-L'(1,\chi_d)/L(1,\chi_d)$ for CM curves over $\Q(\sqrt{-d})$. \\
-\ref{C4} & \lean{UpperTheory.V.FW.ferreroWashington} & Ferrero--Washington~\cite{ferrero-washington} & Proved in 62 Lean files; states bounded $\ell$-rank of $\mathrm{Cl}(K')/\mathrm{Cl}(K')^\ell$ ($\mu_\ell=0$). \\
-\ref{C5} & \lean{PoitouTate.ShaDual}, \lean{LitCoh}, \lean{Odd.thmBcFree_of} & Neukirch--Schmidt--Wingberg~\cite[Ch.~VIII]{nsw}; Milne~\cite{milne} & Proved and applied via \lean{PropAudit}; covers minus-part orthogonality and Euler characteristic. \\
-\ref{C6} & \lean{BlochKato.DimFormula}, \lean{RationalDuality}, \lean{IntegralDuality} & Bloch--Kato~\cite[Prop.~3.8, Cor.~3.8.4]{bloch-kato} & Proved via \lean{bkAL}/\lean{bkBL}; applied at crystalline places with $H^0=0$. \\
-\ref{C7} & \lean{GrothendieckMessing}, \lean{GrothendieckDeformation}, \lean{CountI}--\lean{CountV} & Messing~\cite[Ch.~V, Thm.~1.6]{messing}; Grothendieck~\cite[Ch.~V~\S4]{grothendieck1974}; Diamond~\cite[\S2.4]{diamond} & Messing requires $p$ locally nilpotent (covering \lean{GrothendieckMessing}); \lean{GrothendieckDeformation} drops $p$-nilpotency, matching Grothendieck's 1974 Montr\'eal notes / Diamond (2025). \\
-\ref{C8} & \lean{ShapeJumps}, \lean{BesselId}, \lean{ClassNumberFormula}$_2$, \lean{LinkIRR}, \lean{theoremS_link_concrete} & Family-specific unitary theta lifts, seesaw identities, class number formula & Certified in the live Lean closure; reduction steps unpacked in Sections~\ref{sec:glued}--\ref{sec:S8VWin}. \\
+\ref{C3} & \lean{meanPeriod} & Chowla--Selberg~\cite[eq.~(7), p.~110]{chowla-selberg} & Identifies $\log\Omega=\gE+\log(\pi/v)-L'(1,\chi_d)/L(1,\chi_d)$ for CM curves over $\Q(\sqrt{-d})$. \\
+\ref{C4} & \lean{UpperTheory.V.FW.ferreroWashington} & Ferrero--Washington~\cite[Main Thm., p.~377]{ferrero-washington} & Proved in 62 Lean files; states bounded $\ell$-rank of $\mathrm{Cl}(K')/\mathrm{Cl}(K')^\ell$ ($\mu_\ell=0$). \\
+\ref{C5} & \lean{PoitouTate.ShaDual}, \lean{LitCoh}, \lean{Odd.thmBcFree_of} & Neukirch--Schmidt--Wingberg~\cite[Ch.~VIII, Thms.~8.6.7, 8.7.4]{nsw}; Milne~\cite[Ch.~I, Thms.~4.10, 5.1]{milne} & Proved and applied via \lean{PropAudit}; covers minus-part orthogonality and Euler characteristic. \\
+\ref{C6} & \lean{BlochKato.DimFormula}, \lean{RationalDuality}, \lean{IntegralDuality} & Bloch--Kato~\cite[Prop.~3.8, Cor.~3.8.4]{bloch-kato}; Fontaine--Laffaille~\cite[Thm.~4.3, \S8]{fontaine-laffaille} & Proved via \lean{bkAL}/\lean{bkBL}; applied at crystalline places with $H^0=0$. \\
+\ref{C7} & \lean{GrothendieckMessing}, \lean{GrothendieckDeformation}, \lean{CountI}--\lean{CountV} & Messing~\cite[Ch.~V, Thm.~1.6]{messing}; Grothendieck~\cite[Ch.~V, \S4]{grothendieck1974}; Diamond~\cite[\S2.4]{diamond}; Kato~\cite[Thm.~12.5]{kato-euler} & Messing requires $p$ locally nilpotent (covering \lean{GrothendieckMessing}); \lean{GrothendieckDeformation} drops $p$-nilpotency, matching Grothendieck's 1974 Montr\'eal notes / Diamond (2025). \\
 \bottomrule
 \end{longtable}
 \end{small}
@@ -2344,18 +2466,23 @@ were checked by the author, who takes full responsibility for the content.
 % ======================================================================
 \bibitem{alpoge-remark} L.~Alp\"oge, note accompanying the Lean development, 20 November 2026,
   \url{https://alpo.ge/remark.pdf}.
+\bibitem{blggt} T.~Barnet-Lamb, T.~Gee, D.~Geraghty and R.~Taylor, \emph{Potential automorphy and
+  change of weight}, Ann. of Math. (2) \textbf{179} (2014), 501--609.
 \bibitem{behrend} F.~A.~Behrend, \emph{On sets of integers which contain no three terms in
   arithmetical progression}, Proc. Natl. Acad. Sci. USA \textbf{32} (1946), 331--332.
 \bibitem{bloch-kato} S.~Bloch and K.~Kato, \emph{$L$-functions and Tamagawa numbers of motives},
   in: The Grothendieck Festschrift, Vol.~I, Progr. Math. \textbf{86}, Birkh\"auser, Boston, 1990,
   333--400.
+\bibitem{bost-arakelov} J.-B.~Bost, \emph{P\'eriodes et isog\'enies des vari\'et\'es ab\'eliennes
+  sur les corps de nombres}, Ast\'erisque \textbf{237} (1996), 115--161.
 \bibitem{chowla-selberg} S.~Chowla and A.~Selberg, \emph{On Epstein's zeta-function}, J. reine
   angew. Math. \textbf{227} (1967), 86--110.
 \bibitem{coates-sinnott} J.~Coates and W.~Sinnott, \emph{Integrality properties of the values of
   partial zeta functions}, Proc. London Math. Soc. (3) \textbf{34} (1977), 365--384.
 \bibitem{davenport} H.~Davenport, \emph{Multiplicative Number Theory}, 3rd ed., revised by
 H.~L.~Montgomery, Graduate Texts in Mathematics~74, Springer, New York, 2000.
-
+\bibitem{deligne-lusztig} P.~Deligne and G.~Lusztig, \emph{Representations of reductive groups
+  over finite fields}, Ann. of Math. (2) \textbf{103} (1976), 103--161.
 \bibitem{diamond} F.~Diamond, \emph{Mod $p$ Hilbert modular forms and partial Hasse invariants},
   Forum Math. Sigma (2025), arXiv:2111.10160.
 \bibitem{dixit-part1} I.~Dixit, \emph{The analytic reduction in Alp\"oge's formal proof of the
@@ -2370,12 +2497,24 @@ H.~L.~Montgomery, Graduate Texts in Mathematics~74, Springer, New York, 2000.
   repr\'esentations $p$-adiques}, Ann. Sci. \'Ecole Norm. Sup. (4) \textbf{15} (1982), 547--608.
 \bibitem{gallagher} P.~X.~Gallagher, \emph{A large sieve density estimate near $\sigma=1$},
 Invent. Math. \textbf{11} (1970), 329--339.
-
+\bibitem{gan-qiu-takeda} W.~T.~Gan, Y.~Qiu and S.~Takeda, \emph{The regularized Siegel--Weil
+  formula (the second term identity) and the Rallis inner product formula}, Invent. Math.
+  \textbf{198} (2014), 739--831.
+\bibitem{green-gln} J.~A.~Green, \emph{The characters of the finite general linear groups},
+  Trans. Amer. Math. Soc. \textbf{80} (1955), 402--447.
 \bibitem{grothendieck1974} A.~Grothendieck, \emph{Groupes de Barsotti--Tate et cristaux de
   Dieudonn\'e}, S\'eminaire de Math\'ematiques Sup\'erieures \textbf{45}, Presses de l'Universit\'e
   de Montr\'eal, 1974.
 \bibitem{iwaniec-kowalski} H.~Iwaniec and E.~Kowalski, \emph{Analytic Number Theory}, AMS
   Colloquium Publications \textbf{53}, American Mathematical Society, Providence, RI, 2004.
+\bibitem{kato-euler} K.~Kato, \emph{$p$-adic Hodge theory and values of zeta functions of modular
+  forms}, Ast\'erisque \textbf{295} (2004), 117--290.
+\bibitem{kottwitz-tamagawa} R.~E.~Kottwitz, \emph{Tamagawa numbers}, Ann. of Math. (2)
+  \textbf{127} (1988), 629--646.
+\bibitem{labesse} J.-P.~Labesse, \emph{Changement de base CM et s\'eries discr\`etes}, in: On the
+  Stabilization of the Trace Formula, Int. Press, Somerville, MA, 2011, 429--470.
+\bibitem{li-theta} J.-S.~Li, \emph{Non-vanishing theorems for the cohomology of certain arithmetic
+  quotients}, J. reine angew. Math. \textbf{428} (1992), 177--217.
 \bibitem{mazur-wiles} B.~Mazur and A.~Wiles, \emph{Class fields of abelian extensions of $\Q$},
   Invent. Math. \textbf{76} (1984), 179--330.
 \bibitem{messing} W.~Messing, \emph{The Crystals Associated to Barsotti--Tate Groups: With
@@ -2384,9 +2523,20 @@ Invent. Math. \textbf{11} (1970), 329--339.
   SC, 2006.
 \bibitem{montgomery-topics} H.~L.~Montgomery, \emph{Topics in Multiplicative Number Theory},
 Lecture Notes in Mathematics~227, Springer, Berlin, 1971.
-
 \bibitem{nsw} J.~Neukirch, A.~Schmidt and K.~Wingberg, \emph{Cohomology of Number Fields}, 2nd ed.,
   Grundlehren der mathematischen Wissenschaften \textbf{323}, Springer, Berlin, 2008.
+\bibitem{paul-unitary} A.~Paul, \emph{Howe correspondence for real unitary groups}, J. Funct.
+  Anal. \textbf{159} (1998), 384--431.
+\bibitem{scharlau} W.~Scharlau, \emph{Quadratic and Hermitian Forms}, Grundlehren der
+  mathematischen Wissenschaften \textbf{270}, Springer, Berlin, 1985.
+\bibitem{shimura-mass} G.~Shimura, \emph{Some exact formulas for quaternion unitary groups},
+  J. reine angew. Math. \textbf{509} (1999), 67--102.
+\bibitem{shin-galois} S.~W.~Shin, \emph{Galois representations arising from some compact Shimura
+  varieties}, Ann. of Math. (2) \textbf{173} (2011), 1645--1741.
+\bibitem{shin-plancherel} S.~W.~Shin, \emph{Automorphic Plancherel density theorem}, Israel J.
+  Math. \textbf{192} (2012), 83--120.
+\bibitem{shin-templier} S.~W.~Shin and N.~Templier, \emph{Sato--Tate theorem for families and
+  low-lying zeros of automorphic $L$-functions}, Invent. Math. \textbf{203} (2016), 1--177.
 \bibitem{sutherland} A.~V.~Sutherland, build and verification page for the Lean development,
   \url{https://math.mit.edu/~drew/grh/}, November 2026.
 \bibitem{washington} L.~C.~Washington, \emph{Introduction to Cyclotomic Fields}, 2nd ed.,
