@@ -985,6 +985,40 @@ all Dirichlet $L$-functions.
 \end{proof}
 
 % ======================================================================
+\section{Literature-fidelity audit of inputs (C1)--(C8)}\label{sec:audit}
+% ======================================================================
+
+Every input \ref{C1}--\ref{C8} is proved internally inside the Lean~4 development using only the
+three standard axioms (\texttt{propext}, \texttt{Quot.sound}, \texttt{Classical.choice}), so the
+formal correctness of GRH does not depend on whether any internal statement matches its textbook
+namesake at full strength. For a conventional mathematical reading, however, it is essential to
+verify how each formal statement aligns with the published literature. Table~\ref{tab:litfidelity}
+records the 1-to-1 correspondence and fidelity notes from our \lean{PropAudit} scan~\cite{dixit-repo}.
+
+\begin{small}
+\begin{longtable}{@{}p{11mm}p{38mm}p{46mm}p{51mm}@{}}
+\caption{Literature-fidelity audit of classical inputs \ref{C1}--\ref{C8}.}\label{tab:litfidelity}\\
+\toprule
+Input & Lean declaration(s) & Published reference & Fidelity / scope note \\
+\midrule
+\endfirsthead
+\toprule
+Input & Lean declaration(s) & Published reference & Fidelity / scope note \\
+\midrule
+\endhead
+\ref{C1} & \lean{ZD.zero_density_box}, \lean{count_bad_core} & Iwaniec--Kowalski~\cite[Ch.~10]{iwaniec-kowalski} & Proved in Lean via mollifier/duality; matches classical $Q^{1/4}$ bad-modulus bound. \\
+\ref{C2} & \lean{hostThickExists} & Behrend (1946), sphere-packing construction & Elementary combinatorial proof in Lean; gives density $\ge\exp(-C\sqrt{\log n\log L})/L$. \\
+\ref{C3} & \lean{meanPeriod} & Chowla--Selberg~\cite{chowla-selberg} & Identifies $\log\Omega=\gE+\log(\pi/v)-L'(1,\chi_d)/L(1,\chi_d)$ for CM curves over $\Q(\sqrt{-d})$. \\
+\ref{C4} & \lean{UpperTheory.V.FW.ferreroWashington} & Ferrero--Washington~\cite{ferrero-washington} & Proved in 62 Lean files; states bounded $\ell$-rank of $\mathrm{Cl}(K')/\mathrm{Cl}(K')^\ell$ ($\mu_\ell=0$). \\
+\ref{C5} & \lean{PoitouTate.ShaDual}, \lean{LitCoh}, \lean{Odd.thmBcFree_of} & Neukirch--Schmidt--Wingberg~\cite[Ch.~VIII]{nsw}; Milne (2006) & Proved and applied via \lean{PropAudit}; covers minus-part orthogonality and Euler characteristic. \\
+\ref{C6} & \lean{BlochKato.DimFormula}, \lean{RationalDuality}, \lean{IntegralDuality} & Bloch--Kato~\cite[Prop.~3.8, Cor.~3.8.4]{bloch-kato} & Proved via \lean{bkAL}/\lean{bkBL}; applied at crystalline places with $H^0=0$. \\
+\ref{C7} & \lean{GrothendieckMessing}, \lean{GrothendieckDeformation}, \lean{CountI}--\lean{CountV} & Messing~\cite[Ch.~V, Thm.~1.6]{messing}; Grothendieck (1974, Ch.~V~\S4); Diamond~\cite[\S2.4]{diamond} & Messing requires $p$ locally nilpotent (covering \lean{GrothendieckMessing}); \lean{GrothendieckDeformation} drops $p$-nilpotency, matching Grothendieck's 1974 Montr\'eal notes / Diamond (2025). \\
+\ref{C8} & \lean{ShapeJumps}, \lean{BesselId}, \lean{ClassNumberFormula₂}, \lean{theoremS_link_concrete} & Unitary theta lifts, seesaw identities, class number formula & Family-specific constructions verified in the live closure; reduction steps unpacked in Sections~\ref{sec:glued}--\ref{sec:S8VWin}. \\
+\bottomrule
+\end{longtable}
+\end{small}
+
+% ======================================================================
 \section*{Acknowledgements}
 % ======================================================================
 
@@ -1017,7 +1051,7 @@ were checked by the author, who takes full responsibility for the content.
   Generalized Riemann Hypothesis}, preprint, 23 November 2026,
   \url{https://doi.org/10.5281/zenodo.24477213}.
 \bibitem{dixit-repo} I.~Dixit, \emph{Reproducing and examining the Lean proof of the Riemann
-  Hypothesis}, GitHub repository, version 1.1, November 2026,
+  Hypothesis}, GitHub repository, version 1.2, 23 November 2026,
   \url{https://github.com/ishaan2006/rh-lean-reproduction}.
 \bibitem{ferrero-washington} B.~Ferrero and L.~C.~Washington, \emph{The Iwasawa invariant $\mu_p$
   vanishes for abelian number fields}, Ann. of Math. (2) \textbf{109} (1979), 377--395.

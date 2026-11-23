@@ -229,8 +229,9 @@ declarations</a></li>
 <h1 class="title">The Riemann Hypothesis via a chain of theta lifts: a human-readable account of the Lean proof</h1>
 <div class="byline">Ishaan Dixit · Updated 23 November 2026</div>
 <div class="links">
-<a href="analytic_reduction_grh.pdf"><strong>Analytic reduction paper (PDF, 34 pp.)</strong></a>
-<a href="https://doi.org/10.5281/zenodo.24477213">Zenodo DOI: 10.5281/zenodo.24477213</a>
+<a href="analytic_reduction_grh.pdf"><strong>Part I: Analytic reduction (PDF, 34 pp.)</strong></a>
+<a href="arithmetic_construction_grh.pdf"><strong>Part II: Arithmetic construction (PDF, 16 pp.)</strong></a>
+<a href="https://doi.org/10.5281/zenodo.24477213">Part I Zenodo DOI</a>
 <a href="rh_lean_proof_readable.pdf">Readable account (PDF)</a>
 <a href="https://github.com/ishaan2006/rh-lean-reproduction">Repository</a>
 <a href="https://github.com/ishaan2006/rh-lean-reproduction/blob/main/mechanism/TRACE.md">Line-by-line trace</a>
@@ -242,7 +243,7 @@ declarations</a></li>
 <section class="tldr">
 <h2>In short</h2>
 <ul>
-<li><b>Self-contained paper (<a href="https://doi.org/10.5281/zenodo.24477213">DOI: 10.5281/zenodo.24477213</a>, <a href="analytic_reduction_grh.pdf">PDF</a>):</b> a 34-page conventional mathematical paper proving the analytic reduction end-to-end (windowed Landau theorem without positivity, group Fourier isolation, the <em>x/m + m</em> balance, the deduction from the eleven lattice conditions (S0) to (S10), and four general host lattice theorems).</li>
+<li><b>Two-part journal manuscript:</b> <a href="analytic_reduction_grh.pdf"><b>Part I</b></a> (<a href="https://doi.org/10.5281/zenodo.24477213">DOI: 10.5281/zenodo.24477213</a>, 34 pp.) proves the analytic reduction end-to-end (windowed Landau without positivity, group Fourier isolation, the <em>x/m + m</em> balance, the deduction from (S0) to (S10), and four general host lattice theorems); <a href="arithmetic_construction_grh.pdf"><b>Part II</b></a> (16 pp.) proves Theorem C2 modulo eight audited classical inputs (C1) to (C8), constructing the host windows, glued lattice <em>R</em>, Selmer colength <em>E<sub>b</sub></em>, gain/frame inequalities, and Sha-window <code>VWin</code>.</li>
 <li>The Lean theorem proves GRH for every Dirichlet character; RH is the trivial-character case. Our independent build is clean: 175,187 modules, Mathlib's own statement, only the three standard axioms, and Google DeepMind's <code>formal-conjectures</code> RH/GRH statements compile and pass <code>con-leche --compare</code>.</li>
 <li>The whole square-root saving is one balance: relative to the main term the error is about <em>x/m + m</em> for a chain of <em>m</em> theta lifts, smallest at <em>m ≈ √x</em>.</li>
 <li>Both sides of that balance are paid by one inequality, the divisibility bound. Of the charges of the same nominal size, the energy and slope budgets are slack, and the "signature drift" is an artefact smaller than its bound by a factor of <em>x</em><sup>1131</sup>.</li>

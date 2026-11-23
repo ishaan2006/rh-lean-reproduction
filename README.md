@@ -10,7 +10,8 @@ This repository is my independent look at the release. It does **not** claim to 
 
 ## Start here
 
-- **[The analytic reduction paper (34 pp., Zenodo DOI: 10.5281/zenodo.24477213)](https://doi.org/10.5281/zenodo.24477213)** (direct [PDF](https://ishaan2006.github.io/rh-lean-reproduction/analytic_reduction_grh.pdf), [Release v1.1](https://github.com/ishaan2006/rh-lean-reproduction/releases/tag/v1.1), single-file LaTeX source in [`journal/main.tex`](journal/main.tex)): self-contained conventional proofs of the windowed Landau theorem without positivity (Theorem A), group-theoretic Fourier isolation and the $x/m + m$ balance (Theorem B), the deduction from the eleven Hermitian-lattice conditions (S0) to (S10) (Theorem C), and four general host lattice theorems.
+- **[Part I: The analytic reduction paper (34 pp., Zenodo DOI: 10.5281/zenodo.24477213)](https://doi.org/10.5281/zenodo.24477213)** (direct [PDF](https://ishaan2006.github.io/rh-lean-reproduction/analytic_reduction_grh.pdf), [Release v1.1](https://github.com/ishaan2006/rh-lean-reproduction/releases/tag/v1.1), single-file LaTeX source in [`journal/main.tex`](journal/main.tex)): self-contained conventional proofs of the windowed Landau theorem without positivity (Theorem A), group-theoretic Fourier isolation and the $x/m + m$ balance (Theorem B), the deduction from the eleven Hermitian-lattice conditions (S0) to (S10) (Theorem C1), and four general host lattice theorems.
+- **[Part II: The arithmetic construction paper (16 pp., Theorem C2)](https://ishaan2006.github.io/rh-lean-reproduction/arithmetic_construction_grh.pdf)** ([Release v1.2](https://github.com/ishaan2006/rh-lean-reproduction/releases/tag/v1.2), single-file LaTeX source in [`journal-part2/main.tex`](journal-part2/main.tex)): proves Theorem C2 of Part I modulo eight explicitly audited classical arithmetic inputs `(C1)` to `(C8)`, constructing the scale parameters, host windows, glued lattice $R$, Selmer colength $E_b$, energy/gain/frame bounds `(S0)` to `(S10)`, and the Tate-Shafarevich window `VWin`.
 - **[The readable account](https://ishaan2006.github.io/rh-lean-reproduction/)** (also as a [PDF](https://ishaan2006.github.io/rh-lean-reproduction/paper/), LaTeX source in `writeup/main.tex`): the whole proof top down, in six steps, with 15 figures and the load-bearing footprint of classical inputs. Every claim is labelled Exact, Verified, Reading or Ours.
 - **[`mechanism/TRACE.md`](mechanism/TRACE.md)**: the evidence, 29 sections, every declaration with file and line.
 - **[`results/audit/verdict_table.md`](results/audit/verdict_table.md)** and **[`published_now.tsv`](results/audit/published_now.tsv)**: `PropAudit.lean` load-bearing map of all 610 `*.Published` / `OpenLiterature` items and the 12 inert types/propositions inside the live closure.
@@ -237,8 +238,9 @@ python3 more.py ~/rh/lean/src && python3 cyclo.py ~/rh/lean/src
 - `mechanism/TRACE.md`: the mechanism trace of section 10.
 - `analysis/dead_code/`: the exact dead-code count, to be run on the finished build.
 - `visuals/`: the two interactive pages and the script for their data.
-- `journal/`: single-file LaTeX source (`main.tex`) of the self-contained analytic reduction paper (CC BY 4.0, Zenodo DOI `10.5281/zenodo.24477213`).
-- `docs/`: the GitHub Pages site with the readable account, its figures, `rh_lean_proof_readable.pdf`, and `analytic_reduction_grh.pdf`.
+- `journal/`: single-file LaTeX source (`main.tex`) of Part I, the self-contained analytic reduction paper (CC BY 4.0, Zenodo DOI `10.5281/zenodo.24477213`).
+- `journal-part2/`: single-file LaTeX source (`main.tex`) of Part II, the arithmetic construction paper proving Theorem C2 (CC BY 4.0).
+- `docs/`: the GitHub Pages site with the readable account, its figures, `rh_lean_proof_readable.pdf`, `analytic_reduction_grh.pdf`, and `arithmetic_construction_grh.pdf`.
 - `writeup/`: the LaTeX source of the readable account.
 
 ## Contact
@@ -250,7 +252,7 @@ Ishaan Dixit. Questions, corrections and suggestions are welcome, by email or as
 
 ## License
 
-MIT for scripts, analyses, and site files; CC BY 4.0 for the journal paper (`journal/main.tex`). The Lean proof itself is Levent Alpöge's and is not covered by these licences.
+MIT for scripts, analyses, and site files; CC BY 4.0 for the journal papers (`journal/main.tex` and `journal-part2/main.tex`). The Lean proof itself is Levent Alpöge's and is not covered by these licences.
 
 ## How this was made
 
