@@ -804,6 +804,16 @@ $i(t+1)$ block rows are $\approx 0$ up to $2\eta_{Sz}$.
 parameters at lift $j$; \lean{kerPlace} sums $\phi(\nu)=\nu\log\nu-\nu$ over the rows, a Stirling
 shape.
 
+\paragraph{The $g$-place energy bound.} \Verified{} (\lean{linkDIVt_of_rowsF},
+\lean{secondComplement_of_split}, \lean{WeightDegreeSizes.lean:142--261}) The $g$-place energy
+clause of \lean{LinkDIV_at} is not a global product formula across all places, but a local sum
+over the places $w\mid g_i$ ($i\in\{0,1\}$, combined via $\log(g_0g_1)=\log g_0+\log g_1$ in
+\lean{prod_gTypes}). Specifically, \lean{NormDecompositionCond} gives
+$\sum_{w\mid g_i}\mathrm{sz}(w,v_{NN})=(\sum_\tau\mathrm{nuAbs}(u,j,\tau))\log g_i$,
+\lean{factEtaMean} cancels the Fock-degree offset $2\,\mathrm{FTypeG}=-\mathrm{fockDeg}$,
+\lean{DegreeCountBound} bounds $|\sum_\tau\mathrm{nuAbs}-\mathrm{fockDeg}-\sum_t a_T|\le\mathrm{errG}(j)$,
+and \lean{TypePrimeSizeBound} absorbs $(\mathrm{errG}(j)+2v_{g_i}(D_\Gamma)+2\,\mathrm{er})\log g_i\le C B_0$.
+
 \begin{proposition}[\Ours]
 The real per-lift energy error is $\mathrm{errG}(j)\approx 2\sum_\tau w_j(j,\tau)\approx 2fb$,
 with no factor $m$, against a budget $B_0=f\,m\,b\,x^\eps$. The energy charge $m\,c_E B_0$ therefore
@@ -1263,6 +1273,48 @@ theorem \lean{galoisLocalGlobalStrong_recParameter}. The clean axiom check means
 \paragraph{Budget. \Reading} The minus part is polynomial in $t=x^{401}$, $[E:\Q]\approx x^{2+8\eps}$
 and logarithms; the plus part is at most $\exp(x^{4\eps/5})$ times a polynomial. Both are far below
 $\sqrt b=\exp(x^\eps/2)$, so the window does not touch the square root.
+
+\subsection{Minimal mathematical footprint: load-bearing vs.\ dead classical inputs}\label{sec:footprint}
+
+Because the original archive bundles classical theorems into large hypothesis records, file-level
+reachability from \lean{Main} overstates what the proof actually consumes. Running our compiled
+closure auditor (\texttt{PropAudit.lean}, \Verified{}, at commit \texttt{40e56bab}, 1{,}265{,}279
+project constants in the closure of the five headline theorems) separates genuinely applied
+theorems from dead weight carried in unused record fields (\texttt{results/audit/verdict\_table.md}):
+
+\begin{itemize}
+\item \textbf{610 \texttt{*.Published} and \texttt{OpenLiterature} items:} 276 are unreachable from
+  \lean{Main} (including \lean{LocalLanglandsExists} and \lean{CaraianiLocalGlobal}), 261 are
+  genuinely applied in the closure, 60 are carried-only (\texttt{applied=0}, \texttt{carried>0}:
+  1 trivial placeholder \lean{UnusedSlot72 := True}, 8 parent-bundle conjuncts/aliases, and 51
+  proved by explicit witnesses), and 9 have zero proof occurrences (6 are \lean{Set} definitions
+  rather than theorems).
+\item \textbf{Verified load-bearing classical inputs:} source-checking the terminal witnesses
+  confirms genuine proofs and live applications for Grothendieck--Messing deformation theory
+  (\lean{GrothendieckDeformation}/\lean{GrothendieckMessing} via
+  \lean{abelianScheme_hom_lifting_nilpotent_dividedPowers}), local Bloch--Kato duality and
+  dimension formulas (\lean{BlochKato.RationalDuality}, \lean{IntegralDuality}, \lean{DimFormula}
+  via \lean{bkAL} and \lean{bkBL}), Poitou--Tate duality (\lean{PoitouTate.ShaDual}), real Howe
+  duality (\lean{HoweDualityReal}), Kawamata--Viehweg vanishing (\lean{KawamataViehweg}), strong
+  approximation for special unitary groups (\lean{StrongApproxSU}), and rigid de Rham vector
+  extensions (\lean{DeRhamVectorExtension.Family.Natural}).
+\item \textbf{Dead classical theories still inside the live closure:} 12 types/propositions in the
+  live closure are never constructed inside the proof (inert-in-proof). Tracing the unread record
+  fields that pull them in shows that the proof does \emph{not} use:
+  (i)~Ohsawa--Takegoshi $L^2$ extension and $\bar\partial$-estimates
+  (\lean{L2ExtensionLogCanonical}, \lean{WeightedAtlas}, \lean{OTY}, $\sim$1{,}645 declarations,
+  unread field \lean{PublishedHodgeBundleTheorems.q8} / \lean{HSCore.Quoted.l2}; upstream PR~\#384);
+  (ii)~the \lean{PushDown} / Hodge-flag / Pl\"ucker conjunct ($\sim$160+ declarations, unread 4th
+  conjunct of \lean{ZhangDimensionPushDownGrassmannianHeightBounds}; PR~\#395);
+  (iii)~12 classical-theorem fields of \lean{GlobalTheory.FunPr.ThetaLocalInputs} (including
+  Stone--von Neumann, metaplectic representation, Kudla splitting, holomorphic discrete series,
+  Weyl branching, and cuspidal mirabolic; $\sim$800+ declarations; PR~\#398); or
+  (iv)~the full local Langlands correspondence (\lean{LocLanglands.IsRec} is inert; the proof uses
+  only the weak assignment \lean{IsRecT} via \lean{recTExists}).
+\item \textbf{No hidden vacuous proofs:} of 27 \lean{Prop} declarations flagged as nullary in the
+  closure, 17 are ordinary indexed inductives with a 0-field base constructor and only 10 have body
+  \lean{True} (3 explicit \lean{UnusedSlot}s and 7 explicit ``no extra filter'' predicates).
+\end{itemize}
 
 % ======================================================================
 \section{Why the $2/3$ barrier does not appear}\label{sec:23}
