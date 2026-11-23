@@ -382,22 +382,65 @@ $y\notin(S_w)_{\fp_w}$) such that $dy\in R$. Thus $(S_{w_0})_{\fp_{w_0}}\subsete
 \section{The divisibility bound (S1) and energy/height/slope bounds (S2)--(S5)}\label{sec:S1S5}
 % ======================================================================
 
-\subsection{Column-chain height bound and the Selmer colength $E_b$}
+\subsection{Column-chain height bound and the Selmer colength \texorpdfstring{$E_b$}{Eb}}
 
-For each word $u$, the pairing map $B_u$ factors through a column chain of $m$ lift operators
-$K_1,\dots,K_m$ with operator norms $\|K_j\|_v^2\le\exp(h_K(j,v))$ at each archimedean place $v$.
-By submultiplicativity of operator norms at every place $v$ (\lean{height_chain_atR}):
+We first record the two algebraic assembly lemmas behind \lean{DivClausesR}: averaging the
+column-chain operator norm bound over all infinite places (\lean{height_chain_atR}) and combining
+the per-lift error budgets into $\mathrm{err}_B$ (\lean{errB_of_units}).
+
+\begin{lemma}[Averaged column-chain height bound, \texttt{height\_chain\_atR}]\label{lem:heightchain}
+Let $K$ be a totally complex number field with $r_\infty=|\mathrm{Pl}_\infty(K)|\ge1$ infinite
+places, and let $B_u$ factor through a column chain of $m$ maps $K_j$ with archimedean norm bounds
+$h_P$ and $h_K(\ell,v)$ ($\ell\in J$, partitioned fiberwise by $\mathrm{lf}$). Suppose that at
+every infinite place $v$,
 \begin{equation}\label{eq:heightchain}
-\log\|B_u\|_v^2 \le h_P + \sum_{j=1}^m h_K(j,v) - \log\kappa_v - \min_p\sum_{j=1}^m\log\lambda_j(p,v),
+\log\|B_u\|_v^2 \le h_P + \sum_j\sum_{\mathrm{lf}(\ell)=j} h_K(\ell,v) - \log\kappa_v -
+\min_p\sum_{j\in J}\log\lambda_j(p,v),
 \end{equation}
-which supplies the local-to-global divisibility inputs (D1)--(D4) and the hypotheses of
-Theorem~10.7 of Part~I.
+and $\sum_{j\in J} l_6(j)\le\min_p\sum_{j\in J}\log\lambda_j(p,v)$ for every $v$. Then, with
+$\mathrm{meanLog}(\kappa)=\frac{1}{r_\infty}\sum_v\log\kappa_v$ and
+$\overline{h_K}(j)=\frac{1}{r_\infty}\sum_v h_K(j,v)$,
+\[
+\frac{1}{r_\infty}\sum_{v\in\mathrm{Pl}_\infty(K)}\log\|B_u\|_v^2
+\le h_P + \sum_{j\in J}\overline{h_K}(j) - \sum_{j\in J} l_6(j) - \mathrm{meanLog}(\kappa).
+\]
+\end{lemma}
 
+\begin{proof}
+At every place $v$, summing fiberwise over $\mathrm{lf}$ gives
+$\sum_j\sum_{\mathrm{lf}(\ell)=j} h_K(\ell,v)=\sum_{j\in J} h_K(j,v)$. Averaging
+\eqref{eq:heightchain} over $v\in\mathrm{Pl}_\infty(K)$ and exchanging the finite sums over $v$ and
+$j$ yields
+\[
+\frac{1}{r_\infty}\sum_v\log\|B_u\|_v^2\le h_P+\sum_{j\in J}\overline{h_K}(j)-\mathrm{meanLog}(\kappa)
+-\frac{1}{r_\infty}\sum_v\min_p\sum_{j\in J}\log\lambda_j(p,v).
+\]
+Since $\min_p\sum_j\log\lambda_j(p,v)\ge\sum_j l_6(j)$ at every $v$, the average of the minimum is
+at least $\sum_j l_6(j)$, giving the claim.
+\end{proof}
+
+\begin{lemma}[Assembly of the per-lift error budget, \texttt{errB\_of\_units}]\label{lem:errBunits}
+Let $m=|J|\ge0$, $U=x^\eps(B_0+N_c)\ge0$, and $C\ge0$. Suppose $E_{1u}\le U$,
+$C\,l_{3u}\le c_3 U$, $L_G\le c_G mU$, $E_2(j)\le c_2 U$ for every $j\in J$, $E_3\le c_E mU$, and
+$c_3+c_G+C+c_2+c_E\le c_e$. Then
+\[
+m(C\,l_{3u})+L_G+\sum_{j\in J}\bigl(C E_{1u}+E_2(j)\bigr)+E_3\le c_e m U=\mathrm{err}_B.
+\]
+\end{lemma}
+
+\begin{proof}
+Summing $C E_{1u}+E_2(j)\le (C+c_2)U$ over the $m$ elements of $J$ gives at most $m(C+c_2)U$.
+Adding $m(C\,l_{3u})\le c_3 mU$, $L_G\le c_G mU$, and $E_3\le c_E mU$ yields
+$(c_3+c_G+C+c_2+c_E)mU\le c_e mU$.
+\end{proof}
+
+Lemma~\ref{lem:heightchain} (together with $\sum_j h_X(j)\le\sum_j l_6(j)$) supplies the
+local-to-global divisibility inputs (D1)--(D4) and the hypotheses of Theorem~10.7 of Part~I.
 By Proposition~10.1 and Lemma~10.2 of Part~I, the divisibility inequality (S1) follows once the
-assembled error $\mathrm{err}_B$ is bounded by $C_0 m x^\eps(B_0+N_c)$. In the formal assembly
-(\lean{DivAssembly}, \lean{AbsorbE}), every term except two has a spare factor of at least $m$; the
-two terms of full size $m B_0$ are the \emph{signature drift} and the \emph{Selmer colength charge}
-$E_b$.
+assembled error $\mathrm{err}_B$ is bounded by $c_e m x^\eps(B_0+N_c)$ via
+Lemma~\ref{lem:errBunits}. In the formal assembly (\lean{DivAssembly}, \lean{AbsorbE}), every term
+except two has a spare factor of at least $m$; the two terms of full size $m B_0$ are the
+\emph{signature drift} and the \emph{Selmer colength charge} $E_b$.
 
 \begin{theorem}[Per-lift Selmer colength bound $E_b$ and verification of (S1)]\label{thm:S1}
 Assume \ref{C3}, \ref{C6}, \ref{C7}, \ref{C8}, and the $\Sha$-window bound
@@ -618,6 +661,41 @@ Lemma~9.6 of Part~I (\lean{key_minor_dvd}) hold in $A$ with $e=d$. Therefore $w_
 twisted $2\times2$ minor in $O[X]$, which means every coefficient lies in $w_p O$.
 \end{proof}
 
+\begin{lemma}[Orbitwise arithmetic bounds for cases D and E, \texttt{caseD\_arith}, \texttt{caseE\_arith}]\label{lem:caseDE}
+Let $N\ge1$, $C_{31}\ge0$, $\ell_x\ge1$, $n\le NG$, and $n_d\le N C_{31}\ell_x$.
+\begin{enumerate}[label=(\roman*)]
+\item \textup{(Case D: $p<p_0(k)$)} Let $r\ge1$, $b'\ge1$, $0\le c\le u$, $Gu\le b'$,
+  $0\le c_0\le 3b'$, $k_Q\le b'$, $0\le D_w\le b'$, $S_1,\mathrm{Pr}_2,t_c\ge0$, and suppose
+  $t_c r\le C$ and $2\mathrm{Pr}_2+4t_c+160 C_{31}+7\le C$. Then
+  \begin{multline*}
+  \mathrm{Pr}_2 r(Nb'+nu)+\bigl(t_c r N(S_1+c_0+k_Q)+2rnc+1\bigr)\\
+  +\bigl(40 n_d D_w+2rnc+40 r n_d c_0+1\bigr)+1 \le N(Crb'\ell_x+C\ell_x S_1).
+  \end{multline*}
+\item \textup{(Case E: $p\ge p_0(k)$)} Let $w,\eta,c,N_m,S_2,E,\mathrm{Pr}_1\ge0$,
+  $\mathrm{Pr}_1 G w\le C_w$, $t_{N1}\le C\ell_x$, and
+  $\mathrm{Pr}_1 G(\eta+c+N_m)+\kappa_2 B_1+2Gc+40 C_{31}\ell_x E+3\le b_o$. Then
+  \begin{multline*}
+  \mathrm{Pr}_1 n(w+\eta+c+N_m)+\bigl(t_{N1} N S_2+\kappa_2 N B_1+2nc+1\bigr)\\
+  +(40 n_d E+1)+1 \le N(C_w+b_o+C\ell_x S_2).
+  \end{multline*}
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+For (i), $nu\le NGu\le Nb'$ and $nc\le nu\le Nb'$. Also $n_d D_w\le C_{31}Nb'\ell_x$ and
+$n_d c_0\le 3C_{31}Nb'\ell_x$. Since $N,r,b',\ell_x\ge1$, we have $1\le Nb'\le Nb'r\le Nb'r\ell_x$
+and $Nb'\ell_x\le Nb'r\ell_x$, while $t_c r N S_1\le C N S_1\le C N\ell_x S_1$. Substituting these
+bounds into the left-hand side collects all $Nb'r\ell_x$ coefficients into at most
+$(2\mathrm{Pr}_2+4t_c+160 C_{31}+7)Nb'r\ell_x\le C Nb'r\ell_x$, giving (i).
+
+For (ii), substitute $n\le NG$, $n_d\le N C_{31}\ell_x$, $1\le N$, $\mathrm{Pr}_1 Gw\le C_w$, and
+$t_{N1}\le C\ell_x$ directly into the left-hand side:
+\begin{align*}
+\text{LHS} &\le N\bigl(\mathrm{Pr}_1 Gw+\mathrm{Pr}_1 G(\eta+c+N_m)+C\ell_x S_2+\kappa_2 B_1+2Gc+40 C_{31}\ell_x E+3\bigr)\\
+&\le N(C_w+b_o+C\ell_x S_2). \qedhere
+\end{align*}
+\end{proof}
+
 \begin{lemma}[Summation of orbitwise gain bounds, \texttt{gain\_bound\_all\_of\_star}]\label{lem:orbitsum}
 Fix an inert or signal prime $p\le X''$, a set of orbit representatives $V\subseteq\mathrm{reps}(p)$,
 and nonnegative real quantities $\mathrm{dl}(p,t_0)\ge0$, $\mathrm{ep}(p)\ge0$, and
@@ -791,6 +869,36 @@ Summing over $\ell\in S_2$ (which is a subset of the odd prime factors of $d_E$)
 $S_1$ bound gives \eqref{eq:minusbound}.
 \end{proof}
 
+\begin{lemma}[Combining bad and good primes, \texttt{point\_arith}]\label{lem:pointHV}
+Let $B_\chi$ be a finite set of primes of cardinality $K=|B_\chi|$, let $M=Nt\ge2$, $B\ge0$, and
+suppose:
+\begin{enumerate}[label=(\alph*)]
+\item \textup{(\texttt{SumOut})} for every finite set $S'$ of odd primes disjoint from $B_\chi$,
+  \[
+  \sum_{\ell\in S'}\log\ell\sum_{1\le e<t}\len\Sha_\ell^+(e)\le M^{C_0};
+  \]
+\item \textup{(\texttt{SumIn})} for each prime $\ell\in B_\chi$, there is $C_\ell\in\N$ such that
+  $\log\ell\sum_{1\le e<t}\len\Sha_\ell^+(e)\le M^{C_\ell}+C_\ell B$.
+\end{enumerate}
+Put $D=\sum_{\ell\in B_\chi}C_\ell$ and $C_\ast=C_0+D+K+KD$. Then for every finite set $S$ of odd
+primes,
+\begin{equation}\label{eq:pointHV}
+\sum_{\ell\in S}\log\ell\sum_{1\le e<t}\len\Sha_\ell^+(e)\le M^{C_\ast}+C_\ast B.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Split $S$ into $S_{\mathrm{in}}=S\cap B_\chi$ (of cardinality $k\le K$) and
+$S_{\mathrm{out}}=S\setminus B_\chi$. By (a), the sum over $S_{\mathrm{out}}$ is at most $M^{C_0}$.
+For each $\ell\in S_{\mathrm{in}}$, $C_\ell\le D$ and $M\ge2>1$, so (b) gives at most $M^D+DB$,
+and summing over $S_{\mathrm{in}}$ gives at most $k(M^D+DB)$. Since $M\ge2$, Bernoulli's inequality
+yields $M^K=(1+(M-1))^K\ge 1+K(M-1)\ge K+1$. Since $M^{C_0},M^D,M^{KD}\ge1$ and
+$kD\le KD\le C_\ast$, we obtain
+\[
+k(M^D+DB)+M^{C_0}\le (K+1)M^{C_0+D}+kDB\le M^{C_0+D+K+KD}+C_\ast B=M^{C_\ast}+C_\ast B. \qedhere
+\]
+\end{proof}
+
 \begin{theorem}[The $\Sha$-window \texttt{VWin}]\label{thm:VWin}
 Assume \ref{C4}, \ref{C5}, and \ref{C7}. Let $\psi$ be a primitive Dirichlet character, $C_t=401$,
 $0<\eps<1/52$, and $e(x)=\lceil(2+8\eps)\log_2 x\rceil$. Then there exist $J\ge1$ and $X_0>0$ such
@@ -818,9 +926,14 @@ a polynomial in $x$ and $\log F$, hence is $o(\exp(x^\eps/2))$ for $x\ge X_0$.
 By \ref{C4} (\lean{UpperTheory.V.FW.ferreroWashington}) and Poitou--Tate duality \ref{C5}
 (\lean{PropA.aBound_of_isTower}), the fixed-prime and $\ell=2$ Iwasawa tower bounds hold
 (\lean{Two.fixedIn}, \lean{Two.twoIn}), which with \lean{LemmaK} give \lean{ThmBab}
-(\lean{thmBab_of_lemmaK}). Meanwhile, \lean{pointHV_of_counts} combines the inner count
-(\lean{CountII}, \lean{CountV}, \lean{countVs}, \lean{countIV}) and outer count (\lean{CountI},
-\lean{CountZ}, \lean{CountII}, \lean{CountIII}) from \ref{C7} into \lean{ThmHV}.
+(\lean{thmBab_of_lemmaK}). For each bad prime $\ell\in B_\chi$, decomposing the character set
+$X(e)\subseteq X(0)\cup X(1)$ (\lean{FinalLe.lean}) into odd-order characters $\mathcal O$
+(at most $\mathrm{cond}(\chi)$ characters, each bounded by $B+M^{C_4}$) and remaining characters
+(each bounded by $M^{2C_m}$), plus the finite-index loss $\le tM^6$, establishes hypothesis~(b) of
+Lemma~\ref{lem:pointHV} (\lean{SumIn}, from \lean{CountII}, \lean{CountV}, \lean{countVs},
+\lean{countIV}). Together with \lean{SumOut} (\lean{CountI}, \lean{CountZ}, \lean{CountII},
+\lean{CountIII}), Lemma~\ref{lem:pointHV} proves \lean{PointHV}, which instantiates to \lean{ThmHV}
+(\lean{ThmHV.lean}) with $B=\exp(x^{4\eps/5})$.
 
 Fix $X\ge X_0$ and a window pair $(q,d)$ at $(\eps,X^{1/J})$, and partition $[X^{1/J},X]$ into
 $\asymp\log_2 J$ disjoint dyadic-exponent windows $[Y_r,Y_r^2]$ with $Y_{r+1}=Y_r^2$. Combining
@@ -943,12 +1056,12 @@ Prop.~\ref{prop:ranks}(iii) & \lean{m_pow_five_mul_f_mul_L_le}, \lean{size_windo
 Def.~\ref{def:winpair}, Prop.~\ref{prop:hostB} & \lean{WinPair}, \lean{PageN}, \lean{QH.pairEx}, \lean{count_bad_core}, \lean{ZD.zero_density_box}, \lean{hostThickExists} & \lean{Dev/AA/CharacterBoxes/ExistsPageN.lean} \\
 Section~\ref{sec:glued}, \eqref{eq:sigchain}--\eqref{eq:rowranks} & \lean{IsChiField}, \lean{Ranks}, \lean{nuRow}, \lean{nuAbs} & \lean{ExistsPageN.lean}, \lean{Formalism/LocalRingCardinality/Params.lean} \\
 Theorem~\ref{thm:gluedR} & \lean{prescribedRowLat}, \lean{exists_divStage_of_pk}, \lean{DV.RRDef}, \lean{GoodSideLattices.locMeet} & \lean{Dev/AVT/Proofs/IwasawaDecomposition/ExistsDivStageOfPk.lean:54, 76} \\
-Theorem~\ref{thm:S1} & \lean{height_chain_atR}, \lean{errB_of_units}, \lean{LinkN_at}, \lean{DIVinN_at}, \lean{NData.locs_mem}, \lean{ShapeJumps}, \lean{rank_le_row}, \lean{eL}, \lean{LinkDIV_at} & \lean{Formalism/LocalToGlobal/Divisibility/ConstantGeTwentyEight.lean}, \lean{SR/GlobalTheoremInputs.lean:40, 77}, \lean{SR/LevelLetterCocycles/EmbeddingTypes.lean:99} \\
+Lemmas~\ref{lem:heightchain}--\ref{lem:errBunits}, Thm.~\ref{thm:S1} & \lean{height_chain_atR}, \lean{divClausesR_of}, \lean{errB_of_units}, \lean{LinkN_at}, \lean{DIVinN_at}, \lean{NData.locs_mem}, \lean{ShapeJumps}, \lean{rank_le_row}, \lean{eL}, \lean{LinkDIV_at} & \lean{ConstantGeTwentyEight.lean:174, 235}, \lean{DivisionHeightBoundStatement.lean:525}, \lean{SR/GlobalTheoremInputs.lean:40, 77} \\
 Lemmas~\ref{lem:nuabsfine}--\ref{lem:C2off}, Prop.~\ref{prop:S2S5} & \lean{nuAbs_place_fine}, \lean{degree_fine}, \lean{C2off_of}, \lean{secondComplement_of_inputs}, \lean{C2atG_of}, \lean{NormDecompositionCond}, \lean{factEtaMean} & \lean{NuAbsPlaceFine.lean:101, 136, 177}, \lean{WeightDegreeSizes.lean:400, 460} \\
 Prop.~\ref{prop:S6} & \lean{NprimeMuR}, \lean{LinkMu}, \lean{Places_at}, \lean{slopesN_at_of} & \lean{SR/GlobalTheoremInputs.lean:69}, \lean{SR/GlobalSchurBounds/TopDensityNGeSixteen.lean:1529} \\
-Lemmas~\ref{lem:kWord}--\ref{lem:orbitsum}, Thm.~\ref{thm:S7} & \lean{LinkG_at}, \lean{key_minor_dvd}, \lean{kW_ord}, \lean{key3Ord}, \lean{St.starAll_of}, \lean{gain_bound_all_of_star}, \lean{Loss.loss_bound_at} & \lean{KeyMinorDvd.lean:181, 207, 273}, \lean{PartnerCountOfCentral.lean:884}, \lean{NotSingularOfCentral.lean:777} \\
+Lemmas~\ref{lem:kWord}--\ref{lem:orbitsum}, Thm.~\ref{thm:S7} & \lean{LinkG_at}, \lean{key_minor_dvd}, \lean{kW_ord}, \lean{key3Ord}, \lean{caseD_arith}, \lean{caseE_arith}, \lean{St.starAll_of}, \lean{gain_bound_all_of_star} & \lean{KeyMinorDvd.lean:181, 207, 273}, \lean{PartnerCountOfCentral.lean:539, 587, 884}, \lean{NotSingularOfCentral.lean:777} \\
 Lemma~\ref{lem:diagnondeg}, Prop.~\ref{prop:S8S10} & \lean{unfolding_constant_pos_of_diagonal}, \lean{dall_pos}, \lean{matKF_of}, \lean{LinkS_at}, \lean{ChosenProviso}, \lean{theoremS_link_concrete} & \lean{TopDensityNGeSixteen.lean:1343, 1357, 1411}, \lean{LinkSPos.lean:151} \\
-Lemma~\ref{lem:minuspart}, Thm.~\ref{thm:VWin} & \lean{VWin}, \lean{VWinAt}, \lean{VVle}, \lean{vwin_of_counts}, \lean{ThmBcFree}, \lean{thmBab_of_lemmaK}, \lean{JointWinOfCounts}, \lean{UpperTheory.V.FW.ferreroWashington} & \lean{ExistsPageN.lean:44}, \lean{ThmBcOfPsiBound.lean:220, 339}, \lean{JointWinOfCounts.lean:59, 73}, \lean{ThmBabOfLemmaK.lean:55} \\
+Lemmas~\ref{lem:minuspart}--\ref{lem:pointHV}, Thm.~\ref{thm:VWin} & \lean{VWin}, \lean{VWinAt}, \lean{VVle}, \lean{vwin_of_counts}, \lean{ThmBcFree}, \lean{point_arith}, \lean{thmHV}, \lean{thmBab_of_lemmaK}, \lean{UpperTheory.V.FW.ferreroWashington} & \lean{ExistsPageN.lean:44}, \lean{ThmBcOfPsiBound.lean:220, 339}, \lean{PointArith.lean:47, 78}, \lean{FinalLe.lean:199}, \lean{ThmHV.lean:49} \\
 Section~\ref{sec:assembly} & \lean{ChainTied}, \lean{TieGlobal}, \lean{TieLocal}, \lean{TieArith}, \lean{supplyChi}, \lean{vwin_of_row} & \lean{SR/GlobalSchurBounds/TieGlobal.lean:97} \\
 \bottomrule
 \end{longtable}
