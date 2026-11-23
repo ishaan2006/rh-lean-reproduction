@@ -1,0 +1,129 @@
+==================== abelianScheme_hom_lifting_nilpotent_dividedPowers ====================
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean-1-import Mathlib
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean-2-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.ExistsCrystalPairing
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean-3-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.PoincareDeRhamDuality
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean-4-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CubeTheorem
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean-5-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianHodgeDeRham
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean-6-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianLifting
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean-7-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.AbelianUnobstructed
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean-8-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.GrothendieckDeformation
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean-9-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CanonicalOfAbelianDeRham
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean-10-import Development.AbelianVarietyTheory.PublishedTheorems.Divisors₂.CrysToDRBijective
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean-11-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianLiftingOfFour
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean-12-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.PoincareDeRhamDualityOfHodgeDeRhamDual
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean-13-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeDeRhamLocallyFreeHodgeDegeneratesStatement
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean-14-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.DualAbelianSchemeExistsBidualityStatement
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean-15-import Development.AbelianVarietyTheory.Proofs.DivisorProofs.AbelianSchemeUnobstructedSquareZeroAffine
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean-16-
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean-17-namespace GlobalTheory
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean-18-
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean:19:theorem abelianScheme_hom_lifting_nilpotent_dividedPowers : GlobalTheory.Published.AbelianLifting :=
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean-20-  GlobalTheory.LiftFour.abelianLifting_of_four GlobalTheory.T.abelianScheme_deRham_locallyFree_hodgeDegenerates GlobalTheory.T.dualAbelianScheme_exists_biduality
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean-21-    (GlobalTheory.PoincareDeRhamDualityProof.poincareDeRhamDuality_of_hodge GlobalTheory.T.abelianScheme_deRham_locallyFree_hodgeDegenerates GlobalTheory.T.dualAbelianScheme_exists_biduality)
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean-22-    GlobalTheory.UnobTop.abelianUnobstructed
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean-23-
+/home/ishaandixit2017/rh/lean/src/Development/AbelianVarietyTheory/Proofs/DivisorProofs/AbelianSchemeHomLiftingNilpotentDividedPowers.lean-24-end GlobalTheory
+==================== bkAL ====================
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-204-    (fun a h => hnd.1 a a.2 fun b hb => (hΦ a ⟨b, hb⟩).1 (h _))
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-205-    (fun b h => hnd.2 b b.2 fun a ha => (hΦ ⟨a, ha⟩ b).1 (h _))
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-206-    hBS hSZ hBS' hSZ'
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-207-    (fun a b ha hb => (hΦ a b).2 (horth a ha b hb)) hdim
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-208-  exact ⟨fun a ha h => res.1 ⟨a, ha⟩ fun b hb => (hΦ _ _).2 (h b hb),
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-209-    fun b hb h => res.2 ⟨b, hb⟩ fun a ha => (hΦ _ _).2 (h a ha)⟩
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-210-
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-211-open PositivityTheory.LocalTateOrthogonality.Bk in
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-212-
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-213-theorem formsL (hT : Formalism.GaloisCohomology.LocalTateDualityK) (hE : Formalism.GaloisCohomology.LocalEulerCharK) (l : ℕ) [Fact l.Prime] (Lp : LocPrime l) (K : FinExt l) :
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-214-    FinZQ (Lp.PD K) ∧ TopInj (Lp.PD K) ∧ DualQ (Lp.PD K) ∧
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-215-      DualD (Lp.PD K) ∧ CobLO (Lp.PD K) ∧ TopLine (Lp.PD K) ∧
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-216-      NondegL (Lp.PD K) ∧ DualL (Lp.PD K) := by
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-217-  have hFin : FinZQ (Lp.PD K) := finZQ hT hE l Lp K
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-218-  have hTop : TopInj (Lp.PD K) := topInj hT l Lp K
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-219-  have hQ : DualQ (Lp.PD K) := dualQ hT l Lp K hTop
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-220-  have hD : DualD (Lp.PD K) := dualDL l Lp K hFin hQ
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-221-  have hCob : CobLO (Lp.PD K) := cobLO l Lp K hFin hTop
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-222-  have hH2 : LocalTateTopDegree (Lp.PD K) := tate_duality_H2_finite_coefficients hT l Lp K
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-223-  have hLine : TopLine (Lp.PD K) := topLine l Lp K hH2 hCob
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-224-  have hNd : NondegL (Lp.PD K) := nondegLL l Lp K hD hCob
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-225-  exact ⟨hFin, hTop, hQ, hD, hCob, hLine, hNd, dualLOf l Lp K hFin hLine hNd⟩
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-226-
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-227-open PositivityTheory.LocalTateOrthogonality.Bk in
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-228-
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean:229:theorem bkAL (l : ℕ) [Fact l.Prime] (Lp : LocPrime l) (AI : LocAinf l Lp) (T : LocTied l Lp AI) (K : FinExt l)
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-230-    (hL : DualL (Lp.PD K))
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-231-    (hEu : ∀ (LL : Type) [Field LL] [Algebra ℚ_[l] LL] [TopologicalSpace LL] (O : Type) [CommRing O]
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-232-      [Algebra O LL], GoodO (Qp := ℚ_[l]) LL O →
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-233-      ∀ (A A' : GRep ↥(GK K) ℚ_[l] LL O) (P : A.V →ₗ[LL] A'.V →ₗ[LL] LL),
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-234-        IsDual1 (Lp.PD K) A.ρ A'.ρ P →
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-235-        finrank LL (H1V A.ρ) ≤
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-236-          finrank LL ↥(H0V A.ρ) + finrank LL ↥(H0V A'.ρ) + finrank ℚ_[l] ↥K.1 * finrank LL A.V)
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-237-    (hdim : LocalSituation.bkADim (Lp.PD K)) : bkACore (Lp.PD K) := by
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-238-  intro LL _ _ _ O _ _ hO A A' m hdR hm
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-239-  have ho := PositivityTheory.LocalTateOrthogonality.Orth.orthL_tied l Lp AI T K LL O hO A A' m hm hdR
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-240-  haveI := hO.2.1
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-241-  have hdR' := (GlobalTheory.TateDualFil.tateDual l Lp AI T K LL A.ρ A'.ρ m hdR hm).1
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-242-  have e1 := hdim LL O hO A hdR
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-243-  have e2 := hdim LL O hO A' hdR'
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-244-  have e3 := (GlobalTheory.TateDualFil.tateDual l Lp AI T K LL A.ρ A'.ρ m hdR hm).2
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-245-  have e4 := hEu LL O hO A A' m hm
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-246-  have e6 := hm.2.2.2
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-247-  unfold IsDR at hdR hdR'
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-248-  rw [← e6] at hdR'
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-249-  have hc : finrank LL (H1V A.ρ) ≤
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-250-      finrank LL (FiniteCohomology (Lp.PD K) A.ρ) + finrank LL (FiniteCohomology (Lp.PD K) A'.ρ) := by
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-251-    omega
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-252-  obtain ⟨h1, h2⟩ := hL LL O hO A A' m hm (finiteCocycles (Lp.PD K) A.ρ) (finiteCocycles (Lp.PD K) A'.ρ)
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-253-    (B1_le_Z1f _ A) (fun _ h => h.1) (B1_le_Z1f _ A') (fun _ h => h.1) ho hc
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-254-  exact ⟨fun a ha => ⟨ho a, h1 a ha⟩, fun b hb => ⟨fun h a ha => ho a ha b h, h2 b hb⟩⟩
+==================== bkBL ====================
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-233-      ∀ (A A' : GRep ↥(GK K) ℚ_[l] LL O) (P : A.V →ₗ[LL] A'.V →ₗ[LL] LL),
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-234-        IsDual1 (Lp.PD K) A.ρ A'.ρ P →
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-235-        finrank LL (H1V A.ρ) ≤
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-236-          finrank LL ↥(H0V A.ρ) + finrank LL ↥(H0V A'.ρ) + finrank ℚ_[l] ↥K.1 * finrank LL A.V)
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-237-    (hdim : LocalSituation.bkADim (Lp.PD K)) : bkACore (Lp.PD K) := by
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-238-  intro LL _ _ _ O _ _ hO A A' m hdR hm
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-239-  have ho := PositivityTheory.LocalTateOrthogonality.Orth.orthL_tied l Lp AI T K LL O hO A A' m hm hdR
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-240-  haveI := hO.2.1
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-241-  have hdR' := (GlobalTheory.TateDualFil.tateDual l Lp AI T K LL A.ρ A'.ρ m hdR hm).1
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-242-  have e1 := hdim LL O hO A hdR
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-243-  have e2 := hdim LL O hO A' hdR'
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-244-  have e3 := (GlobalTheory.TateDualFil.tateDual l Lp AI T K LL A.ρ A'.ρ m hdR hm).2
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-245-  have e4 := hEu LL O hO A A' m hm
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-246-  have e6 := hm.2.2.2
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-247-  unfold IsDR at hdR hdR'
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-248-  rw [← e6] at hdR'
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-249-  have hc : finrank LL (H1V A.ρ) ≤
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-250-      finrank LL (FiniteCohomology (Lp.PD K) A.ρ) + finrank LL (FiniteCohomology (Lp.PD K) A'.ρ) := by
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-251-    omega
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-252-  obtain ⟨h1, h2⟩ := hL LL O hO A A' m hm (finiteCocycles (Lp.PD K) A.ρ) (finiteCocycles (Lp.PD K) A'.ρ)
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-253-    (B1_le_Z1f _ A) (fun _ h => h.1) (B1_le_Z1f _ A') (fun _ h => h.1) ho hc
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-254-  exact ⟨fun a ha => ⟨ho a, h1 a ha⟩, fun b hb => ⟨fun h a ha => ho a ha b h, h2 b hb⟩⟩
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-255-
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-256-open PositivityTheory.LocalTateOrthogonality.Bk in
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-257-
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean:258:theorem bkBL (l : ℕ) [Fact l.Prime] (Lp : LocPrime l) (K : FinExt l) (hD : DualD (Lp.PD K))
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-259-    (hC : CobLO (Lp.PD K)) (hA : bkACore (Lp.PD K)) : bkBCore (Lp.PD K) := by
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-260-  intro LL _ _ _ O _ _ hO L1 hL1 A A' LA LA' m hdR hm
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-261-  obtain ⟨hA1, -⟩ := hA LL O hO A A' m hdR hm.1
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-262-  have := hO.2.2.2.1
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-263-  have hO' : IsOpen (L1.T : Set LL) := by rw [hL1]; exact hO.2.2.2.2
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-264-  obtain ⟨⟨hdom, hdvr, -⟩, -⟩ := id hO
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-265-  obtain ⟨ϖ, hϖ⟩ := IsDiscreteValuationRing.exists_irreducible O
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-266-  have hTo : IsOpen (LA'.T : Set A'.V) := (latTop l Lp K LL O hO A' LA' ϖ hϖ).1
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-267-  obtain ⟨-, hF⟩ := cupFlip l Lp K LL O hO A A' m hm.1
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-268-  have h1 : ∀ d ∈ latticeFiniteCocycles (Lp.PD K) LA, ∀ s ∈ HfD (Lp.PD K) LA',
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-269-      CobO (Lp.PD K) L1 (cupLD LA' m d s) := fun d hd s hs => by
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-270-    obtain ⟨b, hb, rfl⟩ := exists_of_mem_HfD hs
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-271-    rw [cobO_cup_iff hL1 hm d fun g => hd.1.2 g trivial]
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-272-    exact cobO_of_cobL hO' ((hA1 d hd.1.1).1 hd.2 b hb)
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-273-  have h2 : ∀ d ∈ latticeCocycles LA, (∀ s ∈ HfD (Lp.PD K) LA', CobO (Lp.PD K) L1 (cupLD LA' m d s)) →
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-274-      d ∈ latticeFiniteCocycles (Lp.PD K) LA := fun d hd H => by
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-275-    refine ⟨hd, (hA1 d hd.1).2 fun b hb => ?_⟩
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-276-    refine (hC LL O hO L1 hL1 _ (hF d hd.1 b hb.1).1).2 fun u => ?_
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-277-    have h3 := (cobO_cup_iff hL1 hm d (fun g => hd.2 g trivial) (u • b)).1
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-278-      (H _ (Submodule.mem_sup_left ⟨u • b, (finiteCocycles (Lp.PD K) A'.ρ).smul_mem u hb, rfl⟩))
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-279-    convert h3 using 1
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-280-    funext p
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-281-    simp [cupL]
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-282-  refine ⟨fun s hs => ⟨fun h d hd => h1 d hd s h, fun H => ?_⟩,
+/home/ishaandixit2017/rh/lean/src/Development/AutomorphicSpectrum/Proofs/GlobalProofs/BlochKatoLocal.lean-283-    fun d hd => ⟨fun h s _ hs => h1 d h s hs, fun H => h2 d hd fun s hs => H s (hfD_le hTo hs) hs⟩⟩

@@ -18,7 +18,7 @@ theorems:
 Method. Every declaration in the closure is read as an inference rule from its type: binders
 whose types have project-defined heads are premises, and the conclusion's head is what it
 produces (constructors, projections, theorems, instances and definitions alike). Conjunctions,
-products, existentials, `Nonempty`, `Iff` and equalities of propositions are taken apart, and
+products, existentials (including `∃!`), `Nonempty`, `Iff` and equalities of propositions are taken apart, and
 each project definition of a type or proposition can be unfolded in both directions. The least
 fixpoint of these rules is what the closure establishes.
 
@@ -43,6 +43,8 @@ Options:
   --url PREFIX    link file:line in the Markdown report to PREFIX/<path>#L<line>
   --no-verify     skip the verification pass
   --why NAME      print how NAME is established, in the closure and anywhere (repeatable)
+  --prefix TEXT   classify every project type or proposition whose name contains TEXT, reachable
+                  or not (repeatable; e.g. `.Published.`); with --prefix-tsv FILE, one line each
 -/
 import Lean
 open Lean Meta
@@ -65,6 +67,8 @@ structure AuditConfig where
   url? : Option String := none
   verify : Bool := true
   why : List Name := []
+  prefixes : List String := []
+  prefixTsv? : Option String := none
 
 partial def parseArgs : List String → AuditConfig → Except String AuditConfig
   | [], c => .ok c
@@ -77,6 +81,8 @@ partial def parseArgs : List String → AuditConfig → Except String AuditConfi
   | "--url" :: u :: r, c => parseArgs r { c with url? := some u }
   | "--no-verify" :: r, c => parseArgs r { c with verify := false }
   | "--why" :: n :: r, c => parseArgs r { c with why := c.why ++ [n.toName] }
+  | "--prefix" :: x :: r, c => parseArgs r { c with prefixes := c.prefixes ++ [x] }
+  | "--prefix-tsv" :: f :: r, c => parseArgs r { c with prefixTsv? := some f }
   | a :: _, _ => .error s!"unknown argument {a}"
 
 def moduleOf (env : Environment) (n : Name) : Name :=
@@ -110,6 +116,8 @@ partial def premHeads (tracked : Name → Bool) (e : Expr) : Array Name :=
   let e := e.consumeMData
   if e.isForall then
     let (local_, body) := forallParts tracked #[] e
+    -- `A → False` (a negation) can be proved from a contradiction in `A`: require nothing
+    if body.consumeMData.isConstOf ``False then #[] else
     (premHeads tracked body).filter (!local_.contains ·)
   else
   let f := e.getAppFn
@@ -119,7 +127,7 @@ partial def premHeads (tracked : Name → Bool) (e : Expr) : Array Name :=
     if n == ``False || n == ``Empty || n == ``PEmpty then #[falseName]
     else if (n == ``And || n == ``Prod || n == ``PProd || n == ``MProd) && args.size == 2 then
       premHeads tracked args[0]! ++ premHeads tracked args[1]!
-    else if (n == ``Exists || n == ``Subtype) && args.size == 2 then
+    else if (n == ``Exists || n == ``Subtype || n == `ExistsUnique) && args.size == 2 then
       match args[1]!.consumeMData with
       | .lam _ _ b _ => premHeads tracked b
       | p => premHeads tracked p
@@ -128,7 +136,7 @@ partial def premHeads (tracked : Name → Bool) (e : Expr) : Array Name :=
         (match args[1]!.consumeMData with
          | .lam _ _ b _ => premHeads tracked b
          | p => premHeads tracked p)
-    else if (n == ``Nonempty || n == ``Inhabited) && args.size == 1 then
+    else if (n == ``Nonempty || n == ``Inhabited || n == `Fact || n == ``PLift || n == ``ULift || n == ``Squash || n == `Trunc) && args.size == 1 then
       premHeads tracked args[0]!
     else if tracked n then #[n] else #[]
   | _ => #[]
@@ -154,7 +162,7 @@ partial def conclusions (tracked : Name → Bool) (prem : Array Name) (e : Expr)
     if n == ``False || n == ``Empty || n == ``PEmpty then #[(prem, falseName)]
     else if (n == ``And || n == ``Prod || n == ``PProd || n == ``MProd) && args.size == 2 then
       conclusions tracked prem args[0]! ++ conclusions tracked prem args[1]!
-    else if (n == ``Exists || n == ``Subtype) && args.size == 2 then
+    else if (n == ``Exists || n == ``Subtype || n == `ExistsUnique) && args.size == 2 then
       match args[1]!.consumeMData with
       | .lam _ _ b _ => conclusions tracked prem b
       | p => conclusions tracked prem p
@@ -163,7 +171,7 @@ partial def conclusions (tracked : Name → Bool) (prem : Array Name) (e : Expr)
         (match args[1]!.consumeMData with
          | .lam _ _ b _ => conclusions tracked prem b
          | p => conclusions tracked prem p)
-    else if (n == ``Nonempty || n == ``Inhabited) && args.size == 1 then
+    else if (n == ``Nonempty || n == ``Inhabited || n == `Fact || n == ``PLift || n == ``ULift || n == ``Squash || n == `Trunc) && args.size == 1 then
       conclusions tracked prem args[0]!
     else if n == ``Iff && args.size == 2 then
       (conclusions tracked (prem ++ premHeads tracked args[1]!) args[0]!) ++
@@ -229,6 +237,15 @@ partial def sortShape (env : Environment) (fuel : Nat) (t : Expr) : Option Bool 
       | _ => none
     | _ => none
 
+/-- Append `x` to the array stored at `k`. The array is taken out of the map before the push, so
+it is updated in place instead of copied (pushing onto `m.getD k #[]` while `m` still holds the
+array copies it every time, which is quadratic for keys with many entries). -/
+@[inline] def pushAt {α : Type} (m : Std.HashMap Name (Array α)) (k : Name) (x : α) :
+    Std.HashMap Name (Array α) :=
+  match m.get? k with
+  | some a => (m.erase k).insert k (a.push x)
+  | none => m.insert k #[x]
+
 /-- An inference rule: from `prem`, conclude `concl`; read from the type of `src`, or from
 unfolding the definition `src` when `unfold` is set. -/
 structure Rule where
@@ -263,7 +280,7 @@ def fixpoint (clauses : Array Rule) (seed : Std.HashSet Name := {}) :
         queue := queue.push c
     else
       for p in ps do
-        watch := watch.insert p ((watch.getD p #[]).push i)
+        watch := pushAt watch p i
   while h : queue.size > 0 do
     let p := queue.back
     queue := queue.pop
@@ -340,10 +357,86 @@ def kindOf : ConstantInfo → String
   | .axiomInfo _ => "axiom" | .inductInfo _ => "inductive" | .ctorInfo _ => "ctor"
   | .recInfo _ => "rec" | .quotInfo _ => "quot"
 
-def audit (cfg : AuditConfig) : MetaM UInt32 := do
+/-- Uses of proofs of the statements in a set, found in one body or proof. -/
+structure UseScan where
+  applied : Std.HashMap Name Nat := {}
+  carried : Std.HashMap Name Nat := {}
+  nodes : Nat := 0
+  /-- subterms already scanned, by address and binder depth: shared subterms are read once -/
+  seen : Std.HashSet (USize × Nat) := {}
+
+/-- Classify how proofs of the statements `lit` occur in `e`.
+
+A *proof term* of `P` is a bound variable whose binder type is `P …`, or a constant whose type
+concludes `P …` applied to exactly its own arguments. An occurrence is *applied* when the proof is
+applied to further arguments (eliminating the `∀`/`→` of `P`), projected, or passed to anything
+other than a project declaration or a constructor (an eliminator such as `And.left`,
+`Exists.casesOn`, `Iff.mp`, a cast: the conservative choice). It is *carried* when it is stored
+by a constructor or passed to a project declaration, whose own body is scanned separately. -/
+unsafe def scanUses (env : Environment) (lit : Std.HashSet Name)
+    (proofOf : Std.HashMap Name (Name × Nat)) (inProject : Name → Bool) (budget : Nat)
+    (e : Expr) : UseScan :=
+  let headLit (t : Expr) : Option Name :=
+    match t.consumeMData.getAppFn with
+    | .const c _ => if lit.contains c then some c else none
+    | _ => none
+  let bump (m : Std.HashMap Name Nat) (p : Name) := m.insert p (m.getD p 0 + 1)
+  let rec go (ctx : Array Expr) (e : Expr) (st : UseScan) : UseScan := Id.run do
+    if st.nodes ≥ budget then return st
+    let key := (ptrAddrUnsafe e, ctx.size)
+    if st.seen.contains key then return st
+    let mut st := { st with nodes := st.nodes + 1, seen := st.seen.insert key }
+    let proofTerm (a : Expr) : Option Name :=
+      let a := a.consumeMData
+      match a.getAppFn with
+      | .bvar i => if a.getAppNumArgs == 0 && i < ctx.size then headLit ctx[ctx.size - 1 - i]! else none
+      | .const c _ => match proofOf.get? c with
+        | some (p, k) => if a.getAppNumArgs == k then some p else none
+        | none => none
+      | _ => none
+    match e with
+    | .app .. =>
+      let f := e.getAppFn
+      let args := e.getAppArgs
+      match f with
+      | .bvar i =>
+        if i < ctx.size then
+          if let some p := headLit ctx[ctx.size - 1 - i]! then st := { st with applied := bump st.applied p }
+      | .const c _ =>
+        if let some (p, k) := proofOf.get? c then
+          if args.size > k then st := { st with applied := bump st.applied p }
+      | _ => pure ()
+      let stores : Bool := match f with
+        | .const c _ =>
+          match env.find? c with
+          | some (.ctorInfo _) => true
+          | _ => inProject c
+        | _ => false
+      for a in args do
+        if let some p := proofTerm a then
+          if stores then st := { st with carried := bump st.carried p }
+          else st := { st with applied := bump st.applied p }
+      if !f.isConst && !f.isBVar then st := go ctx f st
+      for a in args do st := go ctx a st
+      return st
+    | .lam _ t b _ => return go (ctx.push t) b (go ctx t st)
+    | .forallE _ t b _ => return go (ctx.push t) b (go ctx t st)
+    | .letE _ t v b _ => return go (ctx.push t) b (go ctx v (go ctx t st))
+    | .mdata _ b => return go ctx b st
+    | .proj _ _ b =>
+      if let some p := proofTerm b then st := { st with applied := bump st.applied p }
+      return go ctx b st
+    | _ => return st
+  go #[] e {}
+
+unsafe def audit (cfg : AuditConfig) : MetaM UInt32 := do
   let env ← getEnv
   let roots := if cfg.roots.isEmpty then defaultRoots else cfg.roots
-  let inProject (n : Name) : Bool := roots.any (·.isPrefixOf (moduleOf env n))
+  -- membership in the project, decided once per module rather than once per constant
+  let projMod : Array Bool := env.header.moduleNames.map fun m => roots.any (·.isPrefixOf m)
+  let inProject (n : Name) : Bool := match env.getModuleIdxFor? n with
+    | some i => projMod.getD i.toNat false
+    | none => false
   let decls := if cfg.decls.isEmpty then defaultDecls else cfg.decls
   let found := decls.filter (env.contains ·)
   for d in decls do
@@ -361,6 +454,9 @@ def audit (cfg : AuditConfig) : MetaM UInt32 := do
   let mut used : Std.HashSet Name := found.foldl (·.insert ·) {}
   let mut closure : Array Name := #[]
   let mut work : Array Name := found.toArray
+  -- Each body or proof is read once: its constants are cached here and reused by every pass
+  -- below (bodies in this project can be very large, and every read walks the whole term).
+  let mut valConsts : Std.HashMap Name (Array Name) := {}
   while h : work.size > 0 do
     let n := work.back
     work := work.pop
@@ -369,10 +465,18 @@ def audit (cfg : AuditConfig) : MetaM UInt32 := do
     if !inProject n && !found.contains n then continue
     inC := inC.insert n
     closure := closure.push n
-    if let some v := ci.value? (allowOpaque := true) then
-      if !isBoilerplate n then
-        for c in v.getUsedConstants do used := used.insert c
-    for s in successors ci do
+    let vc := match ci.value? (allowOpaque := true) with
+      | some v => v.getUsedConstants
+      | none => #[]
+    valConsts := valConsts.insert n vc
+    if !isBoilerplate n then
+      for c in vc do used := used.insert c
+    let succ := ci.type.getUsedConstants ++ vc ++ (match ci with
+      | .inductInfo d => d.ctors.toArray
+      | .ctorInfo d => #[d.induct]
+      | .recInfo d => d.all.toArray
+      | _ => #[])
+    for s in succ do
       if !inC.contains s then work := work.push s
   IO.eprintln s!"closure: {closure.size} project constants from {found.length} theorems"
   lap "closure"
@@ -382,6 +486,7 @@ def audit (cfg : AuditConfig) : MetaM UInt32 := do
   let projectConsts := env.constants.fold (init := #[]) fun (acc : Array Name) n _ =>
     if inProject n then acc.push n else acc
   IO.eprintln s!"project constants in the environment: {projectConsts.size}"
+  lap "listing project constants"
   for n in projectConsts do
     let some ci := env.find? n | continue
     match ci with
@@ -425,9 +530,14 @@ def audit (cfg : AuditConfig) : MetaM UInt32 := do
   let mut usedAll : Std.HashSet Name := {}
   for n in projectConsts do
     if isBoilerplate n then continue
-    if let some v := (env.find? n).bind (·.value? (allowOpaque := true)) then
-      for c in v.getUsedConstants do usedAll := usedAll.insert c
+    match valConsts.get? n with
+    | some vc => for c in vc do usedAll := usedAll.insert c
+    | none =>
+      if let some v := (env.find? n).bind (·.value? (allowOpaque := true)) then
+        for c in v.getUsedConstants do usedAll := usedAll.insert c
+  lap "constants used anywhere in the project"
   let rulesAll := rulesOf projectConsts usedAll.contains
+  lap s!"rules for the whole project ({rulesAll.size})"
   let (availAll, whyAll) := fixpoint rulesAll
   lap "rules and fixpoint for the whole project"
   -- 4. Candidates: tracked constants in the closure that the closure never establishes.
@@ -458,7 +568,7 @@ def audit (cfg : AuditConfig) : MetaM UInt32 := do
       for n in closure do
         let some ci := env.find? n | continue
         let some v := ci.value? (allowOpaque := true) | continue
-        let vUsed := v.getUsedConstants
+        let vUsed := valConsts.getD n #[]
         if !vUsed.any (fun c => consumers.contains c || ctorOf.contains c) then continue
         let hits ← IO.mkRef (#[] : Array (Name × String))
         v.forEach fun s => do
@@ -523,8 +633,8 @@ def audit (cfg : AuditConfig) : MetaM UInt32 := do
     if isBoilerplate n then continue
     let some ci := env.find? n | continue
     let hits ← IO.mkRef (#[] : Array String)
-    for v in #[ci.type] ++ (ci.value? (allowOpaque := true)).toArray do
-      let vUsed := v.getUsedConstants
+    for (v, isVal) in #[(ci.type, false)] ++ ((ci.value? (allowOpaque := true)).map (·, true)).toArray do
+      let vUsed := if isVal then valConsts.getD n #[] else v.getUsedConstants
       if vUsed.any (fun c => c == ``True || trivConsumers.contains c) then
         v.forEach fun s => do
           if let .const c _ := s.getAppFn then
@@ -551,9 +661,8 @@ def audit (cfg : AuditConfig) : MetaM UInt32 := do
   if !direct.isEmpty then
     for n in closure do
       if isBoilerplate n then continue
-      let some v := (env.find? n).bind (·.value? (allowOpaque := true)) | continue
-      for c in v.getUsedConstants do
-        if inC.contains c && c != n then usersOf := usersOf.insert c ((usersOf.getD c #[]).push n)
+      for c in valConsts.getD n #[] do
+        if inC.contains c && c != n then usersOf := pushAt usersOf c n
   let mut leans : Std.HashSet Name := direct
   let mut todo : Array Name := direct.toArray
   while h : todo.size > 0 do
@@ -570,18 +679,19 @@ def audit (cfg : AuditConfig) : MetaM UInt32 := do
   -- 7. Where each inert constant occurs in the closure.
   let inertSet : Std.HashSet Name := inert.foldl (·.insert ·) {}
   let mut refs : Std.HashMap Name (Array Name) := {}
-  for n in closure do
+  if !inertSet.isEmpty then
+   for n in closure do
     let some ci := env.find? n | continue
-    for c in successors ci do
+    for c in ci.type.getUsedConstants ++ valConsts.getD n #[] do
       if inertSet.contains c && !c.isPrefixOf n then
-        refs := refs.insert c ((refs.getD c #[]).push n)
+        refs := pushAt refs c n
   let lineOf (n : Name) : MetaM Nat := do
     match (← findDeclarationRangesCore? n) with
     | some r => pure r.range.pos.line
     | none => pure 0
   let mut rows : Array Row := #[]
   for n in inert do
-    let rs := (refs.getD n #[]).toList.eraseDups.toArray
+    let rs := ((refs.getD n #[]).foldl (fun (s : Std.HashSet Name) x => s.insert x) {}).toArray
     let elsewhere := match whyAll.get? n with
       | some i => let r := rulesAll[i]!
                   s!"established elsewhere by {if r.unfold then "unfolding " else ""}`{r.src}`" ++
@@ -612,6 +722,84 @@ def audit (cfg : AuditConfig) : MetaM UInt32 := do
   IO.eprintln s!"  declarations that discharge a trivial predicate or pass `True`: {direct.size} \
     ({leans.size} closure declarations use one, directly or not; theorems among them: {rootsLean})"
   IO.eprintln s!"  moved to established by the verification pass: {count "established-by-witness"}"
+  if !cfg.prefixes.isEmpty then
+    let hits := projectConsts.filter fun n =>
+      tracked n && !isBoilerplate n && cfg.prefixes.any fun x => (n.toString.splitOn x).length > 1
+    -- for a head never established: the rules concluding it, each with its unmet premises
+    let mut byConcl : Std.HashMap Name (Array Nat) := {}
+    for h : i in [:rulesAll.size] do
+      let c := rulesAll[i].concl
+      byConcl := pushAt byConcl c i
+    let blockers (n : Name) : String :=
+      let rs := (byConcl.getD n #[]).toList.take 3
+      if rs.isEmpty then "nothing in the project concludes it" else
+      "; ".intercalate (rs.map fun i =>
+        let r := rulesAll[i]!
+        let miss := (r.prem.toList.eraseDups.filter (!availAll.contains ·)).take 3
+        s!"{if r.unfold then "unfolding " else ""}{r.src} needs {", ".intercalate (miss.map toString)}")
+    -- applied vs carried, for the propositions among them
+    let lit : Std.HashSet Name := hits.foldl (fun s n => if isPropOf.getD n false then s.insert n else s) {}
+    let mut proofOf : Std.HashMap Name (Name × Nat) := {}
+    for c in closure do
+      let some ci := env.find? c | continue
+      let mut t := ci.type.consumeMData
+      let mut k := 0
+      while t.isForall do
+        t := t.bindingBody!.consumeMData
+        k := k + 1
+      if let .const p _ := t.getAppFn then
+        if lit.contains p then proofOf := proofOf.insert c (p, k)
+    let mut applied : Std.HashMap Name Nat := {}
+    let mut carried : Std.HashMap Name Nat := {}
+    let mut appliedIn : Std.HashMap Name Name := {}
+    let mut carriedIn : Std.HashMap Name Name := {}
+    let mut skipped : Array Name := #[]
+    let budget := 5000000
+    for c in closure do
+      if isBoilerplate c then continue
+      let some v := (env.find? c).bind (·.value? (allowOpaque := true)) | continue
+      let vu := valConsts.getD c #[]
+      if !vu.any (fun d => proofOf.contains d || lit.contains d) then continue
+      let r := scanUses env lit proofOf inProject budget v
+      if r.nodes ≥ budget then skipped := skipped.push c
+      for (p, n) in r.applied do
+        applied := applied.insert p (applied.getD p 0 + n)
+        if !appliedIn.contains p then appliedIn := appliedIn.insert p c
+      for (p, n) in r.carried do
+        carried := carried.insert p (carried.getD p 0 + n)
+        if !carriedIn.contains p then carriedIn := carriedIn.insert p c
+    lap s!"applied vs carried ({proofOf.size} proof constants, {skipped.size} bodies over budget)"
+    let mut lb : Std.HashMap String Nat := {}
+    for p in lit do
+      if !inC.contains p then continue
+      let k := if applied.getD p 0 > 0 then "applied (load-bearing)"
+        else if carried.getD p 0 > 0 then "carried but never applied" else "no proof of it occurs in the proof"
+      lb := lb.insert k (lb.getD k 0 + 1)
+    IO.eprintln s!"reachable propositions among them, by use:"
+    for (k, v) in lb.toArray do IO.eprintln s!"  {v}  {k}"
+    if !skipped.isEmpty then IO.eprintln s!"  (bodies too large to scan fully: {skipped.toList.take 5})"
+    let mut lines := #["name\tsort\treachable\testablished_in_proof\testablished_anywhere\thow_or_what_blocks\tlocation\tapplied\tcarried\tapplied_in\tcarried_in"]
+    let mut tally : Std.HashMap String Nat := {}
+    for n in hits do
+      let reach := inC.contains n
+      let inProof := availC.contains n
+      let anywhere := availAll.contains n
+      let how := if anywhere then
+          match whyAll.get? n with
+          | some i => let r := rulesAll[i]!
+                      s!"by {if r.unfold then "unfolding " else ""}{r.src}"
+          | none => "seed"
+        else blockers n
+      let key := s!"reachable={reach} in_proof={inProof} anywhere={anywhere}"
+      tally := tally.insert key (tally.getD key 0 + 1)
+      let line ← lineOf n
+      lines := lines.push s!"{n}\t{if isPropOf.getD n false then "Prop" else "Type"}\t{reach}\t{inProof}\t{anywhere}\t{how}\t{modulePath cfg.src (moduleOf env n)}:{line}\t{applied.getD n 0}\t{carried.getD n 0}\t{(appliedIn.get? n).map toString |>.getD ""}\t{(carriedIn.get? n).map toString |>.getD ""}"
+    IO.eprintln s!"prefix report ({", ".intercalate cfg.prefixes}): {hits.size} types and propositions"
+    for (k, v) in tally.toArray.qsort (fun a b => a.2 > b.2) do
+      IO.eprintln s!"  {v}  {k}"
+    if let some f := cfg.prefixTsv? then
+      IO.FS.writeFile f ("\n".intercalate lines.toList ++ "\n")
+      IO.eprintln s!"wrote {f}"
   let mut whyText := ""
   for n in cfg.why do
     let w (m : Name) : Option String := (witnesses.get? m).map (s!"closed application: " ++ ·)
@@ -675,7 +863,9 @@ unsafe def main (args : List String) : IO UInt32 := do
       IO.eprintln s!"{e}\nusage: lean --run PropAudit.lean [--module M] [--decl NAME]... [--root NAME]... [--tsv FILE] [--md FILE] [--src DIR] [--url PREFIX] [--no-verify]"
       return 2
   initSearchPath (← findSysroot)
+  let t0 ← IO.monoMsNow
   let env ← importModules #[{ module := cfg.module }] {}
+  IO.eprintln s!"  [{((← IO.monoMsNow) - t0) / 1000} s] importing {cfg.module}"
   -- each type check gets a fresh budget of 200000 heartbeats (Lean's default per command)
   let ctx : Core.Context := { fileName := "<PropAudit>", fileMap := default,
                               maxHeartbeats := 200000 * 1000 }

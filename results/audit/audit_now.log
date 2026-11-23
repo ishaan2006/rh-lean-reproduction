@@ -1,0 +1,144 @@
+  [32 s] importing Main
+closure: 1265279 project constants from 5 theorems
+  [313 s] closure
+project constants in the environment: 1905921
+  [313 s] listing project constants
+tracked types and propositions in the project: 114810
+  [314 s] tracked heads
+  [321 s] rules and fixpoint for the closure (414969 rules)
+  [452 s] constants used anywhere in the project
+  [464 s] rules for the whole project (605925)
+  [465 s] rules and fixpoint for the whole project
+inert candidates after the rules: 12
+  [473 s] verification
+declarations that discharge a trivial predicate or pass `True` as an argument: 2763; closure declarations that use one, directly or not: 22044; of the theorems: 5
+  [909 s] trivial discharges
+theorems: [riemannHypothesis, riemannZeta_eq_zero_re, LFunction_ne_zero_of_half_lt_re, LFunction_eq_zero_re, LFunction_eq_zero_re_of_isPrimitive]
+project types and propositions in the closure: 64730
+  inert (never established anywhere in the project): 2
+  inert in the proof (established elsewhere, not in the closure): 10
+  trivial: 27
+  declarations that discharge a trivial predicate or pass `True`: 2763 (22044 closure declarations use one, directly or not; theorems among them: [riemannHypothesis, riemannZeta_eq_zero_re, LFunction_ne_zero_of_half_lt_re, LFunction_eq_zero_re, LFunction_eq_zero_re_of_isPrimitive])
+  moved to established by the verification pass: 0
+  [1016 s] applied vs carried (1249 proof constants, 0 bodies over budget)
+reachable propositions among them, by use:
+  261  applied (load-bearing)
+  9  no proof of it occurs in the proof
+  60  carried but never applied
+prefix report (.Published., OpenLiterature): 610 types and propositions
+  334  reachable=true in_proof=true anywhere=true
+  262  reachable=false in_proof=false anywhere=true
+  14  reachable=false in_proof=false anywhere=false
+wrote /home/ishaandixit2017/rh/out/published_now.tsv
+why GlobalTheory.Published.LocalLanglandsExists (NOT reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.LocalLanglandsExists: not established
+  anywhere in the project:
+    GlobalTheory.Published.LocalLanglandsExists ← unfolding `GlobalTheory.Published.LocalLanglandsExists`, from GlobalTheory.LocLanglands.IsRecLit
+      GlobalTheory.LocLanglands.IsRecLit ← unfolding `GlobalTheory.LocLanglands.IsRecLit`, from GlobalTheory.LocLanglands.IsDeligneEps, GlobalTheory.LocLanglands.LawsLit
+        GlobalTheory.LocLanglands.IsDeligneEps ← `GlobalTheory.LocLanglands.IsDeligneEps.mk`, from GlobalTheory.LocLanglands.EpsFamily, GlobalTheory.LocLanglands.IsTateEps
+          GlobalTheory.LocLanglands.EpsFamily ← `GlobalTheory.DelEps.delEps`
+          GlobalTheory.LocLanglands.IsTateEps ← `GlobalTheory.DelEps.isTateEps_tateEps_and_ne_zero`, from GlobalTheory.SmGL.IsSmoothChar
+            GlobalTheory.SmGL.IsSmoothChar ← `GlobalTheory.BCen.twFam._proof_1`
+        GlobalTheory.LocLanglands.LawsLit ← `GlobalTheory.LocLanglands.LawsLit.mk`, from GlobalTheory.LocLanglands.LawsMin, Formalism.ConjugateSelfDual.IsPlaceOver, GlobalTheory.WeilDeligne.WD, GlobalTheory.LocLanglands.IsLocalArtin
+          GlobalTheory.LocLanglands.LawsMin ← `GlobalTheory.LocLanglands.LawsMin.mk`, from GlobalTheory.LocLanglands.HasPairEps, Formalism.ConjugateSelfDual.IsPlaceOver, GlobalTheory.WeilDeligne.WD, GlobalTheory.LocLanglands.IsLocalArtin
+            GlobalTheory.LocLanglands.HasPairEps ← unfolding `GlobalTheory.LocLanglands.HasPairEps`
+            Formalism.ConjugateSelfDual.IsPlaceOver ← `_private.Development.AutomorphicArithmetic.AutomorphicVarieties.LevelCohomology.HcGalIdx.0.UpperTheory.V.X.GaloisIndexPlaces.isPlaceOver_vQ`
+            GlobalTheory.WeilDeligne.WD ← `GlobalTheory.WeilDeligne.WD.lpZero`, from Formalism.ConjugateSelfDual.IsPlaceOver
+              Formalism.ConjugateSelfDual.IsPlaceOver: see above
+            GlobalTheory.LocLanglands.IsLocalArtin ← `GlobalTheory.DelGlob.Inh.selfTerm._proof_5`, from Formalism.ConjugateSelfDual.IsPlaceOver
+              Formalism.ConjugateSelfDual.IsPlaceOver: see above
+          Formalism.ConjugateSelfDual.IsPlaceOver: see above
+          GlobalTheory.WeilDeligne.WD: see above
+          GlobalTheory.LocLanglands.IsLocalArtin: see above
+why GlobalTheory.LocLanglands.IsRecLit (NOT reachable from the theorems):
+  in the closure:
+    GlobalTheory.LocLanglands.IsRecLit: not established
+  anywhere in the project:
+    GlobalTheory.LocLanglands.IsRecLit ← unfolding `GlobalTheory.LocLanglands.IsRecLit`, from GlobalTheory.LocLanglands.IsDeligneEps, GlobalTheory.LocLanglands.LawsLit
+      GlobalTheory.LocLanglands.IsDeligneEps ← `GlobalTheory.LocLanglands.IsDeligneEps.mk`, from GlobalTheory.LocLanglands.EpsFamily, GlobalTheory.LocLanglands.IsTateEps
+        GlobalTheory.LocLanglands.EpsFamily ← `GlobalTheory.DelEps.delEps`
+        GlobalTheory.LocLanglands.IsTateEps ← `GlobalTheory.DelEps.isTateEps_tateEps_and_ne_zero`, from GlobalTheory.SmGL.IsSmoothChar
+          GlobalTheory.SmGL.IsSmoothChar ← `GlobalTheory.BCen.twFam._proof_1`
+      GlobalTheory.LocLanglands.LawsLit ← `GlobalTheory.LocLanglands.LawsLit.mk`, from GlobalTheory.LocLanglands.LawsMin, Formalism.ConjugateSelfDual.IsPlaceOver, GlobalTheory.WeilDeligne.WD, GlobalTheory.LocLanglands.IsLocalArtin
+        GlobalTheory.LocLanglands.LawsMin ← `GlobalTheory.LocLanglands.LawsMin.mk`, from GlobalTheory.LocLanglands.HasPairEps, Formalism.ConjugateSelfDual.IsPlaceOver, GlobalTheory.WeilDeligne.WD, GlobalTheory.LocLanglands.IsLocalArtin
+          GlobalTheory.LocLanglands.HasPairEps ← unfolding `GlobalTheory.LocLanglands.HasPairEps`
+          Formalism.ConjugateSelfDual.IsPlaceOver ← `_private.Development.AutomorphicArithmetic.AutomorphicVarieties.LevelCohomology.HcGalIdx.0.UpperTheory.V.X.GaloisIndexPlaces.isPlaceOver_vQ`
+          GlobalTheory.WeilDeligne.WD ← `GlobalTheory.WeilDeligne.WD.lpZero`, from Formalism.ConjugateSelfDual.IsPlaceOver
+            Formalism.ConjugateSelfDual.IsPlaceOver: see above
+          GlobalTheory.LocLanglands.IsLocalArtin ← `GlobalTheory.DelGlob.Inh.selfTerm._proof_5`, from Formalism.ConjugateSelfDual.IsPlaceOver
+            Formalism.ConjugateSelfDual.IsPlaceOver: see above
+        Formalism.ConjugateSelfDual.IsPlaceOver: see above
+        GlobalTheory.WeilDeligne.WD: see above
+        GlobalTheory.LocLanglands.IsLocalArtin: see above
+why GlobalTheory.Mem.Top.Bl.anyGeometry (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Mem.Top.Bl.anyGeometry ← unfolding `GlobalTheory.Mem.Top.Bl.anyGeometry`
+  anywhere in the project:
+    GlobalTheory.Mem.Top.Bl.anyGeometry ← unfolding `GlobalTheory.Mem.Top.Bl.anyGeometry`
+why Formalism.L2.Geo.geoDegenerate (reachable from the theorems):
+  in the closure:
+    Formalism.L2.Geo.geoDegenerate: not established
+  anywhere in the project:
+    Formalism.L2.Geo.geoDegenerate: not established
+why GlobalTheory.LocLanglands.IsRec (reachable from the theorems):
+  in the closure:
+    GlobalTheory.LocLanglands.IsRec: not established
+  anywhere in the project:
+    GlobalTheory.LocLanglands.IsRec ← `GlobalTheory.T.rec_of_rec_literal`, from GlobalTheory.LocLanglands.IsRecLit, GlobalTheory.Published.StandardCosocleGL, GlobalTheory.Published.DepthZeroInduction, GlobalTheory.Published.LanglandsExhaustionGL, GlobalTheory.Published.DepthZeroCuspidalLL, GlobalTheory.Published.GeometricLemma, Formalism.ConjugateSelfDual.IsPlaceOver, GlobalTheory.Published.LanglandsMultisegments, GlobalTheory.WeilDeligne.WD, GlobalTheory.Published.ZelevinskyPolynomialRing, GlobalTheory.Published.BernsteinZelevinskyFiniteness
+      GlobalTheory.LocLanglands.IsRecLit ← unfolding `GlobalTheory.LocLanglands.IsRecLit`, from GlobalTheory.LocLanglands.IsDeligneEps, GlobalTheory.LocLanglands.LawsLit
+        GlobalTheory.LocLanglands.IsDeligneEps ← `GlobalTheory.LocLanglands.IsDeligneEps.mk`, from GlobalTheory.LocLanglands.EpsFamily, GlobalTheory.LocLanglands.IsTateEps
+          GlobalTheory.LocLanglands.EpsFamily ← `GlobalTheory.DelEps.delEps`
+          GlobalTheory.LocLanglands.IsTateEps ← `GlobalTheory.DelEps.isTateEps_tateEps_and_ne_zero`, from GlobalTheory.SmGL.IsSmoothChar
+            GlobalTheory.SmGL.IsSmoothChar ← `GlobalTheory.BCen.twFam._proof_1`
+        GlobalTheory.LocLanglands.LawsLit ← `GlobalTheory.LocLanglands.LawsLit.mk`, from GlobalTheory.LocLanglands.LawsMin, Formalism.ConjugateSelfDual.IsPlaceOver, GlobalTheory.WeilDeligne.WD, GlobalTheory.LocLanglands.IsLocalArtin
+          GlobalTheory.LocLanglands.LawsMin ← `GlobalTheory.LocLanglands.LawsMin.mk`, from GlobalTheory.LocLanglands.HasPairEps, Formalism.ConjugateSelfDual.IsPlaceOver, GlobalTheory.WeilDeligne.WD, GlobalTheory.LocLanglands.IsLocalArtin
+            GlobalTheory.LocLanglands.HasPairEps ← unfolding `GlobalTheory.LocLanglands.HasPairEps`
+            Formalism.ConjugateSelfDual.IsPlaceOver ← `_private.Development.AutomorphicArithmetic.AutomorphicVarieties.LevelCohomology.HcGalIdx.0.UpperTheory.V.X.GaloisIndexPlaces.isPlaceOver_vQ`
+            GlobalTheory.WeilDeligne.WD ← `GlobalTheory.WeilDeligne.WD.lpZero`, from Formalism.ConjugateSelfDual.IsPlaceOver
+              Formalism.ConjugateSelfDual.IsPlaceOver: see above
+            GlobalTheory.LocLanglands.IsLocalArtin ← `GlobalTheory.DelGlob.Inh.selfTerm._proof_5`, from Formalism.ConjugateSelfDual.IsPlaceOver
+              Formalism.ConjugateSelfDual.IsPlaceOver: see above
+          Formalism.ConjugateSelfDual.IsPlaceOver: see above
+          GlobalTheory.WeilDeligne.WD: see above
+          GlobalTheory.LocLanglands.IsLocalArtin: see above
+      GlobalTheory.Published.StandardCosocleGL ← unfolding `GlobalTheory.Published.StandardCosocleGL`, from GlobalTheory.LocGL.IsCosocle
+        GlobalTheory.LocGL.IsCosocle ← `GlobalTheory.LocLanglands.TemperedRec.isCosocle_rep_cl`, from GlobalTheory.SmGL.IrrRep
+          GlobalTheory.SmGL.IrrRep ← `GlobalTheory.SmGL.IrrRep.ofChar`, from GlobalTheory.SmGL.IsSmoothChar
+            GlobalTheory.SmGL.IsSmoothChar: see above
+      GlobalTheory.Published.DepthZeroInduction ← `UpperTheory.Gal.TypesAndIwahori.Loc.dzi`, from UpperTheory.Gal.TypesAndIwahori.Loc
+        UpperTheory.Gal.TypesAndIwahori.Loc ← `UpperTheory.Gal.TypesAndIwahori.loc_holds`
+      GlobalTheory.Published.LanglandsExhaustionGL ← `GlobalTheory.langlandsExhaustionGL_holds`
+      GlobalTheory.Published.DepthZeroCuspidalLL ← unfolding `GlobalTheory.Published.DepthZeroCuspidalLL`
+      GlobalTheory.Published.GeometricLemma ← `GlobalTheory.RecT.geometricLemma_holds`
+      Formalism.ConjugateSelfDual.IsPlaceOver: see above
+      GlobalTheory.Published.LanglandsMultisegments ← unfolding `GlobalTheory.Published.LanglandsMultisegments`, from GlobalTheory.SmGL.IsSubquotient
+        GlobalTheory.SmGL.IsSubquotient ← `GlobalTheory.SmGL.PrinProd.prinSeries_append`
+      GlobalTheory.WeilDeligne.WD: see above
+      GlobalTheory.Published.ZelevinskyPolynomialRing ← `GlobalTheory.RecT.SphLaw.zelevinskyPolynomialRing`
+      GlobalTheory.Published.BernsteinZelevinskyFiniteness ← `GlobalTheory.bernsteinZelevinskyFiniteness_holds`
+why GlobalTheory.GalCut.ClauseAt (reachable from the theorems):
+  in the closure:
+    GlobalTheory.GalCut.ClauseAt ← unfolding `GlobalTheory.GalCut.ClauseAt`
+  anywhere in the project:
+    GlobalTheory.GalCut.ClauseAt ← unfolding `GlobalTheory.GalCut.ClauseAt`
+why UpperTheory.Zero.LLC.IsRecT (reachable from the theorems):
+  in the closure:
+    UpperTheory.Zero.LLC.IsRecT ← unfolding `UpperTheory.Zero.LLC.IsRecT`, from UpperTheory.Zero.LLC.LawsT
+      UpperTheory.Zero.LLC.LawsT ← `UpperTheory.Zero.LLC.LawsT.mk`, from UpperTheory.Zero.LLC.TypeLaw, Formalism.ConjugateSelfDual.IsPlaceOver, GlobalTheory.LocLanglands.IsTameWD, GlobalTheory.LocLanglands.IsIrrWD, GlobalTheory.WeilDeligne.WD, GlobalTheory.LocLanglands.IsLocalArtin
+        UpperTheory.Zero.LLC.TypeLaw ← unfolding `UpperTheory.Zero.LLC.TypeLaw`, from GlobalTheory.WeilDeligne.WD.mono0
+          GlobalTheory.WeilDeligne.WD.mono0 ← unfolding `GlobalTheory.WeilDeligne.WD.mono0`
+        Formalism.ConjugateSelfDual.IsPlaceOver ← unfolding `Formalism.ConjugateSelfDual.IsPlaceOver`
+        GlobalTheory.LocLanglands.IsTameWD ← unfolding `GlobalTheory.LocLanglands.IsTameWD`
+        GlobalTheory.LocLanglands.IsIrrWD ← unfolding `GlobalTheory.LocLanglands.IsIrrWD`
+        GlobalTheory.WeilDeligne.WD ← unfolding `GlobalTheory.WeilDeligne.WD`
+        GlobalTheory.LocLanglands.IsLocalArtin ← `UpperTheory.V.Loc.laArtin`, from Formalism.ConjugateSelfDual.IsPlaceOver, UpperTheory.V.W.Plc, GlobalTheory.Published.GlobalArtinReciprocity
+          Formalism.ConjugateSelfDual.IsPlaceOver: see above
+          UpperTheory.V.W.Plc ← unfolding `UpperTheory.V.W.Plc`
+          GlobalTheory.Published.GlobalArtinReciprocity ← `GlobalTheory.globalArtinReciprocity_holds`
+  anywhere in the project:
+    UpperTheory.Zero.LLC.IsRecT ← `UpperTheory.V.Z.Win.exLL'`, from Formalism.ConjugateSelfDual.IsPlaceOver
+      Formalism.ConjugateSelfDual.IsPlaceOver ← `_private.Development.AutomorphicArithmetic.AutomorphicVarieties.LevelCohomology.HcGalIdx.0.UpperTheory.V.X.GaloisIndexPlaces.isPlaceOver_vQ`
+wrote /home/ishaandixit2017/rh/out/audit_now.tsv
+wrote /home/ishaandixit2017/rh/out/audit_now.md
+exit 0

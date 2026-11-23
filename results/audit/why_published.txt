@@ -1,0 +1,868 @@
+why GlobalTheory.Published.GrothendieckDeformation (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.GrothendieckDeformation ← `GlobalTheory.Published.grothendieckDeformation_of_lifting`, from GlobalTheory.Published.AbelianDeRham, GlobalTheory.Published.AbelianLifting
+      GlobalTheory.Published.AbelianDeRham ← `GlobalTheory.T.abelianSchemeDeRhamStructure_of_cube_dual_poincare`, from GlobalTheory.Published.PoincareDeRhamDuality, GlobalTheory.Published.DualAbelianScheme, GlobalTheory.Published.AbelianHodgeDeRham, GlobalTheory.Published.CubeTheorem
+        GlobalTheory.Published.PoincareDeRhamDuality ← unfolding `GlobalTheory.Published.PoincareDeRhamDuality`
+        GlobalTheory.Published.DualAbelianScheme ← `GlobalTheory.T.dualAbelianScheme_exists_biduality`
+        GlobalTheory.Published.AbelianHodgeDeRham ← unfolding `GlobalTheory.Published.AbelianHodgeDeRham`, from GlobalTheory.CechDR.IsPullO, GlobalTheory.CechDR.IsPullForm, GlobalTheory.CechDR.IsPull1
+          GlobalTheory.CechDR.IsPullO ← unfolding `GlobalTheory.CechDR.IsPullO`
+          GlobalTheory.CechDR.IsPullForm ← `GlobalTheory.CechDR.isPullForm_pullForm`
+          GlobalTheory.CechDR.IsPull1 ← unfolding `GlobalTheory.CechDR.IsPull1`
+        GlobalTheory.Published.CubeTheorem ← `GlobalTheory.CubeTop.cubeTheorem`
+      GlobalTheory.Published.AbelianLifting ← `GlobalTheory.T.print_abelianLifting`
+  anywhere in the project:
+    GlobalTheory.Published.GrothendieckDeformation ← `GlobalTheory.HTFirstOrderIso.gd`
+why GlobalTheory.Published.GrothendieckMessing (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.GrothendieckMessing ← `GlobalTheory.Published.GrothendieckDeformation.grothendieckMessing`, from GlobalTheory.Published.GrothendieckDeformation
+      GlobalTheory.Published.GrothendieckDeformation ← `GlobalTheory.Published.grothendieckDeformation_of_lifting`, from GlobalTheory.Published.AbelianDeRham, GlobalTheory.Published.AbelianLifting
+        GlobalTheory.Published.AbelianDeRham ← `GlobalTheory.T.abelianSchemeDeRhamStructure_of_cube_dual_poincare`, from GlobalTheory.Published.PoincareDeRhamDuality, GlobalTheory.Published.DualAbelianScheme, GlobalTheory.Published.AbelianHodgeDeRham, GlobalTheory.Published.CubeTheorem
+          GlobalTheory.Published.PoincareDeRhamDuality ← unfolding `GlobalTheory.Published.PoincareDeRhamDuality`
+          GlobalTheory.Published.DualAbelianScheme ← `GlobalTheory.T.dualAbelianScheme_exists_biduality`
+          GlobalTheory.Published.AbelianHodgeDeRham ← unfolding `GlobalTheory.Published.AbelianHodgeDeRham`, from GlobalTheory.CechDR.IsPullO, GlobalTheory.CechDR.IsPullForm, GlobalTheory.CechDR.IsPull1
+            GlobalTheory.CechDR.IsPullO ← unfolding `GlobalTheory.CechDR.IsPullO`
+            GlobalTheory.CechDR.IsPullForm ← `GlobalTheory.CechDR.isPullForm_pullForm`
+            GlobalTheory.CechDR.IsPull1 ← unfolding `GlobalTheory.CechDR.IsPull1`
+          GlobalTheory.Published.CubeTheorem ← `GlobalTheory.CubeTop.cubeTheorem`
+        GlobalTheory.Published.AbelianLifting ← `GlobalTheory.T.print_abelianLifting`
+  anywhere in the project:
+    GlobalTheory.Published.GrothendieckMessing ← `GlobalTheory.Published.GrothendieckDeformation.grothendieckMessing`, from GlobalTheory.Published.GrothendieckDeformation
+      GlobalTheory.Published.GrothendieckDeformation ← `GlobalTheory.HTFirstOrderIso.gd`
+why GlobalTheory.Published.GrothendieckMessing.At (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.GrothendieckMessing.At ← unfolding `GlobalTheory.Published.GrothendieckDeformation`, from GlobalTheory.Published.GrothendieckDeformation, GlobalTheory.Cris.IsNilDP
+      GlobalTheory.Published.GrothendieckDeformation ← `GlobalTheory.Published.grothendieckDeformation_of_lifting`, from GlobalTheory.Published.AbelianDeRham, GlobalTheory.Published.AbelianLifting
+        GlobalTheory.Published.AbelianDeRham ← `GlobalTheory.T.abelianSchemeDeRhamStructure_of_cube_dual_poincare`, from GlobalTheory.Published.PoincareDeRhamDuality, GlobalTheory.Published.DualAbelianScheme, GlobalTheory.Published.AbelianHodgeDeRham, GlobalTheory.Published.CubeTheorem
+          GlobalTheory.Published.PoincareDeRhamDuality ← unfolding `GlobalTheory.Published.PoincareDeRhamDuality`
+          GlobalTheory.Published.DualAbelianScheme ← `GlobalTheory.T.dualAbelianScheme_exists_biduality`
+          GlobalTheory.Published.AbelianHodgeDeRham ← unfolding `GlobalTheory.Published.AbelianHodgeDeRham`, from GlobalTheory.CechDR.IsPullO, GlobalTheory.CechDR.IsPullForm, GlobalTheory.CechDR.IsPull1
+            GlobalTheory.CechDR.IsPullO ← unfolding `GlobalTheory.CechDR.IsPullO`
+            GlobalTheory.CechDR.IsPullForm ← `GlobalTheory.CechDR.isPullForm_pullForm`
+            GlobalTheory.CechDR.IsPull1 ← unfolding `GlobalTheory.CechDR.IsPull1`
+          GlobalTheory.Published.CubeTheorem ← `GlobalTheory.CubeTop.cubeTheorem`
+        GlobalTheory.Published.AbelianLifting ← `GlobalTheory.T.print_abelianLifting`
+      GlobalTheory.Cris.IsNilDP ← unfolding `GlobalTheory.Cris.IsNilDP`
+  anywhere in the project:
+    GlobalTheory.Published.GrothendieckMessing.At ← `GlobalTheory.Published.GrothendieckDeformation.at_dualNumber`, from GlobalTheory.Published.GrothendieckDeformation
+      GlobalTheory.Published.GrothendieckDeformation ← `GlobalTheory.HTFirstOrderIso.gd`
+why GlobalTheory.Published.GrothendieckMessing.Canonical (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.GrothendieckMessing.Canonical ← unfolding `GlobalTheory.Published.GrothendieckMessing.Canonical`, from GlobalTheory.Published.GrothendieckMessing.IsAdmissible
+      GlobalTheory.Published.GrothendieckMessing.IsAdmissible ← `GlobalTheory.T.admissible_deRhamHomology_summands_crystal`, from GlobalTheory.Published.CrystallineSmoothLift, ReciprocityTheory.ChartRestriction.G.Semi.IsAbelianScheme, ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsGrpPullback, GlobalTheory.Published.AbelianHodgeDeRham
+        GlobalTheory.Published.CrystallineSmoothLift ← `GlobalTheory.SmoothLift.crystallineSmoothLift_of_relations`
+        ReciprocityTheory.ChartRestriction.G.Semi.IsAbelianScheme ← `ReciprocityTheory.ChartRestriction.G.Semi.IsAbelianScheme.mk`
+        ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsGrpPullback ← unfolding `ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsGrpPullback`
+        GlobalTheory.Published.AbelianHodgeDeRham ← unfolding `GlobalTheory.Published.AbelianHodgeDeRham`, from GlobalTheory.CechDR.IsPullO, GlobalTheory.CechDR.IsPullForm, GlobalTheory.CechDR.IsPull1
+          GlobalTheory.CechDR.IsPullO ← unfolding `GlobalTheory.CechDR.IsPullO`
+          GlobalTheory.CechDR.IsPullForm ← `GlobalTheory.CechDR.isPullForm_pullForm`
+          GlobalTheory.CechDR.IsPull1 ← unfolding `GlobalTheory.CechDR.IsPull1`
+  anywhere in the project:
+    GlobalTheory.Published.GrothendieckMessing.Canonical ← unfolding `GlobalTheory.Published.GrothendieckMessing.At`, from GlobalTheory.Published.GrothendieckMessing.At
+      GlobalTheory.Published.GrothendieckMessing.At ← `GlobalTheory.Published.GrothendieckDeformation.at_dualNumber`, from GlobalTheory.Published.GrothendieckDeformation
+        GlobalTheory.Published.GrothendieckDeformation ← `GlobalTheory.HTFirstOrderIso.gd`
+why GlobalTheory.Published.GrothendieckMessing.LiftObj (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.GrothendieckMessing.LiftObj ← `GlobalTheory.T.grothendieckMessingLiftAbelianScheme_of_squareZero`, from GlobalTheory.Published.AbelianDeRham, GlobalTheory.Published.AbelianSchemeLifts.At
+      GlobalTheory.Published.AbelianDeRham ← `GlobalTheory.T.abelianSchemeDeRhamStructure_of_cube_dual_poincare`, from GlobalTheory.Published.PoincareDeRhamDuality, GlobalTheory.Published.DualAbelianScheme, GlobalTheory.Published.AbelianHodgeDeRham, GlobalTheory.Published.CubeTheorem
+        GlobalTheory.Published.PoincareDeRhamDuality ← unfolding `GlobalTheory.Published.PoincareDeRhamDuality`
+        GlobalTheory.Published.DualAbelianScheme ← `GlobalTheory.T.dualAbelianScheme_exists_biduality`
+        GlobalTheory.Published.AbelianHodgeDeRham ← unfolding `GlobalTheory.Published.AbelianHodgeDeRham`, from GlobalTheory.CechDR.IsPullO, GlobalTheory.CechDR.IsPullForm, GlobalTheory.CechDR.IsPull1
+          GlobalTheory.CechDR.IsPullO ← unfolding `GlobalTheory.CechDR.IsPullO`
+          GlobalTheory.CechDR.IsPullForm ← `GlobalTheory.CechDR.isPullForm_pullForm`
+          GlobalTheory.CechDR.IsPull1 ← unfolding `GlobalTheory.CechDR.IsPull1`
+        GlobalTheory.Published.CubeTheorem ← `GlobalTheory.CubeTop.cubeTheorem`
+      GlobalTheory.Published.AbelianSchemeLifts.At ← unfolding `GlobalTheory.Published.AbelianSchemeLifts`, from GlobalTheory.Published.AbelianSchemeLifts
+        GlobalTheory.Published.AbelianSchemeLifts ← `GlobalTheory.T.abelianSchemeSquareZeroLifts_of_deRhamCohomology`, from GlobalTheory.Published.AbelianHodgeDeRham
+          GlobalTheory.Published.AbelianHodgeDeRham: see above
+  anywhere in the project:
+    GlobalTheory.Published.GrothendieckMessing.LiftObj ← unfolding `GlobalTheory.Published.GrothendieckMessing.LiftObj`
+why GlobalTheory.Published.GrothendieckMessing.LiftHom (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.GrothendieckMessing.LiftHom ← `GlobalTheory.T.grothendieckMessingLiftHomomorphism_of_squareZero`, from GlobalTheory.Published.AbelianDeRham, GlobalTheory.Published.AbelianSchemeLifts.At
+      GlobalTheory.Published.AbelianDeRham ← `GlobalTheory.T.abelianSchemeDeRhamStructure_of_cube_dual_poincare`, from GlobalTheory.Published.PoincareDeRhamDuality, GlobalTheory.Published.DualAbelianScheme, GlobalTheory.Published.AbelianHodgeDeRham, GlobalTheory.Published.CubeTheorem
+        GlobalTheory.Published.PoincareDeRhamDuality ← unfolding `GlobalTheory.Published.PoincareDeRhamDuality`
+        GlobalTheory.Published.DualAbelianScheme ← `GlobalTheory.T.dualAbelianScheme_exists_biduality`
+        GlobalTheory.Published.AbelianHodgeDeRham ← unfolding `GlobalTheory.Published.AbelianHodgeDeRham`, from GlobalTheory.CechDR.IsPullO, GlobalTheory.CechDR.IsPullForm, GlobalTheory.CechDR.IsPull1
+          GlobalTheory.CechDR.IsPullO ← unfolding `GlobalTheory.CechDR.IsPullO`
+          GlobalTheory.CechDR.IsPullForm ← `GlobalTheory.CechDR.isPullForm_pullForm`
+          GlobalTheory.CechDR.IsPull1 ← unfolding `GlobalTheory.CechDR.IsPull1`
+        GlobalTheory.Published.CubeTheorem ← `GlobalTheory.CubeTop.cubeTheorem`
+      GlobalTheory.Published.AbelianSchemeLifts.At ← unfolding `GlobalTheory.Published.AbelianSchemeLifts`, from GlobalTheory.Published.AbelianSchemeLifts
+        GlobalTheory.Published.AbelianSchemeLifts ← `GlobalTheory.T.abelianSchemeSquareZeroLifts_of_deRhamCohomology`, from GlobalTheory.Published.AbelianHodgeDeRham
+          GlobalTheory.Published.AbelianHodgeDeRham: see above
+  anywhere in the project:
+    GlobalTheory.Published.GrothendieckMessing.LiftHom ← `GlobalTheory.HTFirstOrderIso.liftHom_eps`
+why GlobalTheory.Published.GrothendieckMessing.IsAdmissible (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.GrothendieckMessing.IsAdmissible ← `GlobalTheory.T.admissible_deRhamHomology_summands_crystal`, from GlobalTheory.Published.CrystallineSmoothLift, ReciprocityTheory.ChartRestriction.G.Semi.IsAbelianScheme, ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsGrpPullback, GlobalTheory.Published.AbelianHodgeDeRham
+      GlobalTheory.Published.CrystallineSmoothLift ← `GlobalTheory.SmoothLift.crystallineSmoothLift_of_relations`
+      ReciprocityTheory.ChartRestriction.G.Semi.IsAbelianScheme ← `ReciprocityTheory.ChartRestriction.G.Semi.IsAbelianScheme.mk`
+      ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsGrpPullback ← unfolding `ReciprocityTheory.ChartRestriction.G.Geo.Tor.IsGrpPullback`
+      GlobalTheory.Published.AbelianHodgeDeRham ← unfolding `GlobalTheory.Published.AbelianHodgeDeRham`, from GlobalTheory.CechDR.IsPullO, GlobalTheory.CechDR.IsPullForm, GlobalTheory.CechDR.IsPull1
+        GlobalTheory.CechDR.IsPullO ← unfolding `GlobalTheory.CechDR.IsPullO`
+        GlobalTheory.CechDR.IsPullForm ← `GlobalTheory.CechDR.isPullForm_pullForm`
+        GlobalTheory.CechDR.IsPull1 ← unfolding `GlobalTheory.CechDR.IsPull1`
+  anywhere in the project:
+    GlobalTheory.Published.GrothendieckMessing.IsAdmissible ← unfolding `GlobalTheory.Published.GrothendieckMessing.IsAdmissible`
+why GlobalTheory.Published.HoweDualityReal (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.HoweDualityReal ← `GlobalTheory.howeDualityReal_holds`
+  anywhere in the project:
+    GlobalTheory.Published.HoweDualityReal ← `GlobalTheory.howeDualityReal_holds`
+why GlobalTheory.Published.BlochKato.RationalDuality (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.BlochKato.RationalDuality ← `GlobalTheory.Published.BlochKato.rationalDuality_of_allCoefficients`, from Formalism.MainNotions.N.bkACore, Formalism.WeaklyAdmissibleFiltrations.PeriodData
+      Formalism.MainNotions.N.bkACore ← unfolding `Formalism.MainNotions.N.bkACore`
+      Formalism.WeaklyAdmissibleFiltrations.PeriodData ← `Formalism.WeaklyAdmissibleFiltrations.PeriodData.mk`
+  anywhere in the project:
+    GlobalTheory.Published.BlochKato.RationalDuality ← `GlobalTheory.Published.BlochKato.rationalDuality_of_allCoefficients`, from Formalism.MainNotions.N.bkACore, Formalism.WeaklyAdmissibleFiltrations.PeriodData
+      Formalism.MainNotions.N.bkACore ← unfolding `Formalism.MainNotions.N.bkACore`
+      Formalism.WeaklyAdmissibleFiltrations.PeriodData ← unfolding `Formalism.WeaklyAdmissibleFiltrations.ExPD`, from Formalism.WeaklyAdmissibleFiltrations.ExPD
+        Formalism.WeaklyAdmissibleFiltrations.ExPD ← `Formalism.WeaklyAdmissibleFiltrations.existsPeriodRingData_holds`
+why GlobalTheory.Published.BlochKato.IntegralDuality (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.BlochKato.IntegralDuality ← unfolding `GlobalTheory.Published.BlochKato.IntegralDuality`
+  anywhere in the project:
+    GlobalTheory.Published.BlochKato.IntegralDuality ← unfolding `GlobalTheory.Published.BlochKatoLocal`, from Formalism.BasicNotions.LocAinf, Formalism.BasicNotions.LocTied, Formalism.BasicNotions.LocPrime, Formalism.BasicNotions.Loc.FinExt, GlobalTheory.Published.BlochKatoLocal
+      Formalism.BasicNotions.LocAinf ← `GlobalTheory.MemLoc.PrimeEx.ainf`, from GlobalTheory.MemLoc.Core
+        GlobalTheory.MemLoc.Core ← `GlobalTheory.MemLoc.nonempty_core`
+      Formalism.BasicNotions.LocTied ← `UpperTheory.V.Loc.tiedP`
+      Formalism.BasicNotions.LocPrime ← unfolding `Formalism.BasicNotions.LocTheory`, from Formalism.BasicNotions.LocTheory
+        Formalism.BasicNotions.LocTheory ← `Formalism.BasicNotions.D7.loc`, from Formalism.BasicNotions.D7
+          Formalism.BasicNotions.D7 ← `GlobalTheory.Mem.nonempty_record`
+      Formalism.BasicNotions.Loc.FinExt ← `UpperTheory.KStar.Cyc.rootsExt`
+      GlobalTheory.Published.BlochKatoLocal ← `UpperTheory.Lit.blochKatoLocal`
+why GlobalTheory.Published.BlochKato.DimFormula (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.BlochKato.DimFormula ← unfolding `GlobalTheory.Published.BlochKato.DimFormula`
+  anywhere in the project:
+    GlobalTheory.Published.BlochKato.DimFormula ← unfolding `GlobalTheory.Published.BlochKato.DimFormula`
+why GlobalTheory.Published.ChebotarevOpenNormal (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.ChebotarevOpenNormal ← `GlobalTheory.twist_front_inputs`, from Formalism.GaloisCohomology.LocalTateDualityK, GlobalTheory.Published.GlobalArtinReciprocity, Formalism.GaloisCohomology.LocalEulerCharK, ReciprocityTheory.Gal.LocalTateDuality, ReciprocityTheory.Gal.LocalFiniteness, Formalism.GaloisCohomology.LocalFinitenessK, GlobalTheory.Published.PoitouTateDuality
+      Formalism.GaloisCohomology.LocalTateDualityK ← unfolding `Formalism.GaloisCohomology.LocalTateDualityK`
+      GlobalTheory.Published.GlobalArtinReciprocity ← `GlobalTheory.globalArtinReciprocity_holds`
+      Formalism.GaloisCohomology.LocalEulerCharK ← unfolding `Formalism.GaloisCohomology.LocalEulerCharK`
+      ReciprocityTheory.Gal.LocalTateDuality ← `GlobalTheory.LocalDualityAll.localTateDuality`
+      ReciprocityTheory.Gal.LocalFiniteness ← `GlobalTheory.Laid.locfin_holds`
+      Formalism.GaloisCohomology.LocalFinitenessK ← `CompanionTheory.LocalTateOrthogonality.Gcoh.top_locfin`
+      GlobalTheory.Published.PoitouTateDuality ← `UpperTheory.V.HV.U.pt_s`, from GlobalTheory.Mem.LiteralAutomorphy.LiteratureRankNHypothesis
+        GlobalTheory.Mem.LiteralAutomorphy.LiteratureRankNHypothesis ← `GlobalTheory.Mem.LiteralAutomorphy.LiteratureRankNHypothesis.mk`, from GlobalTheory.Mem.LiteralAutomorphy.LiteratureCMHypothesis, GlobalTheory.Mem.LiteralAutomorphy.LitLocAlt, GlobalTheory.Mem.LiteralAutomorphy.LitCoh, GlobalTheory.Mem.LiteralAutomorphy.LiteratureAutomorphyHypothesis
+          GlobalTheory.Mem.LiteralAutomorphy.LiteratureCMHypothesis ← `GlobalTheory.Mem.LiteralAutomorphy.LiteratureCMHypothesis.mk`, from GlobalTheory.Published.GrothendieckDeformation, GlobalTheory.Published.PeriodComparison, GlobalTheory.Published.AbelianDeRham, GlobalTheory.Published.PartialZetaFunctionalEquation, GlobalTheory.Published.SiegelKlingenDeligneRibet, GlobalTheory.Published.HeckeTateFunctionalEquation, GlobalTheory.Published.SerreTateGoodReductionSt, GlobalTheory.Published.AbelianDualCrystal, GlobalTheory.Published.HilbertClassFieldJ, GlobalTheory.Published.EllipticMainTheoremCM, GlobalTheory.Published.GaussManinPeriods
+            GlobalTheory.Published.GrothendieckDeformation ← `GlobalTheory.Published.grothendieckDeformation_of_lifting`, from GlobalTheory.Published.AbelianDeRham, GlobalTheory.Published.AbelianLifting
+              GlobalTheory.Published.AbelianDeRham ← `GlobalTheory.T.abelianSchemeDeRhamStructure_of_cube_dual_poincare`, from GlobalTheory.Published.PoincareDeRhamDuality, GlobalTheory.Published.DualAbelianScheme, GlobalTheory.Published.AbelianHodgeDeRham, GlobalTheory.Published.CubeTheorem
+                GlobalTheory.Published.PoincareDeRhamDuality ← unfolding `GlobalTheory.Published.PoincareDeRhamDuality`
+                GlobalTheory.Published.DualAbelianScheme ← `GlobalTheory.T.dualAbelianScheme_exists_biduality`
+                GlobalTheory.Published.AbelianHodgeDeRham ← unfolding `GlobalTheory.Published.AbelianHodgeDeRham`, from GlobalTheory.CechDR.IsPullO, GlobalTheory.CechDR.IsPullForm, GlobalTheory.CechDR.IsPull1
+                  GlobalTheory.CechDR.IsPullO ← unfolding `GlobalTheory.CechDR.IsPullO`
+                  GlobalTheory.CechDR.IsPullForm ← `GlobalTheory.CechDR.isPullForm_pullForm`
+                  GlobalTheory.CechDR.IsPull1 ← unfolding `GlobalTheory.CechDR.IsPull1`
+                GlobalTheory.Published.CubeTheorem ← `GlobalTheory.CubeTop.cubeTheorem`
+              GlobalTheory.Published.AbelianLifting ← `GlobalTheory.T.print_abelianLifting`
+            GlobalTheory.Published.PeriodComparison ← `GlobalTheory.PeriodFamily.periodComparison_holds`
+            GlobalTheory.Published.AbelianDeRham: see above
+            GlobalTheory.Published.PartialZetaFunctionalEquation ← `PositivityTheory.Prw.partialZetaFunctionalEquation_holds`
+            GlobalTheory.Published.SiegelKlingenDeligneRibet ← `PositivityTheory.Prw.siegelKlingenDeligneRibet_of`, from GlobalTheory.Published.SiegelKlingen, GlobalTheory.Published.DeligneRibet
+              GlobalTheory.Published.SiegelKlingen ← `PositivityTheory.Prw.siegelKlingen_holds`
+              GlobalTheory.Published.DeligneRibet ← `PositivityTheory.PfDR.deligneRibet_holds`
+            GlobalTheory.Published.HeckeTateFunctionalEquation ← `GlobalTheory.Top.heckeTateFE`
+            GlobalTheory.Published.SerreTateGoodReductionSt ← `UpperTheory.Lit.serreTateGoodReduction`
+            GlobalTheory.Published.AbelianDualCrystal ← `GlobalTheory.abelianDualCrystal`
+            GlobalTheory.Published.HilbertClassFieldJ ← `GlobalTheory.Laid.hcfj_holds`
+            GlobalTheory.Published.EllipticMainTheoremCM ← `PositivityTheory.Prw.ellipticMainTheoremCM_holds`
+            GlobalTheory.Published.GaussManinPeriods ← `GlobalTheory.PeriodFamily.gaussManinPeriods_holds`
+          GlobalTheory.Mem.LiteralAutomorphy.LitLocAlt ← `GlobalTheory.Mem.LiteralAutomorphy.LitLocAlt.mk`, from GlobalTheory.Published.BrauerDegreeZero, GlobalTheory.Published.LocalConverseGL, GlobalTheory.Published.GeometricLemma, GlobalTheory.Published.TemperedProductOfSquareIntegrable, GlobalTheory.Published.LanglandsMultisegments, GlobalTheory.Published.GenericUnlinkedGL, GlobalTheory.Published.BernsteinUnitaryProductIrreducible, GlobalTheory.Published.GreenRegularCharacters, GlobalTheory.Published.MoyPrasadJacquetIso, GlobalTheory.Published.ChevalleyUnits, GlobalTheory.Published.BernsteinZelevinskyFiniteness, GlobalTheory.Published.DepthZeroInduction, GlobalTheory.Published.StandardCosocleGL, GlobalTheory.Published.LanglandsExhaustionGL, GlobalTheory.Published.TotallyDisjointProductIrreducible, GlobalTheory.Published.ZelevinskyPolynomialRing, GlobalTheory.Published.EssSquareIntegrableSegments, GlobalTheory.Published.SquareIntegrableSegment
+            GlobalTheory.Published.BrauerDegreeZero ← `GlobalTheory.BrauerZero.brauerDegreeZero`
+            GlobalTheory.Published.LocalConverseGL ← `DiscreteGroups.sglob.LConv.localConverseGL`
+            GlobalTheory.Published.GeometricLemma ← unfolding `GlobalTheory.Published.GeometricLemma`, from GlobalTheory.SmGL.CellSemisimplification, GlobalTheory.SmGL.JacquetOfInducedFiltration
+              GlobalTheory.SmGL.CellSemisimplification ← unfolding `GlobalTheory.SmGL.CellSemisimplification`
+              GlobalTheory.SmGL.JacquetOfInducedFiltration ← unfolding `GlobalTheory.SmGL.JacquetOfInducedFiltration`
+            GlobalTheory.Published.TemperedProductOfSquareIntegrable ← `UpperTheory.Lit.Cas.temperedProduct`, from GlobalTheory.Published.StandardCosocleGL, GlobalTheory.Published.LanglandsExhaustionGL, GlobalTheory.Published.GeometricLemma, GlobalTheory.Published.IrreducibleAdmissibleGL, GlobalTheory.Published.LanglandsMultisegments, GlobalTheory.Published.EssSquareIntegrableSegments, GlobalTheory.Published.StandardFunctorsFiniteLength, GlobalTheory.Published.BernsteinZelevinskyFiniteness
+              GlobalTheory.Published.StandardCosocleGL ← `PositivityTheory.Exh.standardCosocleGL_holds`
+      …
+  anywhere in the project:
+    GlobalTheory.Published.ChebotarevOpenNormal ← unfolding `GlobalTheory.Published.ChebotarevOpenNormal`, from Formalism.ConjugateSelfDual.IsFrob, Formalism.ConjugateSelfDual.IsPlaceOver
+      Formalism.ConjugateSelfDual.IsFrob ← `Formalism.MainNotions.LatticeVariant.exists_isFrob`, from Formalism.ConjugateSelfDual.IsPlaceOver
+        Formalism.ConjugateSelfDual.IsPlaceOver ← `_private.Development.AutomorphicArithmetic.AutomorphicVarieties.LevelCohomology.HcGalIdx.0.UpperTheory.V.X.GaloisIndexPlaces.isPlaceOver_vQ`
+      Formalism.ConjugateSelfDual.IsPlaceOver: see above
+why GlobalTheory.Published.GoodChernNumbers (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.GoodChernNumbers ← unfolding `GlobalTheory.Published.GoodChernNumbers`, from GlobalTheory.GoodMetric.HasChernIntegral
+      GlobalTheory.GoodMetric.HasChernIntegral ← unfolding `GlobalTheory.GoodMetric.HasChernIntegral`
+  anywhere in the project:
+    GlobalTheory.Published.GoodChernNumbers ← unfolding `GlobalTheory.Published.GoodChernNumbers`, from GlobalTheory.GoodMetric.HasChernIntegral
+      GlobalTheory.GoodMetric.HasChernIntegral ← unfolding `GlobalTheory.GoodMetric.HasChernIntegral`
+why GlobalTheory.Published.CohDimTwo (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.CohDimTwo ← `GlobalTheory.twist_front_inputs`, from Formalism.GaloisCohomology.LocalTateDualityK, GlobalTheory.Published.GlobalArtinReciprocity, Formalism.GaloisCohomology.LocalEulerCharK, ReciprocityTheory.Gal.LocalTateDuality, ReciprocityTheory.Gal.LocalFiniteness, Formalism.GaloisCohomology.LocalFinitenessK, GlobalTheory.Published.PoitouTateDuality
+      Formalism.GaloisCohomology.LocalTateDualityK ← unfolding `Formalism.GaloisCohomology.LocalTateDualityK`
+      GlobalTheory.Published.GlobalArtinReciprocity ← `GlobalTheory.globalArtinReciprocity_holds`
+      Formalism.GaloisCohomology.LocalEulerCharK ← unfolding `Formalism.GaloisCohomology.LocalEulerCharK`
+      ReciprocityTheory.Gal.LocalTateDuality ← `GlobalTheory.LocalDualityAll.localTateDuality`
+      ReciprocityTheory.Gal.LocalFiniteness ← `GlobalTheory.Laid.locfin_holds`
+      Formalism.GaloisCohomology.LocalFinitenessK ← `CompanionTheory.LocalTateOrthogonality.Gcoh.top_locfin`
+      GlobalTheory.Published.PoitouTateDuality ← `UpperTheory.V.HV.U.pt_s`, from GlobalTheory.Mem.LiteralAutomorphy.LiteratureRankNHypothesis
+        GlobalTheory.Mem.LiteralAutomorphy.LiteratureRankNHypothesis ← `GlobalTheory.Mem.LiteralAutomorphy.LiteratureRankNHypothesis.mk`, from GlobalTheory.Mem.LiteralAutomorphy.LiteratureCMHypothesis, GlobalTheory.Mem.LiteralAutomorphy.LitLocAlt, GlobalTheory.Mem.LiteralAutomorphy.LitCoh, GlobalTheory.Mem.LiteralAutomorphy.LiteratureAutomorphyHypothesis
+          GlobalTheory.Mem.LiteralAutomorphy.LiteratureCMHypothesis ← `GlobalTheory.Mem.LiteralAutomorphy.LiteratureCMHypothesis.mk`, from GlobalTheory.Published.GrothendieckDeformation, GlobalTheory.Published.PeriodComparison, GlobalTheory.Published.AbelianDeRham, GlobalTheory.Published.PartialZetaFunctionalEquation, GlobalTheory.Published.SiegelKlingenDeligneRibet, GlobalTheory.Published.HeckeTateFunctionalEquation, GlobalTheory.Published.SerreTateGoodReductionSt, GlobalTheory.Published.AbelianDualCrystal, GlobalTheory.Published.HilbertClassFieldJ, GlobalTheory.Published.EllipticMainTheoremCM, GlobalTheory.Published.GaussManinPeriods
+            GlobalTheory.Published.GrothendieckDeformation ← `GlobalTheory.Published.grothendieckDeformation_of_lifting`, from GlobalTheory.Published.AbelianDeRham, GlobalTheory.Published.AbelianLifting
+              GlobalTheory.Published.AbelianDeRham ← `GlobalTheory.T.abelianSchemeDeRhamStructure_of_cube_dual_poincare`, from GlobalTheory.Published.PoincareDeRhamDuality, GlobalTheory.Published.DualAbelianScheme, GlobalTheory.Published.AbelianHodgeDeRham, GlobalTheory.Published.CubeTheorem
+                GlobalTheory.Published.PoincareDeRhamDuality ← unfolding `GlobalTheory.Published.PoincareDeRhamDuality`
+                GlobalTheory.Published.DualAbelianScheme ← `GlobalTheory.T.dualAbelianScheme_exists_biduality`
+                GlobalTheory.Published.AbelianHodgeDeRham ← unfolding `GlobalTheory.Published.AbelianHodgeDeRham`, from GlobalTheory.CechDR.IsPullO, GlobalTheory.CechDR.IsPullForm, GlobalTheory.CechDR.IsPull1
+                  GlobalTheory.CechDR.IsPullO ← unfolding `GlobalTheory.CechDR.IsPullO`
+                  GlobalTheory.CechDR.IsPullForm ← `GlobalTheory.CechDR.isPullForm_pullForm`
+                  GlobalTheory.CechDR.IsPull1 ← unfolding `GlobalTheory.CechDR.IsPull1`
+                GlobalTheory.Published.CubeTheorem ← `GlobalTheory.CubeTop.cubeTheorem`
+              GlobalTheory.Published.AbelianLifting ← `GlobalTheory.T.print_abelianLifting`
+            GlobalTheory.Published.PeriodComparison ← `GlobalTheory.PeriodFamily.periodComparison_holds`
+            GlobalTheory.Published.AbelianDeRham: see above
+            GlobalTheory.Published.PartialZetaFunctionalEquation ← `PositivityTheory.Prw.partialZetaFunctionalEquation_holds`
+            GlobalTheory.Published.SiegelKlingenDeligneRibet ← `PositivityTheory.Prw.siegelKlingenDeligneRibet_of`, from GlobalTheory.Published.SiegelKlingen, GlobalTheory.Published.DeligneRibet
+              GlobalTheory.Published.SiegelKlingen ← `PositivityTheory.Prw.siegelKlingen_holds`
+              GlobalTheory.Published.DeligneRibet ← `PositivityTheory.PfDR.deligneRibet_holds`
+            GlobalTheory.Published.HeckeTateFunctionalEquation ← `GlobalTheory.Top.heckeTateFE`
+            GlobalTheory.Published.SerreTateGoodReductionSt ← `UpperTheory.Lit.serreTateGoodReduction`
+            GlobalTheory.Published.AbelianDualCrystal ← `GlobalTheory.abelianDualCrystal`
+            GlobalTheory.Published.HilbertClassFieldJ ← `GlobalTheory.Laid.hcfj_holds`
+            GlobalTheory.Published.EllipticMainTheoremCM ← `PositivityTheory.Prw.ellipticMainTheoremCM_holds`
+            GlobalTheory.Published.GaussManinPeriods ← `GlobalTheory.PeriodFamily.gaussManinPeriods_holds`
+          GlobalTheory.Mem.LiteralAutomorphy.LitLocAlt ← `GlobalTheory.Mem.LiteralAutomorphy.LitLocAlt.mk`, from GlobalTheory.Published.BrauerDegreeZero, GlobalTheory.Published.LocalConverseGL, GlobalTheory.Published.GeometricLemma, GlobalTheory.Published.TemperedProductOfSquareIntegrable, GlobalTheory.Published.LanglandsMultisegments, GlobalTheory.Published.GenericUnlinkedGL, GlobalTheory.Published.BernsteinUnitaryProductIrreducible, GlobalTheory.Published.GreenRegularCharacters, GlobalTheory.Published.MoyPrasadJacquetIso, GlobalTheory.Published.ChevalleyUnits, GlobalTheory.Published.BernsteinZelevinskyFiniteness, GlobalTheory.Published.DepthZeroInduction, GlobalTheory.Published.StandardCosocleGL, GlobalTheory.Published.LanglandsExhaustionGL, GlobalTheory.Published.TotallyDisjointProductIrreducible, GlobalTheory.Published.ZelevinskyPolynomialRing, GlobalTheory.Published.EssSquareIntegrableSegments, GlobalTheory.Published.SquareIntegrableSegment
+            GlobalTheory.Published.BrauerDegreeZero ← `GlobalTheory.BrauerZero.brauerDegreeZero`
+            GlobalTheory.Published.LocalConverseGL ← `DiscreteGroups.sglob.LConv.localConverseGL`
+            GlobalTheory.Published.GeometricLemma ← unfolding `GlobalTheory.Published.GeometricLemma`, from GlobalTheory.SmGL.CellSemisimplification, GlobalTheory.SmGL.JacquetOfInducedFiltration
+              GlobalTheory.SmGL.CellSemisimplification ← unfolding `GlobalTheory.SmGL.CellSemisimplification`
+              GlobalTheory.SmGL.JacquetOfInducedFiltration ← unfolding `GlobalTheory.SmGL.JacquetOfInducedFiltration`
+            GlobalTheory.Published.TemperedProductOfSquareIntegrable ← `UpperTheory.Lit.Cas.temperedProduct`, from GlobalTheory.Published.StandardCosocleGL, GlobalTheory.Published.LanglandsExhaustionGL, GlobalTheory.Published.GeometricLemma, GlobalTheory.Published.IrreducibleAdmissibleGL, GlobalTheory.Published.LanglandsMultisegments, GlobalTheory.Published.EssSquareIntegrableSegments, GlobalTheory.Published.StandardFunctorsFiniteLength, GlobalTheory.Published.BernsteinZelevinskyFiniteness
+              GlobalTheory.Published.StandardCosocleGL ← `PositivityTheory.Exh.standardCosocleGL_holds`
+      …
+  anywhere in the project:
+    GlobalTheory.Published.CohDimTwo ← unfolding `GlobalTheory.Published.CohDimTwo`, from GlobalTheory.Published.CohDimTwoGlobal, GlobalTheory.Published.CohDimTwoLocal
+      GlobalTheory.Published.CohDimTwoGlobal ← unfolding `GlobalTheory.Published.CohDimTwoGlobal`
+      GlobalTheory.Published.CohDimTwoLocal ← unfolding `GlobalTheory.Published.CohDimTwoLocal`
+why GlobalTheory.Published.DeRhamVectorExtension.Family.Tangent (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.DeRhamVectorExtension.Family.Tangent ← `GlobalTheory.T.exists_canonical_deRham_rigidExtension_family`, from GlobalTheory.Published.AbelianHodgeDeRham
+      GlobalTheory.Published.AbelianHodgeDeRham ← unfolding `GlobalTheory.Published.AbelianHodgeDeRham`, from GlobalTheory.CechDR.IsPullO, GlobalTheory.CechDR.IsPullForm, GlobalTheory.CechDR.IsPull1
+        GlobalTheory.CechDR.IsPullO ← unfolding `GlobalTheory.CechDR.IsPullO`
+        GlobalTheory.CechDR.IsPullForm ← `GlobalTheory.CechDR.isPullForm_pullForm`
+        GlobalTheory.CechDR.IsPull1 ← unfolding `GlobalTheory.CechDR.IsPull1`
+  anywhere in the project:
+    GlobalTheory.Published.DeRhamVectorExtension.Family.Tangent ← `GlobalTheory.T.exists_canonical_deRham_rigidExtension_family`, from GlobalTheory.Published.AbelianHodgeDeRham
+      GlobalTheory.Published.AbelianHodgeDeRham ← `MainStatements.Hodge.Free.abelianHodgeDeRham`
+why GlobalTheory.Published.DeRhamVectorExtension.Family.Filtered (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.DeRhamVectorExtension.Family.Filtered ← `GlobalTheory.T.exists_canonical_deRham_rigidExtension_family`, from GlobalTheory.Published.AbelianHodgeDeRham
+      GlobalTheory.Published.AbelianHodgeDeRham ← unfolding `GlobalTheory.Published.AbelianHodgeDeRham`, from GlobalTheory.CechDR.IsPullO, GlobalTheory.CechDR.IsPullForm, GlobalTheory.CechDR.IsPull1
+        GlobalTheory.CechDR.IsPullO ← unfolding `GlobalTheory.CechDR.IsPullO`
+        GlobalTheory.CechDR.IsPullForm ← `GlobalTheory.CechDR.isPullForm_pullForm`
+        GlobalTheory.CechDR.IsPull1 ← unfolding `GlobalTheory.CechDR.IsPull1`
+  anywhere in the project:
+    GlobalTheory.Published.DeRhamVectorExtension.Family.Filtered ← `GlobalTheory.T.exists_canonical_deRham_rigidExtension_family`, from GlobalTheory.Published.AbelianHodgeDeRham
+      GlobalTheory.Published.AbelianHodgeDeRham ← `MainStatements.Hodge.Free.abelianHodgeDeRham`
+why GlobalTheory.Published.DeRhamVectorExtension.Family.Natural (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.DeRhamVectorExtension.Family.Natural ← unfolding `GlobalTheory.Published.DeRhamVectorExtension.Family.Natural`
+  anywhere in the project:
+    GlobalTheory.Published.DeRhamVectorExtension.Family.Natural ← unfolding `GlobalTheory.Published.DeRhamVectorExtension.Family.Natural`
+why GlobalTheory.Published.PoitouTate.ShaDual (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.PoitouTate.ShaDual ← `PositivityTheory.Lit1.PTN.shaDual_of_perfectPair`, from PositivityTheory.Lit1.PTN.PerfectPair
+      PositivityTheory.Lit1.PTN.PerfectPair ← `PositivityTheory.Lit1.PTN.perfectPair_of_perfectQZ`, from PositivityTheory.Lit1.PTN.PerfectQZ
+        PositivityTheory.Lit1.PTN.PerfectQZ ← `PositivityTheory.Lit1.PTN.perfectQZ_of_found`
+  anywhere in the project:
+    GlobalTheory.Published.PoitouTate.ShaDual ← unfolding `GlobalTheory.Published.PoitouTate.ShaDual`
+why UpperTheory.LiteratureTheorems.OpenLiteratureStatements (reachable from the theorems):
+  in the closure:
+    UpperTheory.LiteratureTheorems.OpenLiteratureStatements ← `UpperTheory.LiteratureTheorems.OpenLiteratureStatements.mk`, from UpperTheory.Zero.LLC.RecTExists, UpperTheory.One.M.Row
+      UpperTheory.Zero.LLC.RecTExists ← `UpperTheory.Zero.LLC.recTExists`
+      UpperTheory.One.M.Row ← unfolding `UpperTheory.One.M.Row`, from UpperTheory.GalStar.Row0b
+        UpperTheory.GalStar.Row0b ← `UpperTheory.Gal.Int.galoisLocalGlobalStrong_recParameter`
+  anywhere in the project:
+    UpperTheory.LiteratureTheorems.OpenLiteratureStatements ← `UpperTheory.LiteratureTheorems.OpenLiteratureStatements.mk`, from UpperTheory.Zero.LLC.RecTExists, UpperTheory.One.M.Row
+      UpperTheory.Zero.LLC.RecTExists ← `UpperTheory.Zero.LLC.recTExists`
+      UpperTheory.One.M.Row ← unfolding `UpperTheory.One.M.Row`, from UpperTheory.GalStar.Row0b
+        UpperTheory.GalStar.Row0b ← `UpperTheory.Gal.Int.galoisLocalGlobalStrong_recParameter`
+why GlobalTheory.Published.HeckeEntire (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.HeckeEntire ← `GlobalTheory.Published.HeckeEntire_holds`
+  anywhere in the project:
+    GlobalTheory.Published.HeckeEntire ← `GlobalTheory.Published.HeckeEntire_holds`
+why GlobalTheory.Published.FormalAlgebraisation.Schemes (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.FormalAlgebraisation.Schemes ← `GlobalTheory.T.formal_algebraisation_schemes`, from PositivityTheory.FormalThickening.GEClosedProj
+      PositivityTheory.FormalThickening.GEClosedProj ← `GlobalTheory.T.grothendieck_existence_closed_proj`
+  anywhere in the project:
+    GlobalTheory.Published.FormalAlgebraisation.Schemes ← unfolding `GlobalTheory.Published.FormalAlgebraisation.Schemes`
+why GlobalTheory.Published.HasseNorm (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.HasseNorm ← `GlobalTheory.CNorm.hasseNorm`
+  anywhere in the project:
+    GlobalTheory.Published.HasseNorm ← unfolding `GlobalTheory.Published.HasseNorm`
+why GlobalTheory.Published.UnusedSlot72 (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.UnusedSlot72 ← unfolding `GlobalTheory.Published.UnusedSlot72`
+  anywhere in the project:
+    GlobalTheory.Published.UnusedSlot72 ← unfolding `GlobalTheory.Published.UnusedSlot72`
+why GlobalTheory.Published.L2ExtensionLogCanonical (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.L2ExtensionLogCanonical ← `GlobalTheory.l2ExtensionLogCanonical'`
+  anywhere in the project:
+    GlobalTheory.Published.L2ExtensionLogCanonical ← unfolding `GlobalTheory.Published.L2ExtensionLogCanonical`
+why GlobalTheory.Published.FlagPushForward (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.FlagPushForward ← `GlobalTheory.T.fullFlagBundle_pushForward_formula`
+  anywhere in the project:
+    GlobalTheory.Published.FlagPushForward ← `GlobalTheory.T.fullFlagBundle_pushForward_formula`
+why GlobalTheory.Published.GreenSeriesSt (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.GreenSeriesSt ← `PositivityTheory.Prw.greenSeriesSt_of`, from GlobalTheory.Published.GreenCuspidal
+      GlobalTheory.Published.GreenCuspidal ← `PositivityTheory.Stage1.PM.greenCuspidal`
+  anywhere in the project:
+    GlobalTheory.Published.GreenSeriesSt ← `PositivityTheory.Prw.greenSeriesSt_of`, from GlobalTheory.Published.GreenCuspidal
+      GlobalTheory.Published.GreenCuspidal ← `PositivityTheory.Stage1.PM.greenCuspidal`
+why GlobalTheory.Published.ChowFormHyperplaneSection (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.ChowFormHyperplaneSection ← `ChowFormCompatibility.chow_form_hyperplane_section`
+  anywhere in the project:
+    GlobalTheory.Published.ChowFormHyperplaneSection ← unfolding `GlobalTheory.Published.ChowFormHyperplaneSection`
+why GlobalTheory.Published.VolGe (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.VolGe ← `GlobalTheory.VolBr.volGe_of_hilbertSamuel`, from GlobalTheory.Published.ArCalc, GlobalTheory.Published.NefNumerics, GlobalTheory.Published.ArithHilbertSamuel
+      GlobalTheory.Published.ArCalc ← `GlobalTheory.ArithmeticHeightTower.ArakelovDirectHeights.arCalc_direct`, from GlobalTheory.CompanionTheory.Ar.Pub.PoincareLelong, ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement
+        GlobalTheory.CompanionTheory.Ar.Pub.PoincareLelong ← `PositivityTheory.Tls2.Pl.poincareLelong`
+        ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement ← `PositivityTheory.ResPlug.FromRes.resK`
+      GlobalTheory.Published.NefNumerics ← `GlobalTheory.nefNumerics_outright`
+      GlobalTheory.Published.ArithHilbertSamuel ← `GlobalTheory.arithHilbertSamuel_of_principalisation`, from GlobalTheory.Published.Principalisation
+        GlobalTheory.Published.Principalisation ← `PositivityTheory.ResPlug.WeightsCompactStabilizer.principalisation_closed`
+  anywhere in the project:
+    GlobalTheory.Published.VolGe ← unfolding `GlobalTheory.Published.VolGe`
+why GlobalTheory.Published.PointSeparationPair (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.PointSeparationPair ← `NadelVanishingSeparation.NSI.pointSeparationPair`
+  anywhere in the project:
+    GlobalTheory.Published.PointSeparationPair ← unfolding `GlobalTheory.Published.PointSeparationPair`
+why GlobalTheory.Published.VolNef (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.VolNef ← `GlobalTheory.Published.ArithHilbertSamuel.volNef`, from GlobalTheory.Published.ArithHilbertSamuel
+      GlobalTheory.Published.ArithHilbertSamuel ← `GlobalTheory.arithHilbertSamuel_of_principalisation`, from GlobalTheory.Published.Principalisation
+        GlobalTheory.Published.Principalisation ← `PositivityTheory.ResPlug.WeightsCompactStabilizer.principalisation_closed`
+  anywhere in the project:
+    GlobalTheory.Published.VolNef ← unfolding `GlobalTheory.Published.VolNef`
+why GlobalTheory.Published.ArBirational (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.ArBirational ← `GlobalTheory.Published.arBirational_of_arProj`, from GlobalTheory.Published.ArProj
+      GlobalTheory.Published.ArProj ← unfolding `GlobalTheory.Published.ArProj`
+  anywhere in the project:
+    GlobalTheory.Published.ArBirational ← unfolding `GlobalTheory.Published.ArBirational`
+why GlobalTheory.Published.ProperIntersectionLength (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.ProperIntersectionLength ← `GlobalTheory.CovTop.PublishedHodgeBundleTheorems.q12`, from GlobalTheory.CovTop.PublishedHodgeBundleTheorems
+      GlobalTheory.CovTop.PublishedHodgeBundleTheorems ← `GlobalTheory.CovTop.PublishedHodgeBundleTheorems.mk`, from GlobalTheory.Published.SemiAbelianHomExtension, GlobalTheory.Published.AbelianDeRham, GlobalTheory.Published.KawamataViehweg, GlobalTheory.Published.ArCalc, GlobalTheory.Published.InducedSimpleLowestAlcove, GlobalTheory.Published.ArithHilbertSamuel, GlobalTheory.Published.VolNef, GlobalTheory.Published.FormalAlgebraisation, GlobalTheory.Published.GrothendieckMessing, GlobalTheory.Published.NadelVanishingAndNonKltDivisor, GlobalTheory.Published.Principalisation, GlobalTheory.Published.PrismaticDieudonneHodge, GlobalTheory.Published.StrongApproxSU, GlobalTheory.Published.principalPolarisationOneSection, GlobalTheory.Published.ChowFormExists, GlobalTheory.Published.GreenSeriesSt, GlobalTheory.Published.VolGe, GlobalTheory.Published.NefNumerics, GlobalTheory.Published.SemistableReductionSt, GlobalTheory.Published.ToroidalCompactification, GlobalTheory.Published.HasseNormSt, GlobalTheory.Published.LandherrSt, GlobalTheory.Published.L2ExtensionLogCanonical, GlobalTheory.Published.CycleHeights, GlobalTheory.Published.AbMulNSt, GlobalTheory.Published.RayClassFieldSt, GlobalTheory.Published.SerreHolomorphicSections, GlobalTheory.Published.GoodChernWeil
+        GlobalTheory.Published.SemiAbelianHomExtension ← `GlobalTheory.semiAbelianHomExtension_holds`
+        GlobalTheory.Published.AbelianDeRham ← `GlobalTheory.T.abelianSchemeDeRhamStructure_of_cube_dual_poincare`, from GlobalTheory.Published.PoincareDeRhamDuality, GlobalTheory.Published.DualAbelianScheme, GlobalTheory.Published.AbelianHodgeDeRham, GlobalTheory.Published.CubeTheorem
+          GlobalTheory.Published.PoincareDeRhamDuality ← unfolding `GlobalTheory.Published.PoincareDeRhamDuality`
+          GlobalTheory.Published.DualAbelianScheme ← `GlobalTheory.T.dualAbelianScheme_exists_biduality`
+          GlobalTheory.Published.AbelianHodgeDeRham ← unfolding `GlobalTheory.Published.AbelianHodgeDeRham`, from GlobalTheory.CechDR.IsPullO, GlobalTheory.CechDR.IsPullForm, GlobalTheory.CechDR.IsPull1
+            GlobalTheory.CechDR.IsPullO ← unfolding `GlobalTheory.CechDR.IsPullO`
+            GlobalTheory.CechDR.IsPullForm ← `GlobalTheory.CechDR.isPullForm_pullForm`
+            GlobalTheory.CechDR.IsPull1 ← unfolding `GlobalTheory.CechDR.IsPull1`
+          GlobalTheory.Published.CubeTheorem ← `GlobalTheory.CubeTop.cubeTheorem`
+        GlobalTheory.Published.KawamataViehweg ← `GlobalTheory.KVFromPair.kawamataViehweg_of_nadelVanishingPair`, from GlobalTheory.Published.NefNumerics, GlobalTheory.Published.NadelVanishingPair
+          GlobalTheory.Published.NefNumerics ← `GlobalTheory.nefNumerics_outright`
+          GlobalTheory.Published.NadelVanishingPair ← `NadelVanishingSeparation.NSI.nadelVanishingPair`
+        GlobalTheory.Published.ArCalc ← `GlobalTheory.ArithmeticHeightTower.ArakelovDirectHeights.arCalc_direct`, from GlobalTheory.CompanionTheory.Ar.Pub.PoincareLelong, ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement
+          GlobalTheory.CompanionTheory.Ar.Pub.PoincareLelong ← `PositivityTheory.Tls2.Pl.poincareLelong`
+          ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement ← `PositivityTheory.ResPlug.FromRes.resK`
+        GlobalTheory.Published.InducedSimpleLowestAlcove ← `GlobalTheory.Alc.inducedSimpleLowestAlcove`
+        GlobalTheory.Published.ArithHilbertSamuel ← `GlobalTheory.arithHilbertSamuel_of_principalisation`, from GlobalTheory.Published.Principalisation
+          GlobalTheory.Published.Principalisation ← `PositivityTheory.ResPlug.WeightsCompactStabilizer.principalisation_closed`
+        GlobalTheory.Published.VolNef ← `GlobalTheory.Published.ArithHilbertSamuel.volNef`, from GlobalTheory.Published.ArithHilbertSamuel
+          GlobalTheory.Published.ArithHilbertSamuel: see above
+        GlobalTheory.Published.FormalAlgebraisation ← `PositivityTheory.FormalThickening.formalAlgebraisation`
+        GlobalTheory.Published.GrothendieckMessing ← `GlobalTheory.Published.GrothendieckDeformation.grothendieckMessing`, from GlobalTheory.Published.GrothendieckDeformation
+          GlobalTheory.Published.GrothendieckDeformation ← `GlobalTheory.Published.grothendieckDeformation_of_lifting`, from GlobalTheory.Published.AbelianDeRham, GlobalTheory.Published.AbelianLifting
+            GlobalTheory.Published.AbelianDeRham: see above
+            GlobalTheory.Published.AbelianLifting ← `GlobalTheory.T.print_abelianLifting`
+        GlobalTheory.Published.NadelVanishingAndNonKltDivisor ← `NadelVanishingSeparation.NSI.nadelVanishingAndNonKltDivisor`
+        GlobalTheory.Published.Principalisation: see above
+        GlobalTheory.Published.PrismaticDieudonneHodge ← `UpperTheory.Lit.prismaticDieudonneHodge`
+        GlobalTheory.Published.StrongApproxSU ← `GlobalTheory.StrongApproxSUProof.strongApproxSU`
+        GlobalTheory.Published.principalPolarisationOneSection ← `GlobalTheory.AbLaw.principalPolarisation_unique_section`
+        GlobalTheory.Published.ChowFormExists ← `GlobalTheory.Published.chowFormExists_holds`
+        GlobalTheory.Published.GreenSeriesSt ← `PositivityTheory.Prw.greenSeriesSt_of`, from GlobalTheory.Published.GreenCuspidal
+          GlobalTheory.Published.GreenCuspidal ← `PositivityTheory.Stage1.PM.greenCuspidal`
+        GlobalTheory.Published.VolGe ← `GlobalTheory.VolBr.volGe_of_hilbertSamuel`, from GlobalTheory.Published.ArCalc, GlobalTheory.Published.NefNumerics, GlobalTheory.Published.ArithHilbertSamuel
+          GlobalTheory.Published.ArCalc: see above
+          GlobalTheory.Published.NefNumerics: see above
+          GlobalTheory.Published.ArithHilbertSamuel: see above
+        GlobalTheory.Published.NefNumerics: see above
+      …
+  anywhere in the project:
+    GlobalTheory.Published.ProperIntersectionLength ← unfolding `GlobalTheory.Published.ProperIntersectionLength`
+why GlobalTheory.Published.LocalConverseGL (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.LocalConverseGL ← `DiscreteGroups.sglob.LConv.localConverseGL`
+  anywhere in the project:
+    GlobalTheory.Published.LocalConverseGL ← unfolding `GlobalTheory.Published.LocalConverseGL`
+why GlobalTheory.Published.AdmissibleCoefficientsAnalytic (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.AdmissibleCoefficientsAnalytic ← `GlobalTheory.CompanionTheory.Hypotheses₂.admissibleCoefficientsAnalytic`
+  anywhere in the project:
+    GlobalTheory.Published.AdmissibleCoefficientsAnalytic ← `GlobalTheory.CompanionTheory.Hypotheses₂.admissibleCoefficientsAnalytic`
+why GlobalTheory.Published.WeylBranching (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.WeylBranching ← `PositivityTheory.Stage1.PM.weylBranching`
+  anywhere in the project:
+    GlobalTheory.Published.WeylBranching ← `PositivityTheory.Stage1.PM.weylBranching`
+why GlobalTheory.Published.HolomorphicDiscreteSeries (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.HolomorphicDiscreteSeries ← `GlobalTheory.HolDS.holomorphicDiscreteSeries_holds`
+  anywhere in the project:
+    GlobalTheory.Published.HolomorphicDiscreteSeries ← `GlobalTheory.HolDS.holomorphicDiscreteSeries_holds`
+why GlobalTheory.Published.BernsteinUnitaryProductIrreducible (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.BernsteinUnitaryProductIrreducible ← `PositivityTheory.RgUd.All.bernsteinUnitaryProductIrreducible`
+  anywhere in the project:
+    GlobalTheory.Published.BernsteinUnitaryProductIrreducible ← unfolding `GlobalTheory.Published.BernsteinUnitaryProductIrreducible`
+why GlobalTheory.Published.CMPotentialGoodReductionSt (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.CMPotentialGoodReductionSt ← `UpperTheory.Lit.cmPotentialGoodReduction`
+  anywhere in the project:
+    GlobalTheory.Published.CMPotentialGoodReductionSt ← `UpperTheory.Lit.cmPotentialGoodReduction`
+why GlobalTheory.Published.FinitenessOfHermitianClasses (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.FinitenessOfHermitianClasses ← `GlobalTheory.CovTop.PublishedHodgeBundleTheorems.p18`, from GlobalTheory.CovTop.PublishedHodgeBundleTheorems
+      GlobalTheory.CovTop.PublishedHodgeBundleTheorems ← `GlobalTheory.CovTop.PublishedHodgeBundleTheorems.mk`, from GlobalTheory.Published.SemiAbelianHomExtension, GlobalTheory.Published.AbelianDeRham, GlobalTheory.Published.KawamataViehweg, GlobalTheory.Published.ArCalc, GlobalTheory.Published.InducedSimpleLowestAlcove, GlobalTheory.Published.ArithHilbertSamuel, GlobalTheory.Published.VolNef, GlobalTheory.Published.FormalAlgebraisation, GlobalTheory.Published.GrothendieckMessing, GlobalTheory.Published.NadelVanishingAndNonKltDivisor, GlobalTheory.Published.Principalisation, GlobalTheory.Published.PrismaticDieudonneHodge, GlobalTheory.Published.StrongApproxSU, GlobalTheory.Published.principalPolarisationOneSection, GlobalTheory.Published.ChowFormExists, GlobalTheory.Published.GreenSeriesSt, GlobalTheory.Published.VolGe, GlobalTheory.Published.NefNumerics, GlobalTheory.Published.SemistableReductionSt, GlobalTheory.Published.ToroidalCompactification, GlobalTheory.Published.HasseNormSt, GlobalTheory.Published.LandherrSt, GlobalTheory.Published.L2ExtensionLogCanonical, GlobalTheory.Published.CycleHeights, GlobalTheory.Published.AbMulNSt, GlobalTheory.Published.RayClassFieldSt, GlobalTheory.Published.SerreHolomorphicSections, GlobalTheory.Published.GoodChernWeil
+        GlobalTheory.Published.SemiAbelianHomExtension ← `GlobalTheory.semiAbelianHomExtension_holds`
+        GlobalTheory.Published.AbelianDeRham ← `GlobalTheory.T.abelianSchemeDeRhamStructure_of_cube_dual_poincare`, from GlobalTheory.Published.PoincareDeRhamDuality, GlobalTheory.Published.DualAbelianScheme, GlobalTheory.Published.AbelianHodgeDeRham, GlobalTheory.Published.CubeTheorem
+          GlobalTheory.Published.PoincareDeRhamDuality ← unfolding `GlobalTheory.Published.PoincareDeRhamDuality`
+          GlobalTheory.Published.DualAbelianScheme ← `GlobalTheory.T.dualAbelianScheme_exists_biduality`
+          GlobalTheory.Published.AbelianHodgeDeRham ← unfolding `GlobalTheory.Published.AbelianHodgeDeRham`, from GlobalTheory.CechDR.IsPullO, GlobalTheory.CechDR.IsPullForm, GlobalTheory.CechDR.IsPull1
+            GlobalTheory.CechDR.IsPullO ← unfolding `GlobalTheory.CechDR.IsPullO`
+            GlobalTheory.CechDR.IsPullForm ← `GlobalTheory.CechDR.isPullForm_pullForm`
+            GlobalTheory.CechDR.IsPull1 ← unfolding `GlobalTheory.CechDR.IsPull1`
+          GlobalTheory.Published.CubeTheorem ← `GlobalTheory.CubeTop.cubeTheorem`
+        GlobalTheory.Published.KawamataViehweg ← `GlobalTheory.KVFromPair.kawamataViehweg_of_nadelVanishingPair`, from GlobalTheory.Published.NefNumerics, GlobalTheory.Published.NadelVanishingPair
+          GlobalTheory.Published.NefNumerics ← `GlobalTheory.nefNumerics_outright`
+          GlobalTheory.Published.NadelVanishingPair ← `NadelVanishingSeparation.NSI.nadelVanishingPair`
+        GlobalTheory.Published.ArCalc ← `GlobalTheory.ArithmeticHeightTower.ArakelovDirectHeights.arCalc_direct`, from GlobalTheory.CompanionTheory.Ar.Pub.PoincareLelong, ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement
+          GlobalTheory.CompanionTheory.Ar.Pub.PoincareLelong ← `PositivityTheory.Tls2.Pl.poincareLelong`
+          ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement ← `PositivityTheory.ResPlug.FromRes.resK`
+        GlobalTheory.Published.InducedSimpleLowestAlcove ← `GlobalTheory.Alc.inducedSimpleLowestAlcove`
+        GlobalTheory.Published.ArithHilbertSamuel ← `GlobalTheory.arithHilbertSamuel_of_principalisation`, from GlobalTheory.Published.Principalisation
+          GlobalTheory.Published.Principalisation ← `PositivityTheory.ResPlug.WeightsCompactStabilizer.principalisation_closed`
+        GlobalTheory.Published.VolNef ← `GlobalTheory.Published.ArithHilbertSamuel.volNef`, from GlobalTheory.Published.ArithHilbertSamuel
+          GlobalTheory.Published.ArithHilbertSamuel: see above
+        GlobalTheory.Published.FormalAlgebraisation ← `PositivityTheory.FormalThickening.formalAlgebraisation`
+        GlobalTheory.Published.GrothendieckMessing ← `GlobalTheory.Published.GrothendieckDeformation.grothendieckMessing`, from GlobalTheory.Published.GrothendieckDeformation
+          GlobalTheory.Published.GrothendieckDeformation ← `GlobalTheory.Published.grothendieckDeformation_of_lifting`, from GlobalTheory.Published.AbelianDeRham, GlobalTheory.Published.AbelianLifting
+            GlobalTheory.Published.AbelianDeRham: see above
+            GlobalTheory.Published.AbelianLifting ← `GlobalTheory.T.print_abelianLifting`
+        GlobalTheory.Published.NadelVanishingAndNonKltDivisor ← `NadelVanishingSeparation.NSI.nadelVanishingAndNonKltDivisor`
+        GlobalTheory.Published.Principalisation: see above
+        GlobalTheory.Published.PrismaticDieudonneHodge ← `UpperTheory.Lit.prismaticDieudonneHodge`
+        GlobalTheory.Published.StrongApproxSU ← `GlobalTheory.StrongApproxSUProof.strongApproxSU`
+        GlobalTheory.Published.principalPolarisationOneSection ← `GlobalTheory.AbLaw.principalPolarisation_unique_section`
+        GlobalTheory.Published.ChowFormExists ← `GlobalTheory.Published.chowFormExists_holds`
+        GlobalTheory.Published.GreenSeriesSt ← `PositivityTheory.Prw.greenSeriesSt_of`, from GlobalTheory.Published.GreenCuspidal
+          GlobalTheory.Published.GreenCuspidal ← `PositivityTheory.Stage1.PM.greenCuspidal`
+        GlobalTheory.Published.VolGe ← `GlobalTheory.VolBr.volGe_of_hilbertSamuel`, from GlobalTheory.Published.ArCalc, GlobalTheory.Published.NefNumerics, GlobalTheory.Published.ArithHilbertSamuel
+          GlobalTheory.Published.ArCalc: see above
+          GlobalTheory.Published.NefNumerics: see above
+          GlobalTheory.Published.ArithHilbertSamuel: see above
+        GlobalTheory.Published.NefNumerics: see above
+      …
+  anywhere in the project:
+    GlobalTheory.Published.FinitenessOfHermitianClasses ← unfolding `GlobalTheory.Published.FinitenessOfHermitianClasses`
+why GlobalTheory.Published.CuspidalMirabolic (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.CuspidalMirabolic ← `GlobalTheory.cuspidalMirabolic_holds`
+  anywhere in the project:
+    GlobalTheory.Published.CuspidalMirabolic ← `GlobalTheory.cuspidalMirabolic_holds`
+why GlobalTheory.Published.principalPolarisationOneSection (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.principalPolarisationOneSection ← `GlobalTheory.AbLaw.principalPolarisation_unique_section`
+  anywhere in the project:
+    GlobalTheory.Published.principalPolarisationOneSection ← unfolding `GlobalTheory.Published.principalPolarisationOneSection`
+why GlobalTheory.Published.ThetaRationalInvariance (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.ThetaRationalInvariance ← `PositivityTheory.Stage1.PM.thetaRationalInvariance`
+  anywhere in the project:
+    GlobalTheory.Published.ThetaRationalInvariance ← unfolding `GlobalTheory.Published.ThetaRationalInvariance`
+why GlobalTheory.Published.InfinitesimalEquivalence (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.InfinitesimalEquivalence ← `GlobalTheory.GKPort.Closure.infinitesimalEquivalence_unitaryGroupPQ`
+  anywhere in the project:
+    GlobalTheory.Published.InfinitesimalEquivalence ← `GlobalTheory.GKPort.Closure.infinitesimalEquivalence_unitaryGroupPQ`
+why GlobalTheory.Published.CuspidalExists (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.CuspidalExists ← `GlobalTheory.CompanionTheory.Hypotheses₂.cuspidalExists_holds`
+  anywhere in the project:
+    GlobalTheory.Published.CuspidalExists ← unfolding `GlobalTheory.Published.CuspidalMirabolic`, from GlobalTheory.Published.CuspidalMirabolic
+      GlobalTheory.Published.CuspidalMirabolic ← `GlobalTheory.cuspidalMirabolic_holds`
+why GlobalTheory.Published.AdmissibleClosure (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.AdmissibleClosure ← `GlobalTheory.GKPort.Closure.admissibleClosure_gKSubmodule`
+  anywhere in the project:
+    GlobalTheory.Published.AdmissibleClosure ← `GlobalTheory.GKPort.Closure.admissibleClosure_gKSubmodule`
+why GlobalTheory.Published.HarishChandraAnalyticity (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.HarishChandraAnalyticity ← `GlobalTheory.CompanionTheory.Hypotheses₂.harishChandra_analyticity_density`
+  anywhere in the project:
+    GlobalTheory.Published.HarishChandraAnalyticity ← `GlobalTheory.CompanionTheory.Hypotheses₂.harishChandra_analyticity_density`
+why GlobalTheory.Published.StoneVonNeumann (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.StoneVonNeumann ← `PositivityTheory.Stage1.PM.stoneVonNeumann`
+  anywhere in the project:
+    GlobalTheory.Published.StoneVonNeumann ← `PositivityTheory.Stage1.PM.stoneVonNeumann`
+why GlobalTheory.Published.StandardFunctorsFiniteLength (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.StandardFunctorsFiniteLength ← `PositivityTheory.Tls2.BZGL.standardFunctorsFiniteLength_top`
+  anywhere in the project:
+    GlobalTheory.Published.StandardFunctorsFiniteLength ← `UpperTheory.Gal.Int.Inp.Inp.len`, from UpperTheory.Gal.Int.Inp.Inp
+      UpperTheory.Gal.Int.Inp.Inp ← `UpperTheory.Gal.Int.Inp.inp_holds`
+why GlobalTheory.Published.ArMetric (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.ArMetric ← unfolding `GlobalTheory.Published.ArMetric`, from GlobalTheory.Weight.ChernIntegrableOn
+      GlobalTheory.Weight.ChernIntegrableOn ← unfolding `GlobalTheory.Weight.ChernIntegrableOn`
+  anywhere in the project:
+    GlobalTheory.Published.ArMetric ← unfolding `GlobalTheory.Published.ArMetric`, from GlobalTheory.Weight.ChernIntegrableOn
+      GlobalTheory.Weight.ChernIntegrableOn ← unfolding `GlobalTheory.Weight.ChernIntegrableOn`
+why GlobalTheory.Published.MetaplecticRepresentation (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.MetaplecticRepresentation ← `GlobalTheory.metaplecticRepresentation_holds`
+  anywhere in the project:
+    GlobalTheory.Published.MetaplecticRepresentation ← unfolding `GlobalTheory.Published.MetaplecticRepresentation`
+why GlobalTheory.Published.SerreTateGoodReductionSt (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.SerreTateGoodReductionSt ← `UpperTheory.Lit.serreTateGoodReduction`
+  anywhere in the project:
+    GlobalTheory.Published.SerreTateGoodReductionSt ← `UpperTheory.Lit.serreTateGoodReduction`
+why GlobalTheory.Published.SquareIntegrableSegment (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.SquareIntegrableSegment ← `PositivityTheory.Prw.squareIntegrableSegment_of`, from GlobalTheory.Published.EssSquareIntegrableSegments
+      GlobalTheory.Published.EssSquareIntegrableSegments ← `PositivityTheory.Exh.essSquareIntegrableSegments_of_seg`, from GlobalTheory.Published.SegmentRepresentation
+        GlobalTheory.Published.SegmentRepresentation ← `PositivityTheory.RgGu.segmentRepresentation`
+  anywhere in the project:
+    GlobalTheory.Published.SquareIntegrableSegment ← unfolding `GlobalTheory.Published.SquareIntegrableSegment`, from GlobalTheory.LocGL.IsLSeg
+      GlobalTheory.LocGL.IsLSeg ← `GlobalTheory.Published.EssSquareIntegrableSegments.both_sides_ofChar`, from GlobalTheory.SmGL.IsSmoothChar
+        GlobalTheory.SmGL.IsSmoothChar ← `GlobalTheory.BCen.twFam._proof_1`
+why UpperTheory.V.Published.DefQuatExists (reachable from the theorems):
+  in the closure:
+    UpperTheory.V.Published.DefQuatExists ← `UpperTheory.V.Af.defQuatExists`
+  anywhere in the project:
+    UpperTheory.V.Published.DefQuatExists ← `UpperTheory.V.Af.defQuatExists`
+why GlobalTheory.Published.RallisInnerProductConvergent (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.RallisInnerProductConvergent ← `UpperTheory.Lit.Rallis.RallisIPProof.rallis_of_dm`, from GlobalTheory.Published.WeilThetaConvergence, GlobalTheory.Published.SiegelWeilUnitaryConvergent, ResidueKilled.DM
+      GlobalTheory.Published.WeilThetaConvergence ← `UpperTheory.Lit.weilThetaConvergence`
+      GlobalTheory.Published.SiegelWeilUnitaryConvergent ← `UpperTheory.Lit.Sw47.convergent`
+      ResidueKilled.DM ← `ResidueKilled.dm_of_two`, from GlobalTheory.Published.CuspRapidDecay, GlobalTheory.Published.SiegelEisensteinContinuation
+        GlobalTheory.Published.CuspRapidDecay ← `GlobalTheory.Grow.cuspRapidDecay_of_bound`, from GlobalTheory.Published.CuspDecayBound
+          GlobalTheory.Published.CuspDecayBound ← `GlobalTheory.CuspGeo.cuspDecayBound`
+        GlobalTheory.Published.SiegelEisensteinContinuation ← `PositivityTheory.RgEis.Sp.Hd.siegelEisensteinContinuation`
+  anywhere in the project:
+    GlobalTheory.Published.RallisInnerProductConvergent ← `UpperTheory.Lit.Rallis.RallisIPProof.rallisInnerProductConvergent_of`, from GlobalTheory.Published.WeilThetaConvergence, GlobalTheory.Published.SiegelWeilUnitaryConvergent, GlobalTheory.Published.DoublingMethod
+      GlobalTheory.Published.WeilThetaConvergence ← unfolding `GlobalTheory.Published.WeilThetaConvergence`
+      GlobalTheory.Published.SiegelWeilUnitaryConvergent ← unfolding `GlobalTheory.Published.SiegelWeilUnitaryConvergent`, from GlobalTheory.Eis.EisValueAt
+        GlobalTheory.Eis.EisValueAt ← `GlobalTheory.SiegelWeilMiddle.Model.conclusion_zero`, from Formalism.BasicNotions.D7, Formalism.BasicNotions.TH.HSp
+          Formalism.BasicNotions.D7 ← `GlobalTheory.Mem.nonempty_record`
+          Formalism.BasicNotions.TH.HSp ← `GlobalTheory.LocFrame.exY`, from Formalism.BasicNotions.D7
+            Formalism.BasicNotions.D7: see above
+      GlobalTheory.Published.DoublingMethod ← `GlobalTheory.doublingMethod_of_three`, from GlobalTheory.Published.SiegelEisensteinSimplePole, GlobalTheory.Published.CuspRapidDecay, GlobalTheory.Published.SiegelEisensteinContinuation
+        GlobalTheory.Published.SiegelEisensteinSimplePole ← unfolding `GlobalTheory.Published.SiegelEisensteinSimplePole`, from GlobalTheory.Eis.EisPoleLE
+          GlobalTheory.Eis.EisPoleLE ← unfolding `GlobalTheory.Eis.EisPoleLE`, from GlobalTheory.Eis.IsEisFamily, GlobalTheory.Cont.PoleLE
+            GlobalTheory.Eis.IsEisFamily ← unfolding `GlobalTheory.Eis.IsEisFamily`, from GlobalTheory.Eis.EisConv, GlobalTheory.AutomorphicL2Unitary.LeftInv
+              GlobalTheory.Eis.EisConv ← unfolding `GlobalTheory.Eis.EisConv`, from GlobalTheory.Eis.CosetConv
+                GlobalTheory.Eis.CosetConv ← `GlobalTheory.Eis.CosetConv.eq_1`
+              GlobalTheory.AutomorphicL2Unitary.LeftInv ← `GlobalTheory.AutomorphicL2Unitary.leftInv_lift`
+            GlobalTheory.Cont.PoleLE ← `GlobalTheory.Eis.eisValueAt_iff_eisPoleLE._simp_1_4`, from GlobalTheory.Cont.HolValueAt
+              GlobalTheory.Cont.HolValueAt ← `PositivityTheory.SiegelWeilFormula.KWhit.holValueAt_const_mul_cpow`
+        GlobalTheory.Published.CuspRapidDecay ← `GlobalTheory.Grow.cuspRapidDecay_of_bound`, from GlobalTheory.Published.CuspDecayBound
+          GlobalTheory.Published.CuspDecayBound ← `GlobalTheory.CuspGeo.cuspDecayBound`
+        GlobalTheory.Published.SiegelEisensteinContinuation ← `PositivityTheory.RgEis.Sp.Hd.siegelEisensteinContinuation`
+why GlobalTheory.Published.PoitouTate.ConjCompatible (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.PoitouTate.ConjCompatible ← `GlobalTheory.PoitouTateConj.conjCompatible`, from GlobalTheory.Published.PoitouTate.InvFam, GlobalTheory.Published.PoitouTate.IsNormalised
+      GlobalTheory.Published.PoitouTate.InvFam ← unfolding `GlobalTheory.Published.PoitouTate.InvFam`
+      GlobalTheory.Published.PoitouTate.IsNormalised ← unfolding `GlobalTheory.Published.PoitouTate.IsNormalised`
+  anywhere in the project:
+    GlobalTheory.Published.PoitouTate.ConjCompatible ← unfolding `GlobalTheory.Published.PoitouTate.ConjCompatible`
+why GlobalTheory.Published.ToroidalCharts (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.ToroidalCharts ← `GlobalTheory.Published.toroidalCharts_of_siegel_of_forFan`, from GlobalTheory.Published.ToroidalChartsForFan, GlobalTheory.Published.SiegelToroidalIntegral
+      GlobalTheory.Published.ToroidalChartsForFan ← `GlobalTheory.Published.ToroidalForFanKS.toroidalChartsForFan`, from GlobalTheory.Published.ToroidalForFanKS
+        GlobalTheory.Published.ToroidalForFanKS ← `GlobalTheory.T.toroidalCompactificationFan_logKodairaSpencer_iso`
+      GlobalTheory.Published.SiegelToroidalIntegral ← `GlobalTheory.siegelToroidalIntegral_holds`
+  anywhere in the project:
+    GlobalTheory.Published.ToroidalCharts ← `GlobalTheory.Published.ToroidalChartsForFan.toroidalCharts`, from GlobalTheory.PolFan.IsPolFan, GlobalTheory.PolFan.NoSelfInt, GlobalTheory.Published.ToroidalChartsForFan
+      GlobalTheory.PolFan.IsPolFan ← `GlobalTheory.UChart.exists_monoFam_nontrivial`
+      GlobalTheory.PolFan.NoSelfInt ← unfolding `GlobalTheory.PolFan.NoSelfInt`, from GlobalTheory.PolFan.NoEquivRays
+        GlobalTheory.PolFan.NoEquivRays ← unfolding `GlobalTheory.PolFan.NoEquivRays`
+      GlobalTheory.Published.ToroidalChartsForFan ← `GlobalTheory.toroidalChartsForFan_of_toroidalForFanKS`, from GlobalTheory.Published.ToroidalForFanKS
+        GlobalTheory.Published.ToroidalForFanKS ← `GlobalTheory.RigChart.toroidalForFanKS_of_rigidForFan`, from GlobalTheory.RigChart.RigidForFan
+          GlobalTheory.RigChart.RigidForFan ← `GlobalTheory.T.rigidBoundaryChartsForFan_unitaryDatum`
+why GlobalTheory.Published.CohDimTwoGlobal (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.CohDimTwoGlobal ← unfolding `GlobalTheory.Published.CohDimTwoGlobal`
+  anywhere in the project:
+    GlobalTheory.Published.CohDimTwoGlobal ← unfolding `GlobalTheory.Published.CohDimTwoGlobal`
+why GlobalTheory.Published.BaseChangeDefiniteUnitaryGroup (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.BaseChangeDefiniteUnitaryGroup ← unfolding `GlobalTheory.Published.BaseChangeDefiniteUnitaryGroup`, from UpperTheory.BaseChangeIdentities.DefiniteN
+      UpperTheory.BaseChangeIdentities.DefiniteN ← `UpperTheory.BaseChangeIdentities.definiteN_of`, from PositivityTheory.Rg.BcN.BaseChangeIsobaricN
+        PositivityTheory.Rg.BcN.BaseChangeIsobaricN ← `UpperTheory.BaseChangeIdentities.baseChangeNB`
+  anywhere in the project:
+    GlobalTheory.Published.BaseChangeDefiniteUnitaryGroup ← unfolding `GlobalTheory.Published.BaseChangeDefiniteUnitaryGroup`, from UpperTheory.BaseChangeIdentities.DefiniteN
+      UpperTheory.BaseChangeIdentities.DefiniteN ← `UpperTheory.BaseChangeIdentities.bridge`, from PositivityTheory.Rg.BcN.BaseChangeIsobaricN, GlobalTheory.Published.BernsteinUnitaryProductIrreducible
+        PositivityTheory.Rg.BcN.BaseChangeIsobaricN ← `UpperTheory.BaseChangeIdentities.baseChangeNB`
+        GlobalTheory.Published.BernsteinUnitaryProductIrreducible ← unfolding `GlobalTheory.Published.BernsteinUnitaryProductIrreducible`
+why GlobalTheory.Published.KudlaSplittingSplitUnitary (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.KudlaSplittingSplitUnitary ← `GlobalTheory.kudlaSplittingSplitUnitary`
+  anywhere in the project:
+    GlobalTheory.Published.KudlaSplittingSplitUnitary ← `GlobalTheory.kudlaSplittingSplitUnitary`
+why GlobalTheory.Published.GKGlobalisation (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.GKGlobalisation ← `GlobalTheory.gkGlobalisation_holds`
+  anywhere in the project:
+    GlobalTheory.Published.GKGlobalisation ← unfolding `GlobalTheory.Published.GKGlobalisation`, from GlobalTheory.Published.InfinitesimalEquivalence, GlobalTheory.Published.AdmissibleClosure
+      GlobalTheory.Published.InfinitesimalEquivalence ← `GlobalTheory.GKPort.Closure.infinitesimalEquivalence_unitaryGroupPQ`
+      GlobalTheory.Published.AdmissibleClosure ← `GlobalTheory.GKPort.Closure.admissibleClosure_gKSubmodule`
+why GlobalTheory.Published.QuadraticClassFieldTheory (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.QuadraticClassFieldTheory ← `PositivityTheory.Stage1.PM.quadraticClassFieldTheory`
+  anywhere in the project:
+    GlobalTheory.Published.QuadraticClassFieldTheory ← `GlobalTheory.Published.quadraticClassFieldTheory_holds`
+why GlobalTheory.Published.NefBigIff (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.NefBigIff ← `GlobalTheory.Published.NefRiemannRoch.nefBigIff`, from GlobalTheory.Published.NefRiemannRoch
+      GlobalTheory.Published.NefRiemannRoch ← `GlobalTheory.T.nef_riemann_roch`
+  anywhere in the project:
+    GlobalTheory.Published.NefBigIff ← unfolding `GlobalTheory.Published.NefBigIff`
+why GlobalTheory.Published.FubiniStudyChowHeight (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.FubiniStudyChowHeight ← `FubiniStudyChowHeightFormula₂.fubiniStudy_chowHeight_formula`, from GlobalTheory.CovTop.PublishedHodgeBundleTheorems
+      GlobalTheory.CovTop.PublishedHodgeBundleTheorems ← `GlobalTheory.CovTop.PublishedHodgeBundleTheorems.mk`, from GlobalTheory.Published.SemiAbelianHomExtension, GlobalTheory.Published.AbelianDeRham, GlobalTheory.Published.KawamataViehweg, GlobalTheory.Published.ArCalc, GlobalTheory.Published.InducedSimpleLowestAlcove, GlobalTheory.Published.ArithHilbertSamuel, GlobalTheory.Published.VolNef, GlobalTheory.Published.FormalAlgebraisation, GlobalTheory.Published.GrothendieckMessing, GlobalTheory.Published.NadelVanishingAndNonKltDivisor, GlobalTheory.Published.Principalisation, GlobalTheory.Published.PrismaticDieudonneHodge, GlobalTheory.Published.StrongApproxSU, GlobalTheory.Published.principalPolarisationOneSection, GlobalTheory.Published.ChowFormExists, GlobalTheory.Published.GreenSeriesSt, GlobalTheory.Published.VolGe, GlobalTheory.Published.NefNumerics, GlobalTheory.Published.SemistableReductionSt, GlobalTheory.Published.ToroidalCompactification, GlobalTheory.Published.HasseNormSt, GlobalTheory.Published.LandherrSt, GlobalTheory.Published.L2ExtensionLogCanonical, GlobalTheory.Published.CycleHeights, GlobalTheory.Published.AbMulNSt, GlobalTheory.Published.RayClassFieldSt, GlobalTheory.Published.SerreHolomorphicSections, GlobalTheory.Published.GoodChernWeil
+        GlobalTheory.Published.SemiAbelianHomExtension ← `GlobalTheory.semiAbelianHomExtension_holds`
+        GlobalTheory.Published.AbelianDeRham ← `GlobalTheory.T.abelianSchemeDeRhamStructure_of_cube_dual_poincare`, from GlobalTheory.Published.PoincareDeRhamDuality, GlobalTheory.Published.DualAbelianScheme, GlobalTheory.Published.AbelianHodgeDeRham, GlobalTheory.Published.CubeTheorem
+          GlobalTheory.Published.PoincareDeRhamDuality ← unfolding `GlobalTheory.Published.PoincareDeRhamDuality`
+          GlobalTheory.Published.DualAbelianScheme ← `GlobalTheory.T.dualAbelianScheme_exists_biduality`
+          GlobalTheory.Published.AbelianHodgeDeRham ← unfolding `GlobalTheory.Published.AbelianHodgeDeRham`, from GlobalTheory.CechDR.IsPullO, GlobalTheory.CechDR.IsPullForm, GlobalTheory.CechDR.IsPull1
+            GlobalTheory.CechDR.IsPullO ← unfolding `GlobalTheory.CechDR.IsPullO`
+            GlobalTheory.CechDR.IsPullForm ← `GlobalTheory.CechDR.isPullForm_pullForm`
+            GlobalTheory.CechDR.IsPull1 ← unfolding `GlobalTheory.CechDR.IsPull1`
+          GlobalTheory.Published.CubeTheorem ← `GlobalTheory.CubeTop.cubeTheorem`
+        GlobalTheory.Published.KawamataViehweg ← `GlobalTheory.KVFromPair.kawamataViehweg_of_nadelVanishingPair`, from GlobalTheory.Published.NefNumerics, GlobalTheory.Published.NadelVanishingPair
+          GlobalTheory.Published.NefNumerics ← `GlobalTheory.nefNumerics_outright`
+          GlobalTheory.Published.NadelVanishingPair ← `NadelVanishingSeparation.NSI.nadelVanishingPair`
+        GlobalTheory.Published.ArCalc ← `GlobalTheory.ArithmeticHeightTower.ArakelovDirectHeights.arCalc_direct`, from GlobalTheory.CompanionTheory.Ar.Pub.PoincareLelong, ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement
+          GlobalTheory.CompanionTheory.Ar.Pub.PoincareLelong ← `PositivityTheory.Tls2.Pl.poincareLelong`
+          ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement ← `PositivityTheory.ResPlug.FromRes.resK`
+        GlobalTheory.Published.InducedSimpleLowestAlcove ← `GlobalTheory.Alc.inducedSimpleLowestAlcove`
+        GlobalTheory.Published.ArithHilbertSamuel ← `GlobalTheory.arithHilbertSamuel_of_principalisation`, from GlobalTheory.Published.Principalisation
+          GlobalTheory.Published.Principalisation ← `PositivityTheory.ResPlug.WeightsCompactStabilizer.principalisation_closed`
+        GlobalTheory.Published.VolNef ← `GlobalTheory.Published.ArithHilbertSamuel.volNef`, from GlobalTheory.Published.ArithHilbertSamuel
+          GlobalTheory.Published.ArithHilbertSamuel: see above
+        GlobalTheory.Published.FormalAlgebraisation ← `PositivityTheory.FormalThickening.formalAlgebraisation`
+        GlobalTheory.Published.GrothendieckMessing ← `GlobalTheory.Published.GrothendieckDeformation.grothendieckMessing`, from GlobalTheory.Published.GrothendieckDeformation
+          GlobalTheory.Published.GrothendieckDeformation ← `GlobalTheory.Published.grothendieckDeformation_of_lifting`, from GlobalTheory.Published.AbelianDeRham, GlobalTheory.Published.AbelianLifting
+            GlobalTheory.Published.AbelianDeRham: see above
+            GlobalTheory.Published.AbelianLifting ← `GlobalTheory.T.print_abelianLifting`
+        GlobalTheory.Published.NadelVanishingAndNonKltDivisor ← `NadelVanishingSeparation.NSI.nadelVanishingAndNonKltDivisor`
+        GlobalTheory.Published.Principalisation: see above
+        GlobalTheory.Published.PrismaticDieudonneHodge ← `UpperTheory.Lit.prismaticDieudonneHodge`
+        GlobalTheory.Published.StrongApproxSU ← `GlobalTheory.StrongApproxSUProof.strongApproxSU`
+        GlobalTheory.Published.principalPolarisationOneSection ← `GlobalTheory.AbLaw.principalPolarisation_unique_section`
+        GlobalTheory.Published.ChowFormExists ← `GlobalTheory.Published.chowFormExists_holds`
+        GlobalTheory.Published.GreenSeriesSt ← `PositivityTheory.Prw.greenSeriesSt_of`, from GlobalTheory.Published.GreenCuspidal
+          GlobalTheory.Published.GreenCuspidal ← `PositivityTheory.Stage1.PM.greenCuspidal`
+        GlobalTheory.Published.VolGe ← `GlobalTheory.VolBr.volGe_of_hilbertSamuel`, from GlobalTheory.Published.ArCalc, GlobalTheory.Published.NefNumerics, GlobalTheory.Published.ArithHilbertSamuel
+          GlobalTheory.Published.ArCalc: see above
+          GlobalTheory.Published.NefNumerics: see above
+          GlobalTheory.Published.ArithHilbertSamuel: see above
+        GlobalTheory.Published.NefNumerics: see above
+      …
+  anywhere in the project:
+    GlobalTheory.Published.FubiniStudyChowHeight ← unfolding `GlobalTheory.Published.FubiniStudyChowHeight`, from GlobalTheory.HermLB.IsSelfInter
+      GlobalTheory.HermLB.IsSelfInter ← `GlobalTheory.Published.ArDegreeModel.birational_int`
+why GlobalTheory.Published.ArDegree (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.ArDegree ← `PositivityTheory.Prw.arDegree_of`, from GlobalTheory.Published.HeightProjection, GlobalTheory.Published.ChernDegreeComplex
+      GlobalTheory.Published.HeightProjection ← `GlobalTheory.Published.heightProjection_of_arProj`, from GlobalTheory.Published.ArProj
+        GlobalTheory.Published.ArProj ← unfolding `GlobalTheory.Published.ArProj`
+      GlobalTheory.Published.ChernDegreeComplex ← `GlobalTheory.T.degree_eq_integral_topChernForm_complex`
+  anywhere in the project:
+    GlobalTheory.Published.ArDegree ← `GlobalTheory.Published.arDegree_of_heightProjection`, from GlobalTheory.Published.HeightProjection, GlobalTheory.Published.ChernDegreeComplex
+      GlobalTheory.Published.HeightProjection ← unfolding `GlobalTheory.Published.CycleHeights`, from GlobalTheory.Published.CycleHeights
+        GlobalTheory.Published.CycleHeights ← `GlobalTheory.Published.cycleHeights_of_arCalc`, from GlobalTheory.Published.ArCalc
+          GlobalTheory.Published.ArCalc ← `GlobalTheory.ArithmeticHeightTower.ArakelovDirectHeights.arCalc_direct`, from GlobalTheory.CompanionTheory.Ar.Pub.PoincareLelong, ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement
+            GlobalTheory.CompanionTheory.Ar.Pub.PoincareLelong ← `PositivityTheory.Tls2.Pl.poincareLelong`
+            ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement ← `PositivityTheory.ResPlug.FromRes.resK`
+      GlobalTheory.Published.ChernDegreeComplex ← unfolding `GlobalTheory.Published.ChernDegreeComplex`, from GlobalTheory.Weight.ChernIntegrableOn
+        GlobalTheory.Weight.ChernIntegrableOn ← unfolding `GlobalTheory.Weight.ChernIntegrableOn`
+why GlobalTheory.Published.CuspDiscreteDecompositionGL (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.CuspDiscreteDecompositionGL ← `GlobalTheory.CompanionTheory.CuspRep.cuspDiscreteDecompositionGL`
+  anywhere in the project:
+    GlobalTheory.Published.CuspDiscreteDecompositionGL ← `GlobalTheory.CompanionTheory.CuspGL.cuspDiscreteDecompositionGL_of_compact`
+why GlobalTheory.Published.BrauerDegreeZero (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.BrauerDegreeZero ← `GlobalTheory.BrauerZero.brauerDegreeZero`
+  anywhere in the project:
+    GlobalTheory.Published.BrauerDegreeZero ← `GlobalTheory.BrauerZero.brauerDegreeZero`
+why GlobalTheory.Published.TemperedProductOfSquareIntegrable (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.TemperedProductOfSquareIntegrable ← `UpperTheory.Lit.Cas.temperedProduct`, from GlobalTheory.Published.StandardCosocleGL, GlobalTheory.Published.LanglandsExhaustionGL, GlobalTheory.Published.GeometricLemma, GlobalTheory.Published.IrreducibleAdmissibleGL, GlobalTheory.Published.LanglandsMultisegments, GlobalTheory.Published.EssSquareIntegrableSegments, GlobalTheory.Published.StandardFunctorsFiniteLength, GlobalTheory.Published.BernsteinZelevinskyFiniteness
+      GlobalTheory.Published.StandardCosocleGL ← `PositivityTheory.Exh.standardCosocleGL_holds`
+      GlobalTheory.Published.LanglandsExhaustionGL ← `PositivityTheory.Exh.langlandsExhaustionGL_of_seg`, from GlobalTheory.Published.SegmentRepresentation
+        GlobalTheory.Published.SegmentRepresentation ← `PositivityTheory.RgGu.segmentRepresentation`
+      GlobalTheory.Published.GeometricLemma ← unfolding `GlobalTheory.Published.GeometricLemma`, from GlobalTheory.SmGL.CellSemisimplification, GlobalTheory.SmGL.JacquetOfInducedFiltration
+        GlobalTheory.SmGL.CellSemisimplification ← unfolding `GlobalTheory.SmGL.CellSemisimplification`
+        GlobalTheory.SmGL.JacquetOfInducedFiltration ← unfolding `GlobalTheory.SmGL.JacquetOfInducedFiltration`
+      GlobalTheory.Published.IrreducibleAdmissibleGL ← `PositivityTheory.Tls2.BZGL.irreducibleAdmissibleGL_top`
+      GlobalTheory.Published.LanglandsMultisegments ← `PositivityTheory.Exh.langlandsMultisegments_holds`
+      GlobalTheory.Published.EssSquareIntegrableSegments ← `PositivityTheory.Exh.essSquareIntegrableSegments_of_seg`, from GlobalTheory.Published.SegmentRepresentation
+        GlobalTheory.Published.SegmentRepresentation: see above
+      GlobalTheory.Published.StandardFunctorsFiniteLength ← `PositivityTheory.Tls2.BZGL.standardFunctorsFiniteLength_top`
+      GlobalTheory.Published.BernsteinZelevinskyFiniteness ← `GlobalTheory.CompanionTheory.Published.bernsteinZelevinskyFiniteness`
+  anywhere in the project:
+    GlobalTheory.Published.TemperedProductOfSquareIntegrable ← unfolding `GlobalTheory.Published.TemperedProductOfSquareIntegrable`
+why GlobalTheory.Published.CuspidalRestrictsToInduced (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.CuspidalRestrictsToInduced ← `CompanionTheory.Mirab.Restr.cuspidalRestrictsToInduced`
+  anywhere in the project:
+    GlobalTheory.Published.CuspidalRestrictsToInduced ← `CompanionTheory.Mirab.Restr.cuspidalRestrictsToInduced`
+why GlobalTheory.Published.HermitianLocalGlobal (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.HermitianLocalGlobal ← `PositivityTheory.Stage1.PM.hermitianLocalGlobal`
+  anywhere in the project:
+    GlobalTheory.Published.HermitianLocalGlobal ← `PositivityTheory.Stage1.PM.hermitianLocalGlobal`
+why GlobalTheory.Published.LeviSubmoduleDense (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.LeviSubmoduleDense ← `GlobalTheory.CompanionTheory.Hypotheses₂.leviSubmoduleDense`
+  anywhere in the project:
+    GlobalTheory.Published.LeviSubmoduleDense ← `GlobalTheory.CompanionTheory.Hypotheses₂.leviSubmoduleDense`
+why GlobalTheory.Published.BaseChangeIsobaricTransfer (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.BaseChangeIsobaricTransfer ← unfolding `GlobalTheory.Published.BaseChangeIsobaricTransfer`, from PositivityTheory.Rg.BcN.BaseChangeIsobaricN
+      PositivityTheory.Rg.BcN.BaseChangeIsobaricN ← `UpperTheory.BaseChangeIdentities.baseChangeNB`
+  anywhere in the project:
+    GlobalTheory.Published.BaseChangeIsobaricTransfer ← unfolding `GlobalTheory.Published.BaseChangeIsobaricTransfer`, from PositivityTheory.Rg.BcN.BaseChangeIsobaricN
+      PositivityTheory.Rg.BcN.BaseChangeIsobaricN ← `UpperTheory.BaseChangeIdentities.baseChangeNB`
+why GlobalTheory.Published.WeilRepresentationExists (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.WeilRepresentationExists ← `UpperTheory.Lit.weilRepresentationExists_pair`
+  anywhere in the project:
+    GlobalTheory.Published.WeilRepresentationExists ← `UpperTheory.Lit.weilRepresentationExists_pair`
+why GlobalTheory.Published.DoublingMethodLocalZetaIntegrals (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.DoublingMethodLocalZetaIntegrals ← unfolding `GlobalTheory.Published.DoublingMethodLocalZetaIntegrals`, from ResidueKilled.DM
+      ResidueKilled.DM ← `ResidueKilled.dm_of_two`, from GlobalTheory.Published.CuspRapidDecay, GlobalTheory.Published.SiegelEisensteinContinuation
+        GlobalTheory.Published.CuspRapidDecay ← `GlobalTheory.Grow.cuspRapidDecay_of_bound`, from GlobalTheory.Published.CuspDecayBound
+          GlobalTheory.Published.CuspDecayBound ← `GlobalTheory.CuspGeo.cuspDecayBound`
+        GlobalTheory.Published.SiegelEisensteinContinuation ← `PositivityTheory.RgEis.Sp.Hd.siegelEisensteinContinuation`
+  anywhere in the project:
+    GlobalTheory.Published.DoublingMethodLocalZetaIntegrals ← `GlobalTheory.T.doubling_zeta_of_eisenstein_facts`, from GlobalTheory.Published.CuspRapidDecay, GlobalTheory.Published.UnusedSlot72, GlobalTheory.Published.SiegelEisensteinContinuation
+      GlobalTheory.Published.CuspRapidDecay ← `GlobalTheory.Grow.cuspRapidDecay_of_bound`, from GlobalTheory.Published.CuspDecayBound
+        GlobalTheory.Published.CuspDecayBound ← `GlobalTheory.CuspGeo.cuspDecayBound`
+      GlobalTheory.Published.UnusedSlot72 ← unfolding `GlobalTheory.Published.UnusedSlot72`
+      GlobalTheory.Published.SiegelEisensteinContinuation ← `PositivityTheory.RgEis.Sp.Hd.siegelEisensteinContinuation`
+why GlobalTheory.Published.CanonicalExtensionRankOne (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.CanonicalExtensionRankOne ← `GlobalTheory.CovTop.PublishedHodgeBundleTheorems.q2`, from GlobalTheory.CovTop.PublishedHodgeBundleTheorems
+      GlobalTheory.CovTop.PublishedHodgeBundleTheorems ← `GlobalTheory.CovTop.PublishedHodgeBundleTheorems.mk`, from GlobalTheory.Published.SemiAbelianHomExtension, GlobalTheory.Published.AbelianDeRham, GlobalTheory.Published.KawamataViehweg, GlobalTheory.Published.ArCalc, GlobalTheory.Published.InducedSimpleLowestAlcove, GlobalTheory.Published.ArithHilbertSamuel, GlobalTheory.Published.VolNef, GlobalTheory.Published.FormalAlgebraisation, GlobalTheory.Published.GrothendieckMessing, GlobalTheory.Published.NadelVanishingAndNonKltDivisor, GlobalTheory.Published.Principalisation, GlobalTheory.Published.PrismaticDieudonneHodge, GlobalTheory.Published.StrongApproxSU, GlobalTheory.Published.principalPolarisationOneSection, GlobalTheory.Published.ChowFormExists, GlobalTheory.Published.GreenSeriesSt, GlobalTheory.Published.VolGe, GlobalTheory.Published.NefNumerics, GlobalTheory.Published.SemistableReductionSt, GlobalTheory.Published.ToroidalCompactification, GlobalTheory.Published.HasseNormSt, GlobalTheory.Published.LandherrSt, GlobalTheory.Published.L2ExtensionLogCanonical, GlobalTheory.Published.CycleHeights, GlobalTheory.Published.AbMulNSt, GlobalTheory.Published.RayClassFieldSt, GlobalTheory.Published.SerreHolomorphicSections, GlobalTheory.Published.GoodChernWeil
+        GlobalTheory.Published.SemiAbelianHomExtension ← `GlobalTheory.semiAbelianHomExtension_holds`
+        GlobalTheory.Published.AbelianDeRham ← `GlobalTheory.T.abelianSchemeDeRhamStructure_of_cube_dual_poincare`, from GlobalTheory.Published.PoincareDeRhamDuality, GlobalTheory.Published.DualAbelianScheme, GlobalTheory.Published.AbelianHodgeDeRham, GlobalTheory.Published.CubeTheorem
+          GlobalTheory.Published.PoincareDeRhamDuality ← unfolding `GlobalTheory.Published.PoincareDeRhamDuality`
+          GlobalTheory.Published.DualAbelianScheme ← `GlobalTheory.T.dualAbelianScheme_exists_biduality`
+          GlobalTheory.Published.AbelianHodgeDeRham ← unfolding `GlobalTheory.Published.AbelianHodgeDeRham`, from GlobalTheory.CechDR.IsPullO, GlobalTheory.CechDR.IsPullForm, GlobalTheory.CechDR.IsPull1
+            GlobalTheory.CechDR.IsPullO ← unfolding `GlobalTheory.CechDR.IsPullO`
+            GlobalTheory.CechDR.IsPullForm ← `GlobalTheory.CechDR.isPullForm_pullForm`
+            GlobalTheory.CechDR.IsPull1 ← unfolding `GlobalTheory.CechDR.IsPull1`
+          GlobalTheory.Published.CubeTheorem ← `GlobalTheory.CubeTop.cubeTheorem`
+        GlobalTheory.Published.KawamataViehweg ← `GlobalTheory.KVFromPair.kawamataViehweg_of_nadelVanishingPair`, from GlobalTheory.Published.NefNumerics, GlobalTheory.Published.NadelVanishingPair
+          GlobalTheory.Published.NefNumerics ← `GlobalTheory.nefNumerics_outright`
+          GlobalTheory.Published.NadelVanishingPair ← `NadelVanishingSeparation.NSI.nadelVanishingPair`
+        GlobalTheory.Published.ArCalc ← `GlobalTheory.ArithmeticHeightTower.ArakelovDirectHeights.arCalc_direct`, from GlobalTheory.CompanionTheory.Ar.Pub.PoincareLelong, ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement
+          GlobalTheory.CompanionTheory.Ar.Pub.PoincareLelong ← `PositivityTheory.Tls2.Pl.poincareLelong`
+          ReciprocityTheory.ChartRestriction.G.Geo.ResK.ResKStatement ← `PositivityTheory.ResPlug.FromRes.resK`
+        GlobalTheory.Published.InducedSimpleLowestAlcove ← `GlobalTheory.Alc.inducedSimpleLowestAlcove`
+        GlobalTheory.Published.ArithHilbertSamuel ← `GlobalTheory.arithHilbertSamuel_of_principalisation`, from GlobalTheory.Published.Principalisation
+          GlobalTheory.Published.Principalisation ← `PositivityTheory.ResPlug.WeightsCompactStabilizer.principalisation_closed`
+        GlobalTheory.Published.VolNef ← `GlobalTheory.Published.ArithHilbertSamuel.volNef`, from GlobalTheory.Published.ArithHilbertSamuel
+          GlobalTheory.Published.ArithHilbertSamuel: see above
+        GlobalTheory.Published.FormalAlgebraisation ← `PositivityTheory.FormalThickening.formalAlgebraisation`
+        GlobalTheory.Published.GrothendieckMessing ← `GlobalTheory.Published.GrothendieckDeformation.grothendieckMessing`, from GlobalTheory.Published.GrothendieckDeformation
+          GlobalTheory.Published.GrothendieckDeformation ← `GlobalTheory.Published.grothendieckDeformation_of_lifting`, from GlobalTheory.Published.AbelianDeRham, GlobalTheory.Published.AbelianLifting
+            GlobalTheory.Published.AbelianDeRham: see above
+            GlobalTheory.Published.AbelianLifting ← `GlobalTheory.T.print_abelianLifting`
+        GlobalTheory.Published.NadelVanishingAndNonKltDivisor ← `NadelVanishingSeparation.NSI.nadelVanishingAndNonKltDivisor`
+        GlobalTheory.Published.Principalisation: see above
+        GlobalTheory.Published.PrismaticDieudonneHodge ← `UpperTheory.Lit.prismaticDieudonneHodge`
+        GlobalTheory.Published.StrongApproxSU ← `GlobalTheory.StrongApproxSUProof.strongApproxSU`
+        GlobalTheory.Published.principalPolarisationOneSection ← `GlobalTheory.AbLaw.principalPolarisation_unique_section`
+        GlobalTheory.Published.ChowFormExists ← `GlobalTheory.Published.chowFormExists_holds`
+        GlobalTheory.Published.GreenSeriesSt ← `PositivityTheory.Prw.greenSeriesSt_of`, from GlobalTheory.Published.GreenCuspidal
+          GlobalTheory.Published.GreenCuspidal ← `PositivityTheory.Stage1.PM.greenCuspidal`
+        GlobalTheory.Published.VolGe ← `GlobalTheory.VolBr.volGe_of_hilbertSamuel`, from GlobalTheory.Published.ArCalc, GlobalTheory.Published.NefNumerics, GlobalTheory.Published.ArithHilbertSamuel
+          GlobalTheory.Published.ArCalc: see above
+          GlobalTheory.Published.NefNumerics: see above
+          GlobalTheory.Published.ArithHilbertSamuel: see above
+        GlobalTheory.Published.NefNumerics: see above
+      …
+  anywhere in the project:
+    GlobalTheory.Published.CanonicalExtensionRankOne ← `GlobalTheory.Published.canonicalExtensionRankOne_holds`
+why GlobalTheory.Published.FlathFactorisation (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.FlathFactorisation ← `PositivityTheory.Prw.flathFactorisation_of`, from GlobalTheory.Published.UnitaryIrreducibleAdmissible, GlobalTheory.Published.FlathTensorProduct
+      GlobalTheory.Published.UnitaryIrreducibleAdmissible ← `CompanionTheory.Rg.Fl.B.unitaryIrreducibleAdmissible`
+      GlobalTheory.Published.FlathTensorProduct ← `CompanionTheory.Rg.Fl.B.flathTensorProduct`
+  anywhere in the project:
+    GlobalTheory.Published.FlathFactorisation ← `PositivityTheory.Prw.flathFactorisation_of`, from GlobalTheory.Published.UnitaryIrreducibleAdmissible, GlobalTheory.Published.FlathTensorProduct
+      GlobalTheory.Published.UnitaryIrreducibleAdmissible ← unfolding `GlobalTheory.Published.UnitaryIrreducibleAdmissible`
+      GlobalTheory.Published.FlathTensorProduct ← `CompanionTheory.Rg.Fl.B.flathTensorProduct`
+why GlobalTheory.Published.IdealInvariantsOneOrbitSt (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.IdealInvariantsOneOrbitSt ← `PositivityTheory.Prw.idealInvariantsOneOrbitSt_holds`
+  anywhere in the project:
+    GlobalTheory.Published.IdealInvariantsOneOrbitSt ← `PositivityTheory.Prw.idealInvariantsOneOrbitSt_holds`
+why GlobalTheory.Published.LogLine.offDivisor (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.LogLine.offDivisor ← unfolding `GlobalTheory.Published.LogLine.offDivisor`
+  anywhere in the project:
+    GlobalTheory.Published.LogLine.offDivisor ← unfolding `GlobalTheory.Published.LogLine.offDivisor`
+why GlobalTheory.Published.SUSupp (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.SUSupp ← unfolding `GlobalTheory.Published.SUSupp`
+  anywhere in the project:
+    GlobalTheory.Published.SUSupp ← unfolding `GlobalTheory.Published.SUSupp`
+why GlobalTheory.Published.AutFin.forms (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.AutFin.forms ← unfolding `GlobalTheory.Published.AutFin.forms`
+  anywhere in the project:
+    GlobalTheory.Published.AutFin.forms ← unfolding `GlobalTheory.Published.AutFin.forms`
+why GlobalTheory.Published.idealInvariants (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.idealInvariants ← unfolding `GlobalTheory.Published.idealInvariants`
+  anywhere in the project:
+    GlobalTheory.Published.idealInvariants ← unfolding `GlobalTheory.Published.idealInvariants`
+why GlobalTheory.Published.primesInProgression (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.primesInProgression ← unfolding `GlobalTheory.Published.primesInProgression`
+  anywhere in the project:
+    GlobalTheory.Published.primesInProgression ← unfolding `GlobalTheory.Published.primesInProgression`
+why GlobalTheory.Published.AutFinGL.forms (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.AutFinGL.forms ← unfolding `GlobalTheory.Published.AutFinGL.forms`
+  anywhere in the project:
+    GlobalTheory.Published.AutFinGL.forms ← unfolding `GlobalTheory.Published.AutFinGL.forms`
+why GlobalTheory.Published.HarishChandraModulesOn (reachable from the theorems):
+  in the closure:
+    GlobalTheory.Published.HarishChandraModulesOn ← unfolding `GlobalTheory.Published.HarishChandraModules`, from GlobalTheory.Published.HarishChandraModules, Formalism.BasicNotions.TH.GrpData
+      GlobalTheory.Published.HarishChandraModules ← `CompanionTheory.D.gk.HC.print_harishChandraModules`
+      Formalism.BasicNotions.TH.GrpData ← `Formalism.BasicNotions.TH.GrpData.mk`
+  anywhere in the project:
+    GlobalTheory.Published.HarishChandraModulesOn ← unfolding `GlobalTheory.Published.HarishChandraModules`, from GlobalTheory.Published.HarishChandraModules, Formalism.BasicNotions.TH.GrpData
+      GlobalTheory.Published.HarishChandraModules ← `PositivityTheory.Stage1.PM.harishChandraModules`
+      Formalism.BasicNotions.TH.GrpData ← `Formalism.MainNotions.DIV.Inh.nonempty_TH_GrpData`
