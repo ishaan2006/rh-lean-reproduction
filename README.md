@@ -151,6 +151,8 @@ Caveats: the fixpoint rules are statement-level and err toward "established" (ne
 
 | PR / Issue | Scope |
 |---|---|
+| [#417](https://github.com/leanprover-community/riemann-hypothesis/pull/417) | Docstrings for divisibility bridge (`RecBridge.lean`), local `g`-place energy (`WeightDegreeSizes.lean`), and common lattice (`ExistsDivStageOfPk.lean`) |
+| [#416](https://github.com/leanprover-community/riemann-hypothesis/pull/416) | Docstrings for Fourier isolation (`ChBalance.lean`), Lipschitz bounds (`LipschitzWeightAndMinimum.lean`), `ChainTied` (`TieGlobal.lean`), and `RankVal` (`ExistsRanksRankValFrame.lean`) |
 | [#411](https://github.com/leanprover-community/riemann-hypothesis/pull/411) | Docstrings along the top-level proof spine (`Main.lean`, `MainConclusion.lean`, `ZeroFreeAllOfTopG.lean`, `ZeroFreeOfRpowWindow.lean`, `landauWindow.lean`) |
 | [#407](https://github.com/leanprover-community/riemann-hypothesis/pull/407) | Literature citations for `KawamataViehweg` (Kawamata 1982, Viehweg 1982) and `StrongApproxSU` (Platonov-Rapinchuk 1994, Theorem 7.12) |
 | [#405](https://github.com/leanprover-community/riemann-hypothesis/pull/405) | Literature citations for `BlochKatoLocal` (Bloch-Kato 1990) and `GrothendieckMessing` (Messing 1972) |
