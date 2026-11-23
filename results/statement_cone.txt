@@ -1,0 +1,28 @@
+StatementCone.lean (scripts/StatementCone.lean): the project definitions a statement depends on.
+Follows constants in types, and in the bodies of definitions; never follows theorem proofs, and
+skips theorem constants met inside definition bodies; stops at Mathlib and Lean core. Over-approximates.
+
+Validation, 2026-11-23, Lean v4.36.0, literature/first-references + PR #272 (237a03a), Mathlib from cache,
+12 project files built from source:
+  GlobalTheory.Published.PoitouTateDuality: 80 project constants (73 named defs/inductives/opaques)
+  in 7 modules, all among the 11 files read by hand for #272 (124 definitions there); every one of
+  the 42 definitions named in #272 is in the list; no constant without a body.
+
+Full build of the published archive (Lean v4.33.1, src/ tree b41b516b), 2026-11-23:
+  UpperTheory.V.Z.Kato.WeilSphericalRecords.KatoTwoW         532 constants (385 named) in 52 modules; 964 outside constants; 2:31, 17.5 GB
+  GlobalTheory.Published.BhattScholzeIntegral               359 constants (218 named) in 16 modules; 555 outside constants; 0:04, 8.1 GB
+  UpperTheory.GalStar.Row0b                                 593 constants (431 named) in 53 modules; 982 outside constants; 0:04, 9.4 GB
+No run reported a project constant without a body.
+For comparison, #78 describes KatoTwoW as sitting on about 25,000 of the project's files.
+These were taken on the archive's pins; upstream main is now on Lean 4.36, so the lists should be
+re-run there before they are used for citations.
+
+Reading lists (results/reading/*.md), same runs after folding constructors, recursors, structure
+projections and generated helpers into the declaration they belong to; files in dependency order,
+entries in source order, each linked to its line at the commit named in the list:
+  PoitouTateDuality       72 declarations in 7 files   (Lean 4.36, linked to ishaan2006/riemann-hypothesis@237a03a)
+  KatoTwoW               339 declarations in 52 files  (archive build, linked to leanprover-community/riemann-hypothesis@40e56bab)
+  BhattScholzeIntegral   176 declarations in 16 files  (same)
+  Row0b                  386 declarations              (same)
+Spot check: the first four Kato entries (PRep.eig, PRep.fixed, twKer, TwJacquet) link to lines 9, 19,
+21, 24 of SmoothPartStable.lean at 40e56bab, which are exactly those declarations.
