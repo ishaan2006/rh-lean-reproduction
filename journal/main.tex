@@ -23,6 +23,7 @@
 % Lean identifiers (used only in remarks and the appendix)
 \urlstyle{tt}
 \DeclareUrlCommand\lean{\urlstyle{tt}}
+\makeatletter\g@addto@macro{\UrlBreaks}{\do\_\do\a\do\e\do\i\do\o\do\u\do\r\do\n\do\t\do\s}\mathchardef\UrlBreakPenalty=9000\makeatother
 
 \newcommand{\CC}{\mathbb{C}}
 \newcommand{\R}{\mathbb{R}}
@@ -43,6 +44,8 @@
 \newcommand{\abs}[1]{\left|#1\right|}
 \newcommand{\norm}[1]{\left\|#1\right\|}
 \newcommand{\Ga}{\Gamma}
+\newcommand{\Oc}{\mathcal{O}}
+\DeclareMathOperator{\rk}{rk}
 
 \theoremstyle{plain}
 \newtheorem{theorem}{Theorem}[section]
@@ -76,27 +79,26 @@
 
 \begin{abstract}
 In November 2026 L.~Alp\"oge released a Lean~4 development, accepted by the Lean kernel and by
-several independent proof checkers, whose final theorem asserts that no Dirichlet $L$-function
-vanishes in the half-plane $\re s>1/2$. No human-readable proof accompanies it. We give complete
-and self-contained proofs of the analytic part of the argument, and a precise statement of the
-arithmetic part.
+several independent checkers, whose final theorem states that no Dirichlet $L$-function vanishes
+in $\re s>1/2$. It comes with no human-readable proof. We give conventional proofs of the
+analytic part of the argument and of several layers of the arithmetic part, and an exact statement
+of what remains.
 
-The analytic part consists of two theorems. The first is a windowed form of Landau's theorem: a
-one-sided bound $G(y)\le Cy^{\theta}$ for a positive combination of Chebyshev remainders of
-Dirichlet characters, required only on windows $[Y,Y^{1+\delta}]$ with $Y$ arbitrarily large,
-excludes zeros with $\re s>\theta$. No positivity of Dirichlet coefficients is needed; what is
-used is that the residues of the relevant Laplace transform at real poles are positive. The
-second theorem reduces such a bound to an averaged inequality between an explicit weighted count
-of prime powers and an explicit main term, formulated on a finite abelian group equipped with
-Frobenius elements and inertia subgroups. Relative to the main term, the admissible error has
-size $x/m+m$ for a free integer parameter $m$, and its optimisation at $m\approx\sqrt{x}$ is the
-source of the exponent $1/2$. If the second term grew like $m^{2}$, the same argument would give
-the exponent $2/3$ mentioned in the author's outline.
+The analytic part has two theorems. The first is a windowed Landau theorem: a one-sided bound
+$G(y)\le Cy^\theta$ for a positive combination of Chebyshev remainders, required only on windows
+$[Y,Y^{1+\delta}]$ with $Y$ arbitrarily large, excludes zeros with $\re s>\theta$. No positivity of
+Dirichlet coefficients is used. The second reduces such a bound to an averaged inequality between a
+weighted count of prime powers and an explicit main term, on a finite abelian group with Frobenius
+and inertia data. The admissible error is of size $x/m+m$ for a free integer $m$, and taking
+$m\approx\sqrt x$ is the source of the exponent $1/2$.
 
-The arithmetic part asserts that groups and weights satisfying the averaged inequality exist at
-all large scales in suitable windows. Its formal proof uses theta lifts, Bloch--Kato Selmer ranks
-and Iwasawa theory. It is certified by the Lean kernel and is stated here precisely, but it is
-not reproved.
+The averaged inequality in turn follows from eleven conditions (S0)--(S10) (a domain condition
+and ten inequalities) between slopes and heights of a family of Hermitian lattices. We prove this
+deduction, and we prove the general statements behind four of the ten: a frame theorem for nearly
+orthogonal families of Hermitian lattices, a summation of local indices, a congruence modulo
+$\sqrt p$, and a divisor inequality for lattices given by local data. The existence of lattices
+satisfying the eleven conditions is certified by the Lean kernel and stated precisely, but not
+reproved.
 \end{abstract}
 
 \maketitle
@@ -109,29 +111,22 @@ not reproved.
 
 \subsection{The result}
 
-For a Dirichlet character $\chi$ let $L(s,\chi)$ be its $L$-function, and let $\zeta(s)$ be the
-Riemann zeta function. On 20 November 2026 Levent Alp\"oge released a formal development in the
-Lean~4 proof assistant~\cite{lean4}, built on Mathlib~\cite{mathlib}, together with a four-page
-outline~\cite{alpoge-remark}. Its final theorems state the following.
+On 20 November 2026 Levent Alp\"oge released a formal development in Lean~4~\cite{lean4}, built on
+Mathlib~\cite{mathlib}, with a four-page outline~\cite{alpoge-remark}. Its final theorems state:
 
 \begin{maincor}
-For every Dirichlet character $\chi$ and every $s\in\CC$ with $\re s>1/2$, $L(s,\chi)\neq 0$
-unless $\chi$ is principal and $s=1$. In particular the Riemann Hypothesis holds, in the form of
-Mathlib's definition: every zero of $\zeta$ other than $-2,-4,-6,\dots$ has real part $1/2$.
+For every Dirichlet character $\chi$ and every $s\in\CC$ with $\re s>1/2$ (and $s\neq 1$ if $\chi$ is principal),
+$L(s,\chi)\neq 0$. In particular every zero of $\zeta$ other than $-2,-4,-6,\dots$ has real part $1/2$.
 \end{maincor}
 
-The development has $175{,}187$ files and about $17.4$ million lines. It has been accepted by the
-Lean kernel, by the independent checkers \texttt{nanoda}, \texttt{con-leche} and
-\texttt{lean4lean}, and by others listed on A.~Sutherland's verification page~\cite{sutherland}.
-It uses only the three standard axioms \texttt{propext}, \texttt{Quot.sound} and
-\texttt{Classical.choice}. The author of the present paper rebuilt it independently and
-re-exported the kernel declarations of the final theorem. The export agrees byte for byte with the
-published one~\cite{dixit-repo}.
+The development has $175{,}187$ files and about $17.4$ million lines. It is accepted by the Lean
+kernel and by the independent checkers \texttt{nanoda}, \texttt{con-leche} and \texttt{lean4lean},
+among others~\cite{sutherland}, and uses only the axioms \texttt{propext}, \texttt{Quot.sound} and
+\texttt{Classical.choice}. The author rebuilt it and re-exported the kernel declarations of the
+final theorem; the export agrees byte for byte with the published one~\cite{dixit-repo}.
 
-What the formal proof does not provide is a proof a mathematician can read. The outline is four
-pages long, and the formal statements are spread over about a million declarations whose names
-often bear no relation to their content. The purpose of this paper is to supply a complete,
-conventional proof of one half of the argument, and an exact statement of the other half.
+The outline is four pages and the formal proof has about a million declarations. This paper gives
+conventional proofs of as much of the argument as we can, and states the rest exactly.
 
 \subsection{The three theorems}
 
@@ -182,10 +177,10 @@ second, $\MAIN(a,w)$, has the shape of a Stirling main term plus a logarithmic d
 Suppose that at a scale $x$ an abstract host carries $m$ systems of weights, indexed by
 $j=1,\dots,m$. Suppose the weights satisfy size conditions, auxiliary characters satisfy
 standard bounds, and the averaged inequality
-\[
-\sum_{t\in T}\sum_{j=1}^{m}\Bigl(\ASK(a_t,t,w_{u,j})-\re\MAIN(a_t,w_{u,j})\Bigr)\ \le\
-x^{C\eps}\Bigl(n_T\,a_E\Bigl(1+\frac{m^2}{k}\Bigr)+m\Bigl(2nmb\,x^{\eps}+\frac{n_{T_2}\,k\,b\,x^{2\eps}}{n^{2}}\Bigr)\Bigr)
-\]
+\begin{multline*}
+\sum_{t\in T}\sum_{j=1}^{m}\Bigl(\ASK(a_t,t,w_{u,j})-\re\MAIN(a_t,w_{u,j})\Bigr)\\
+\le\ x^{C\eps}\Bigl(n_T\,a_E\Bigl(1+\frac{m^2}{k}\Bigr)+m\Bigl(2nmb\,x^{\eps}+\frac{n_{T_2}\,k\,b\,x^{2\eps}}{n^{2}}\Bigr)\Bigr)
+\end{multline*}
 holds for every translate $u$ in a subgroup $A_0\le H$. Then a weighted sum of the $G_\psi(x)$ over a
 prescribed set of characters is at most $x^{1/2+(C+3)\eps}$, plus the absolute values of the
 remaining $G_\psi(x)$.
@@ -204,57 +199,43 @@ arbitrarily large, there is a host satisfying the hypotheses of Theorem~B whose 
 are the characters of the cyclic group generated by $\psi$.
 \end{theoremC}
 
-Theorem~C is the arithmetic heart of the development. Its formal proof constructs the weights
-from a family of Hermitian lattices carried along a chain of $m$ theta lifts between unitary
-groups. It proves the averaged inequality by computing the Arakelov degree of a common lattice
-in two ways, and it controls the losses by Bloch--Kato Selmer ranks and by a Tate--Shafarevich
-bound resting on formal proofs of the Ferrero--Washington theorem and Poitou--Tate duality. We do
-not reprove Theorem~C. We state it exactly (Section~\ref{sec:C}), we explain which formal
-statements it is assembled from, and we describe the structure of its formal proof without
-claiming to prove it.
+Theorem~C is not reproved here. Its formal proof goes through a further layer that we do prove:
+the averaged inequality follows from eleven conditions (S0)--(S10) (a domain condition and ten
+inequalities) between slopes and heights of a family of Hermitian lattices attached to the host
+(Theorem~C1, Section~\ref{sec:slope}). What is left is the existence of such lattices (Theorem~C2,
+Section~\ref{sec:C}). For four of the ten inequalities we prove the general statement behind them
+and isolate what is specific to the family: the frame inequality (S8), the local indices (S6) and
+the losses (S7) in Section~\ref{sec:three}, and the divisibility inequality (S1) in
+Section~\ref{sec:S1}.
 
-Theorems~A, B and~C together imply the Corollary (Section~\ref{sec:GRH}).
+\subsection{Scope}
 
-\subsection{What is proved here, and how it relates to the formal proof}
+Everything outside Theorem~C2 is proved here. The external inputs are standard facts about
+Dirichlet $L$-functions ((F1)--(F5) in Section~\ref{sec:prelim}), standard facts about
+Harder--Narasimhan filtrations (Section~\ref{sec:three}), and the product formula and
+elementary-divisor theory over $\Oc_K$ (Section~\ref{sec:S1}). Theorem~C2 is used as a black box,
+and we say so where it is used.
 
-Theorems~A and~B, the exact identity of Proposition~\ref{prop:balance}, and the propositions of
-Section~\ref{sec:balance} are proved completely in this paper. The only external inputs are
-standard facts about Dirichlet $L$-functions, collected as (F1) to (F5) in
-Section~\ref{sec:prelim}. Theorem~C is used as a black box, and we say so wherever it is used.
+The proofs follow the formal ones but are written independently and in a different order. Every
+statement has been compared with its formal counterpart in the published archive (commit
+\texttt{40e56bab}); Appendix~\ref{app:lean} gives the correspondence. Where we simplify a formal
+statement, we say so.
 
-The proofs follow the strategy of the formal proofs but are written independently, in
-conventional language and in a different order. We have compared every statement with its formal
-counterpart at the commit of the published archive (\texttt{40e56bab}). The correspondence is
-listed in Appendix~\ref{app:lean}. Where our formulation differs from the formal one, the
-difference is a simplification and is pointed out. For example, we remove a truncation parameter
-that does not change the quantities involved.
-
-\subsection{What is new}
-
-The mathematics is Alp\"oge's. We believe the following are new as written statements.
-\begin{enumerate}
-\item The windowed Landau theorem with arbitrary positive weights and no positivity of
-  coefficients (Theorem~A), with a short proof by Taylor coefficients at a far real point and a
-  vertical shift that isolates a nearest pole.
-\item A self-contained formulation of the interface between the analytic and the arithmetic parts
-  (Definition~\ref{def:host} and Theorem~B), in which the arithmetic content is a single averaged
-  inequality between elementary sums.
-\item An analysis of the error bracket (Section~\ref{sec:balance}). The exponent $1/2$ is the
-  optimum of $x/m+m$, the remaining size windows are bookkeeping, and a per-lift cost growing
-  linearly along the chain would give exactly the exponent $2/3$ of the outline.
-\end{enumerate}
-An informal account of the whole development, including the arithmetic part, written by the
-present author with evidence labels for every step, is~\cite{dixit-account}. Other expositions
-include Naskr\k{e}cki's guide and book~\cite{naskrecki} and Jaswal's reader's guide~\cite{jaswal}.
+The mathematics is Alp\"oge's. As written statements, the following appear to be new: the
+windowed Landau theorem without positivity of coefficients (Theorem~A); the interface between the
+analytic and arithmetic parts as a single averaged inequality (Theorem~B); the analysis of the
+error bracket, which shows that a per-lift cost growing linearly along the chain would give the
+exponent $2/3$ of the outline (Section~\ref{sec:balance}); and the general forms of the frame,
+local-index and divisor inequalities (Sections~\ref{sec:three} and~\ref{sec:S1}). An informal
+account of the whole development is~\cite{dixit-account}; see also~\cite{naskrecki,jaswal}.
 
 \subsection{Organization}
 
-Section~\ref{sec:prelim} collects classical facts and the Mellin transform of $G_\chi$.
-Section~\ref{sec:A} proves Theorem~A. Section~\ref{sec:hosts} introduces abstract hosts and
-proves the exact identity $\ASK-\MAIN=\De$. Section~\ref{sec:B} states and proves Theorem~B.
-Section~\ref{sec:balance} analyses the error bracket. Section~\ref{sec:C} states Theorem~C and
-describes its formal proof. Section~\ref{sec:GRH} deduces the Corollary.
-Section~\ref{sec:remarks} lists what a complete human proof would still require.
+Section~\ref{sec:prelim} collects classical facts. Section~\ref{sec:A} proves Theorem~A.
+Sections~\ref{sec:hosts}--\ref{sec:balance} introduce hosts, prove Theorem~B and analyse the error.
+Section~\ref{sec:slope} proves Theorem~C1, and Section~\ref{sec:C} states Theorems~C and~C2.
+Sections~\ref{sec:three} and~\ref{sec:S1} prove the general statements behind (S1), (S6), (S7) and
+(S8). Section~\ref{sec:GRH} deduces the Corollary, and Section~\ref{sec:remarks} lists what remains.
 
 \begin{figure}[ht]
 \centering
@@ -263,11 +244,12 @@ Section~\ref{sec:remarks} lists what a complete human proof would still require.
   bbox/.style={box, draw=black, very thick},
   gbox/.style={box, dashed},
   arr/.style={-{Stealth[length=2.2mm]}, thick}]
-\node[gbox] (C) {\textbf{Theorem C} (certified)\\ hosts exist on windows $[Y,Y^{3/2}]$};
+\node[gbox] (C2) {\textbf{Theorem C2} (certified)\\ lattices with slope conditions (S0)--(S10)\\ exist on windows $[Y,Y^{3/2}]$};
+\node[bbox, below=7mm of C2] (C) {\textbf{Theorem C1} (proved here)\\ slope inequalities $\Longrightarrow$ averaged gap inequality};
 \node[bbox, below=7mm of C] (B) {\textbf{Theorem B} (proved here)\\ averaged $\ASK\le\MAIN+\text{error}$\\ $\Longrightarrow G_F(x)\le x^{1/2+O(\eps)}$};
 \node[bbox, below=7mm of B] (A) {\textbf{Theorem A} (proved here)\\ bound on windows $\Longrightarrow$ no zeros with $\re s>\theta$};
 \node[box, below=7mm of A] (G) {\textbf{Corollary}\\ GRH for Dirichlet $L$-functions};
-\draw[arr] (C) -- (B); \draw[arr] (B) -- (A); \draw[arr] (A) -- (G);
+\draw[arr] (C2) -- (C); \draw[arr] (C) -- (B); \draw[arr] (B) -- (A); \draw[arr] (A) -- (G);
 \end{tikzpicture}
 \caption{Logical structure. Solid boxes are proved in this paper; the dashed box is a statement
 certified by the Lean kernel and not proved here.}\label{fig:structure}
@@ -358,10 +340,10 @@ The point $s=1$ is not a pole. For nonprincipal $\chi$ we have
 $\Phi_\chi(s)=\frac1{s-1}\bigl(\frac{L'}{L}(1,\chi)-\frac1s\frac{L'}{L}(s,\chi)\bigr)$, and the
 bracket is holomorphic near $1$ and vanishes at $s=1$. For $\chi=1$, \ref{F3} gives
 $\frac{\zeta'}{\zeta}(s)=-\frac1{s-1}+\gE+O(s-1)$, and $\frac1s=1-(s-1)+O((s-1)^2)$, so
-\[
--\frac{1}{s(s-1)}\frac{\zeta'}{\zeta}(s)=\frac{1}{s-1}\Bigl(\frac1{s-1}-\gE+O(s-1)\Bigr)\bigl(1-(s-1)+O((s-1)^2)\bigr)
-=\frac{1}{(s-1)^2}-\frac{1+\gE}{s-1}+O(1),
-\]
+\begin{align*}
+-\frac{1}{s(s-1)}\frac{\zeta'}{\zeta}(s)&=\frac{1}{s-1}\Bigl(\frac1{s-1}-\gE+O(s-1)\Bigr)\bigl(1-(s-1)+O((s-1)^2)\bigr)\\
+&=\frac{1}{(s-1)^2}-\frac{1+\gE}{s-1}+O(1),
+\end{align*}
 and the two correction terms in $\Phi_\zeta$ cancel the principal part.
 
 At a zero $\rho\neq1$ of multiplicity $m_\rho$ with $\re\rho>0$, we have
@@ -385,8 +367,7 @@ Suppose that for every $Y_0$ there is $Y\ge Y_0$ such that $G_F(y)\le C\,y^{\the
 $y\in[Y,Y^{1+\delta}]$. Then $L(s,\chi_i)\neq0$ for every $i\in I$ and every $s$ with $\re s>\theta$.
 \end{theorem}
 
-The rest of this section proves Theorem~\ref{thm:A}. Fix $F$, and write $\bar F$ for the family of
-conjugate characters $\bar\chi_i$ with the same weights.
+The rest of this section proves Theorem~\ref{thm:A}. Fix $F=(\chi_i,a_i)_{i\in I}$.
 
 \subsection{The Laplace transform and its poles}
 
@@ -670,7 +651,7 @@ $G=E_0\times H$. We write elements of $G$ as $(\epsilon_1,\epsilon_2;h)$. Let
 \]
 a subgroup of index $2$, and put $n=|H|$ and $f=|\Phi|=2n$. We use the following elements:
 \[
-\kappa=(1,1;0),\qquad \varsigma=(1,0;0),\qquad \iota(h)=(0,0;h),\qquad \iota'(h)=(0,1;h),\qquad e(h)=(1,0;h)=\varsigma+\iota(h).
+\kappa=(1,1;0),\quad \varsigma=(1,0;0),\quad \iota(h)=(0,0;h),\quad \iota'(h)=(0,1;h),\quad e(h)=(1,0;h)=\varsigma+\iota(h).
 \]
 Let $\Gh$ be the group of characters $\psi:G\to\CC^\times$, with trivial character $\mathbf 1$. Put
 $\chi_C(\epsilon_1,\epsilon_2;h)=(-1)^{\epsilon_1}$. This is the character with kernel $\Phi$.
@@ -733,7 +714,7 @@ Dirichlet character $\xi$, then $G_\psi=G_\xi$. This is how genuine Dirichlet ch
 Let $D$ and $\ell$ be as above. For $a>0$, $t\in H$ and $w:\Phi\to(0,\infty)$ put
 \begin{align*}
 \ASK(a,t,w)&=\sum_{p\text{ inert}}2\log p\sum_{\substack{i\ge1\\ iF_p\notin\Phi}}\Bigl(\frac{a}{p^i}-w\bigl(\pa_t(iF_p)\bigr)\Bigr)_{+}
-+\log d\sum_{i\ge1}\ \sum_{\substack{g\in iF_d+I_d\\ g\notin\Phi}}\Bigl(\frac{a}{d^i}-w\bigl(\pa_t(g)\bigr)\Bigr)_{+},\\
++\log d\sum_{i\ge1}\ \sum_{g\in(iF_d+I_d)\setminus\Phi}\Bigl(\frac{a}{d^i}-w\bigl(\pa_t(g)\bigr)\Bigr)_{+},\\
 \MAIN(a,w)&=a\Bigl(\log a-1-\gE+\ell(\chi_C)-\frac1f\sum_{\rho\in\Phi}\log w(\rho)\Bigr),\\
 \De(a,t,w)&=\frac1f\sum_{g\notin\Phi}\ \sum_{\psi\in\Gh}\overline{\psi(g)}\;w\bigl(\pa_t(g)\bigr)\,G_\psi\Bigl(\frac{a}{w(\pa_t(g))}\Bigr).
 \end{align*}
@@ -794,8 +775,8 @@ $K(p^i,g)=2|I_p|^{-1}\mathbf 1[g\in iF_p+I_p]$ by Lemma~\ref{lem:orth}. We sort 
   contribution is $2\log p\sum_{i:\,iF_p\notin\Phi}(a/p^i-w(\pa_t(iF_p)))_+$. If $F_p\in\Phi$ this is
   empty. Otherwise $p$ is inert, and we obtain the term of $\ASK$ at $p$. Every inert prime arises
   in this way.
-\item $p=d$. By (H4), $|I_d|=2$ and $K(d^i,g)=\mathbf 1[g\in iF_d+I_d]$, which gives the last term of
-  $\ASK$.\qedhere
+\item $p=d$. By (H4), $|I_d|=2$ and $K(d^i,g)=\mathbf 1[g\in iF_d+I_d]$; the restriction $g\notin\Phi$
+  gives the $g\in(iF_d+I_d)\setminus\Phi$ term of $\ASK$.\qedhere
 \end{itemize}
 \end{proof}
 
@@ -884,9 +865,8 @@ For a host as above put
 \[
 G_K(y)=\sum_{\psi\in K}\mathrm{wt}(\psi)\re G_\psi(y),\qquad
 \mathrm{wt}(\psi)=\begin{cases}1,&\psi\text{ trivial on }\iota(H),\\ c,&\text{otherwise},\end{cases}
-\qquad
-\Sigma_{\mathrm{rest}}(y)=\sum_{\psi\in\Gh_{A_0}\setminus K}|G_\psi(y)|.
 \]
+and $\Sigma_{\mathrm{rest}}(y)=\sum_{\psi\in\Gh_{A_0}\setminus K}|G_\psi(y)|$.
 
 \begin{theorem}[Theorem B]\label{thm:B}
 Let $C\ge0$, $\eps>0$, $C_E\ge0$, $K_0\ge0$ and $M>0$. There is $x_1=x_1(C,\eps,C_E,K_0,M)$ such
@@ -1177,7 +1157,269 @@ That is the situation of Proposition~\ref{prop:twothirds}, up to a constant. The
 it by charging every local contribution to exactly one lift. We describe this in
 Section~\ref{sec:C}, but it is part of Theorem~\ref{thm:C} and is not proved here.
 % ======================================================================
-\section{The arithmetic input: Theorem C}\label{sec:C}
+\section{The slope layer: Theorem C1}\label{sec:slope}
+% ======================================================================
+
+In the formal proof the gap inequality \ref{B8} is deduced, by an argument about real numbers,
+from eleven conditions (S0)--(S10) (the domain condition (S0) and ten inequalities (S1)--(S10))
+between slopes and heights of a family of lattices. We state those conditions abstractly and
+carry out the deduction.
+
+\subsection{Slope data}
+
+For a finite set $X$ and functions $d>0$ and $Y$ on $X$ we write
+$\mathrm{wm}_d(Y)=\sum_{\nu}d(\nu)Y(\nu)/\sum_\nu d(\nu)$ for the weighted mean, and
+$\phi(y)=y\log y-y$. The function $g_H(z)=z\log(1+H/z)$ for $z>0$ is extended by $g_H(0)=0$
+for $H\ge0$ (with $g_0\equiv0$).
+
+\begin{definition}\label{def:slopedatum}
+A \emph{slope datum} consists of the following.
+\begin{itemize}
+\item Integers $m,f\ge1$; a finite nonempty set $T$, with $n_T=|T|$; a finite nonempty set $U$ of
+  \emph{points}; and for each $u\in U$ a finite nonempty set $\mathcal W(u)$ of \emph{words}.
+\item Real numbers $x,\eps,a,b,b',k,L,L_a,B_0,N_c,\gamma,\ell_\ast,v,\lambda,X''$; numbers $a_t>0$ for
+  $t\in T$; and weights $w_{u,j}(\rho)>0$ for $u\in U$, $1\le j\le m$, $1\le\rho\le f$.
+\item For each $u\in U$ and $\nu\in\mathcal W(u)$, real numbers $d(\nu)>0$, $T(\nu)>0$,
+  $\mu(\nu)\le\mu^+(\nu)$, $h(\nu)$, $\mu_0(\nu)$, $\mu_0^+(\nu)$ and $E_j(\nu)$ for $1\le j\le m$. We
+  put $E(\nu)=\sum_jE_j(\nu)$.
+\item For each $u\in U$, real numbers $\mu_\ast(u)$, $\mu_\ast^-(u)$, $F(u)$, $\mathcal G(u)$, $A(u)$,
+  $I(u)$, $H_\ast(u)$, $\delta_u$, $\eta_u$ and $e_u$; and real numbers $\bar\delta,\bar\eta,\bar e$.
+\item Constants $c_{\mathrm{Div}},e_{\mathrm{Div}},c_E,c_H,c_C,c_S,c_1,c_L,e_L,c_{HH}$.
+\end{itemize}
+\end{definition}
+
+We use the abbreviations
+\begin{gather*}
+S_A=\sum_{t\in T}a_t,\qquad \log\Omega=\gamma+\log(\pi/v)-\ell_\ast,\qquad
+L_P=c_Ln_Tmb\,x^{e_L\eps},\\
+E_{\mathrm{Div}}=c_{\mathrm{Div}}n_TaL_a+c_{\mathrm{Div}}m(B_0+N_c)x^{e_{\mathrm{Div}}\eps},\\
+\mathrm{Main}(u)=\sum_{j=1}^m\sum_{t\in T}a_t\Bigl(\log a_t-1-\gamma+\ell_\ast-\frac1f\sum_{\rho=1}^f\log w_{u,j}(\rho)\Bigr),\\
+\Lambda(u)=\sum_{j=1}^m\frac1f\sum_{\rho=1}^f\log\frac{w_{u,j}(\rho)\,v}{\pi}+m\lambda-c_C\Bigl(L_a+\frac{m^2L_a}{k}\Bigr),\\
+s(u)=\mathrm{wm}_d(\mu-h),\qquad u^F(u)=\max_{\nu\in\mathcal W(u)}\bigl(\mu^+(\nu)-h(\nu)\bigr)-s(u),\\
+\mathrm{Lo}(\nu)=c_1I(u)+c_1n_Tm\Bigl(\frac ak+b'\Bigr)\log T(\nu)+c_1X''+1\qquad(\nu\in\mathcal W(u)).
+\end{gather*}
+The weighted means over $\mathcal W(u)$ use the weights $d$.
+
+\begin{definition}\label{def:slopehyp}
+A slope datum is \emph{admissible} if the following hold for all $u\in U$ and all
+$\nu,\nu'\in\mathcal W(u)$.
+\begin{enumerate}[label=\textup{(S\arabic*)}, start=0, leftmargin=3.2em]
+\item\label{S0} $x,b,k,v>0$, $a\ge0$, $b'\ge0$, $c_1\ge0$, $\bar\delta<1$, $\bar\eta\ge0$ and
+  $0\le\bar e\le\frac14$.
+\item\label{S1} (\emph{Divisibility}) $\mu_\ast(u)+h(\nu)-F(u)\le\sum_{t\in T}\bigl(m(\phi(a_t)-a_t\log\Omega)-a_t\log T(\nu)\bigr)+E_{\mathrm{Div}}$.
+\item\label{S2} (\emph{Energy}) $|E(\nu)-mS_A\lambda|\le c_EmB_0$.
+\item\label{S3} (\emph{Heights}) $\bigl|\bigl(h(\nu)+\sum_ta_t\log T(\nu)\bigr)-\bigl(h(\nu')+\sum_ta_t\log T(\nu')\bigr)\bigr|\le c_H(n_TaL_a+mB_0)$.
+\item\label{S4} (\emph{Counting}) $\Lambda(u)\le\log T(\nu)\le c_CmL$ and $|\log T(\nu)-\log T(\nu')|\le c_C\log k$.
+\item\label{S5} (\emph{Reference slopes}) $-c_Sn_TaL_a(1+m/k)\le\mu_0(\nu)$ and $\mu_0^+(\nu)\le c_Sn_TaL_a$.
+\item\label{S6} (\emph{Local indices}) $\mu^+(\nu)\le\mu_0^+(\nu)+\mathcal G(u)+F(u)-E(\nu)+c_1mB_0$ and
+  $\mu_0(\nu)+\mathcal G(u)+F(u)-E(\nu)-\mathrm{Lo}(\nu)\le\mu(\nu)$.
+\item\label{S7} (\emph{Losses}) $A(u)-\mathcal G(u)\le L_P$ and $I(u)\le L_P$.
+\item\label{S8} (\emph{Frame inequality}) If $0\le\delta_u<1$, $\eta_u\ge0$, $0\le e_u\le\frac14$,
+  $s(u)-\mu_\ast^-(u)\le H_\ast(u)$ and $H_\ast(u)>0$, then
+  \[
+  s(u)-\log|\mathcal W(u)|-\frac{4\,g_{H_\ast(u)}(u^F(u))+(\eta_u+4\sqrt{e_u})H_\ast(u)}{1-\delta_u}\le\mu_\ast(u).
+  \]
+\item\label{S9} $s(u)-\mu_\ast^-(u)\le H_\ast(u)$ and $0<H_\ast(u)\le x^{c_{HH}}b$.
+\item\label{S10} $0\le\delta_u\le\bar\delta$, $0\le\eta_u\le\bar\eta$ and $0\le e_u\le\bar e$.
+\end{enumerate}
+\end{definition}
+
+In the formal proof the points are translates $u\in H$ and the words index a family of lattices
+(Table~\ref{tab:slopemeaning}); the theorem below does not use this.
+
+\begin{theorem}[Theorem C1: the pointwise bound]\label{thm:C1}
+For an admissible slope datum and every $u\in U$,
+\[
+A(u)\le\mathrm{Main}(u)+\mathrm{Err}(u),
+\]
+where, with
+\begin{align*}
+M_{\mathrm{Lo}}&=c_1L_P+c_1n_Tm\Bigl(\frac ak+b'\Bigr)c_CmL+c_1X''+1,\\
+V&=2mc_EB_0+c_H(n_TaL_a+mB_0)+S_Ac_C\log k,\\
+\bar U&=c_Sn_TaL_a\Bigl(2+\frac mk\Bigr)+V+c_1mB_0+M_{\mathrm{Lo}},
+\end{align*}
+the error is
+\begin{multline*}
+\mathrm{Err}(u)=S_Ac_C\Bigl(L_a+\frac{m^2L_a}{k}\Bigr)+E_{\mathrm{Div}}+mc_EB_0+c_Sn_TaL_a\Bigl(1+\frac mk\Bigr)+\log|\mathcal W(u)|+L_P+M_{\mathrm{Lo}}\\
++\frac{1}{1-\bar\delta}\Bigl(4\log\bigl(1+x^{c_{HH}}\bigr)(\bar U+b)+(\bar\eta+4\sqrt{\bar e})\,x^{c_{HH}}b\Bigr).
+\end{multline*}
+\end{theorem}
+
+\subsection{Proof of Theorem C1}
+
+Fix $u\in U$ and write $\mathcal W=\mathcal W(u)$. We use two facts about weighted means: if
+$c-Y(\nu)\le X(\nu)$ for all $\nu$, then $c-\mathrm{wm}_d(Y)\le\mathrm{wm}_d(X)$; and if
+$X(\nu)\le c$ for all $\nu$, then $\mathrm{wm}_d(X)\le c$. Put
+$S_{\mathrm{Div}}=\sum_tm(\phi(a_t)-a_t\log\Omega)$ and
+\begin{align*}
+K_1&=S_Ac_C\Bigl(L_a+\frac{m^2L_a}{k}\Bigr)+E_{\mathrm{Div}}+mc_EB_0+c_Sn_TaL_a\Bigl(1+\frac mk\Bigr),\\
+K_3&=c_Sn_TaL_a\Bigl(2+\frac mk\Bigr)+V+c_1mB_0.
+\end{align*}
+
+\begin{lemma}[Cancellation of the order-$m$ terms]\label{lem:keyid}
+$S_{\mathrm{Div}}-S_A\Lambda(u)+mS_A\lambda=\mathrm{Main}(u)+S_Ac_C(L_a+m^2L_a/k)$.
+\end{lemma}
+
+\begin{proof}
+Since $\log\Omega=\gamma+\log\pi-\log v-\ell_\ast$, we have
+$S_{\mathrm{Div}}=\sum_tma_t(\log a_t-1-\gamma-\log\pi+\log v+\ell_\ast)$. On the other hand
+\[
+S_A\Lambda(u)=\sum_ta_t\sum_j\frac1f\sum_\rho\log w_{u,j}(\rho)+mS_A(\log v-\log\pi)+mS_A\lambda-S_Ac_C\Bigl(L_a+\frac{m^2L_a}k\Bigr).
+\]
+Subtract, and add $mS_A\lambda$. The terms in $\log v$, $\log\pi$ and $\lambda$ cancel, and what
+remains is $\mathrm{Main}(u)+S_Ac_C(L_a+m^2L_a/k)$.
+\end{proof}
+
+\begin{lemma}\label{lem:slower}
+$s(u)\ge\mathcal G(u)+\mu_\ast(u)-\mathrm{Main}(u)-K_1-\mathrm{wm}_d(\mathrm{Lo})$.
+\end{lemma}
+
+\begin{proof}
+Fix $\nu$. By \ref{S6}, $\mu(\nu)\ge\mu_0(\nu)+\mathcal G+F-E(\nu)-\mathrm{Lo}(\nu)$. By \ref{S1},
+$-h(\nu)\ge\mu_\ast-F-S_{\mathrm{Div}}+\sum_ta_t\log T(\nu)-E_{\mathrm{Div}}$. Adding, $F$ cancels. Now
+use $\sum_ta_t\log T(\nu)\ge S_A\Lambda(u)$, from \ref{S4} and $a_t>0$; then
+$E(\nu)\le m(S_A\lambda+c_EB_0)$, from \ref{S2}; and finally
+$\mu_0(\nu)\ge-c_Sn_TaL_a(1+m/k)$, from \ref{S5}. This gives
+\[
+\mu(\nu)-h(\nu)\ge\mathcal G+\mu_\ast-\bigl(S_{\mathrm{Div}}-S_A\Lambda(u)+mS_A\lambda\bigr)-E_{\mathrm{Div}}-mc_EB_0-c_Sn_TaL_a(1+m/k)-\mathrm{Lo}(\nu).
+\]
+By Lemma~\ref{lem:keyid} the right side is $\mathcal G+\mu_\ast-\mathrm{Main}(u)-K_1-\mathrm{Lo}(\nu)$.
+Take the weighted mean over $\nu$.
+\end{proof}
+
+\begin{lemma}\label{lem:uF}
+$0\le u^F(u)\le K_3+\mathrm{wm}_d(\mathrm{Lo})$.
+\end{lemma}
+
+\begin{proof}
+Since $\mu\le\mu^+$, we have
+$\max_\nu(\mu^+-h)\ge\mathrm{wm}_d(\mu^+-h)\ge\mathrm{wm}_d(\mu-h)=s(u)$, so $u^F\ge0$.
+
+For the upper bound, take $\nu,\nu'\in\mathcal W$. By \ref{S2} applied to $\nu$ and $\nu'$,
+$E(\nu')-E(\nu)\le2mc_EB_0$. By \ref{S3} and the last part of \ref{S4},
+$h(\nu')-h(\nu)\le c_H(n_TaL_a+mB_0)+S_Ac_C\log k$. Hence
+$(-E(\nu)-h(\nu))-(-E(\nu')-h(\nu'))\le V$. Combining this with the upper half of \ref{S6} for
+$\nu$, the lower half for $\nu'$, and \ref{S5} for both, gives
+\[
+\mu^+(\nu)-h(\nu)-\bigl(\mu(\nu')-h(\nu')\bigr)\le c_Sn_TaL_a+c_Sn_TaL_a(1+m/k)+c_1mB_0+V+\mathrm{Lo}(\nu')=K_3+\mathrm{Lo}(\nu').
+\]
+Take the weighted mean over $\nu'$, and then the maximum over $\nu$.
+\end{proof}
+
+\begin{lemma}\label{lem:Lomean}
+$\mathrm{wm}_d(\mathrm{Lo})\le M_{\mathrm{Lo}}$.
+\end{lemma}
+
+\begin{proof}
+By \ref{S0} the coefficient $c_1n_Tm(a/k+b')$ is nonnegative, and $\log T(\nu)\le c_CmL$ by
+\ref{S4}. So $\mathrm{Lo}(\nu)\le c_1I(u)+c_1n_Tm(a/k+b')c_CmL+c_1X''+1$. Finally
+$I(u)\le L_P$ by \ref{S7}.
+\end{proof}
+
+\begin{lemma}\label{lem:gmono}
+For $H>0$ the function $g_H$ is continuous and nondecreasing on $[0,\infty)$.
+\end{lemma}
+
+\begin{proof}
+For $z>0$, $g_H(z)=z\log(z+H)-z\log z\to0$ as $z\to0^+$. Moreover
+$g_H'(z)=\log(1+H/z)-H/(z+H)\ge0$, since $\log(1+y)\ge y/(1+y)$ for $y\ge0$.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:C1}]
+Put $U'=K_3+\mathrm{wm}_d(\mathrm{Lo})$. By Lemmas~\ref{lem:uF} and~\ref{lem:Lomean},
+$0\le u^F\le U'\le\bar U$. By \ref{S9} and Lemma~\ref{lem:gmono}, since $U'\ge0$,
+\[
+g_{H_\ast}(u^F)\le g_{H_\ast}(U'+b)=(U'+b)\log\Bigl(1+\frac{H_\ast}{U'+b}\Bigr)\le(U'+b)\log\bigl(1+x^{c_{HH}}\bigr)\le(\bar U+b)\log\bigl(1+x^{c_{HH}}\bigr),
+\]
+where we used $H_\ast\le x^{c_{HH}}b\le x^{c_{HH}}(U'+b)$. By \ref{S9} and \ref{S10}, the
+hypotheses of \ref{S8} hold. Since $0\le\delta_u\le\bar\delta<1$, $\eta_u\le\bar\eta$, $e_u\le\bar e$ and
+$H_\ast\le x^{c_{HH}}b$, the frame inequality gives
+\[
+s(u)-\mu_\ast(u)\le\log|\mathcal W|+\frac{1}{1-\bar\delta}\Bigl(4\log\bigl(1+x^{c_{HH}}\bigr)(\bar U+b)+(\bar\eta+4\sqrt{\bar e})x^{c_{HH}}b\Bigr).
+\]
+By Lemmas~\ref{lem:slower} and~\ref{lem:Lomean},
+$\mathcal G(u)\le s(u)-\mu_\ast(u)+\mathrm{Main}(u)+K_1+M_{\mathrm{Lo}}$, and by \ref{S7},
+$A(u)\le\mathcal G(u)+L_P$. Combining the three inequalities gives the theorem.
+\end{proof}
+
+\subsection{The size of the error}
+
+\begin{proposition}\label{prop:errsize}
+In addition to \ref{S0}--\ref{S10}, suppose the following windows hold for some $e_K,K\ge0$:
+$1\le x$; $0<\eps\le1$; $1\le b$ and $xb\le a$; $n_T\ge1$; $m\le x^{1/2+\eps/2}$ and $xm\le k$;
+$1\le k\le\min(a,x^{e_K})$; $0\le L,L_a\le2x^{\eps}$; $kb'\le a$; $0\le X''\le a$; $a_t\le2a$ for all
+$t$; $B_0,N_c\ge0$; $\log|\mathcal W(u)|\le(k-3)\log2$ for all $u$; $\bar\delta\le\frac12$;
+$\bar e\ge0$; all of $c_{\mathrm{Div}},c_E,c_H,c_C,c_S,c_1,c_L$ lie in $[0,K]$;
+$e_{\mathrm{Div}},e_L,c_{HH}\ge0$; $(\bar\eta+4\sqrt{\bar e})x^{c_{HH}}b\le Kx^{\eps}n_Ta$;
+$\log x\le x^{\eps}$; and $200(1+K)^2(1+c_{HH})(1+e_K)\le x^{\eps}$. Then for every $u\in U$
+\[
+\mathrm{Err}(u)\le x^{(e_{\mathrm{Div}}+e_L+3)\eps}\Bigl(n_Ta\Bigl(1+\frac{m^2}{k}\Bigr)+m(B_0+N_c)\Bigr).
+\]
+\end{proposition}
+
+\begin{proof}
+Write $y=x^{\eps}$, $y_D=x^{e_{\mathrm{Div}}\eps}$ and $y_L=x^{e_L\eps}$, all at least $1$, and put
+$A_0=n_Ta$, $Q=A_0(1+m^2/k)+m(B_0+N_c)$, $P_0=(1+K)^2(1+e_K)$, $P=P_0(1+c_{HH})$ and
+$Z=y^2y_Dy_LQ$. We first collect elementary bounds. Since $\eps\le1$ and $x\ge1$, $m\le x$, so
+$mb\le xb\le a$ and $m\le xm\le k$. Moreover $S_A\le2A_0$; $\log|\mathcal W(u)|\le k\le a\le A_0\le Q$;
+$1\le b\le a\le Q$; $0\le\log k\le e_K\log x\le e_Ky$;
+$\log(1+x^{c_{HH}})\le\log2+c_{HH}\log x\le(1+c_{HH})y$; $(1-\bar\delta)^{-1}\le2$; and
+$b'\le a/k$.
+
+Then, term by term:
+\begin{itemize}
+\item $S_Ac_C(L_a+m^2L_a/k)\le2A_0\cdot K\cdot2y(1+m^2/k)\le4KyQ\le4PZ$;
+\item $E_{\mathrm{Div}}\le2KyA_0+Ky_Dm(B_0+N_c)\le3Ky\,y_DQ\le3PZ$;
+\item $mc_EB_0\le KQ\le PZ$, and $c_Sn_TaL_a(1+m/k)\le4KyA_0\le4PZ$;
+\item $\log|\mathcal W(u)|\le Q\le Z$, and $L_P\le Ky_LA_0\le PZ$, using $n_Tmb\le A_0$;
+\item $M_{\mathrm{Lo}}\le K^2y_LA_0+K^2\cdot2y\cdot2A_0m^2/k+Ka+1\le(5K^2+K+1)y\,y_LQ\le5P_0y\,y_LQ\le5PZ$.
+  Here we used $m^2(a/k+b')\le2am^2/k$.
+\end{itemize}
+These seven terms sum to at most $19PZ$. Next,
+$V\le2KQ+K(2yA_0+Q)+2A_0Ke_Ky\le7P_0yQ$, so
+\[
+\bar U+b\le6KyA_0+7P_0yQ+KQ+5P_0y\,y_LQ+Q\le20P_0y\,y_LQ.
+\]
+Therefore the last term of $\mathrm{Err}(u)$ is at most
+$2\bigl(4(1+c_{HH})y\cdot20P_0y\,y_LQ+Ky\,A_0\bigr)\le160PZ+2PZ$. In total
+$\mathrm{Err}(u)\le181PZ\le200PZ\le x^{\eps}Z=x^{(e_{\mathrm{Div}}+e_L+3)\eps}Q$, using the last window.
+\end{proof}
+
+\subsection{From slope data to the gap inequality}
+
+A slope datum is \emph{tied} to a host at scale $x$ (Definition~\ref{def:host}) if there are a map
+$\tau:U\to H$ whose image contains $A_0$, a bijection between the index set $T$ of the slope datum
+and the set $T\subseteq H$ of the host preserving the numbers $a_t$, and a bijection
+$\{1,\dots,f\}\cong\Phi$ under which $w_{u,j}$ corresponds to the host weight $w_{\tau(u),j}$, such that
+\[
+\gamma=\gE,\qquad \ell_\ast=\re\ell(\chi_C),\qquad A(u)=\sum_{t\in T}\sum_{j=1}^m\ASK(a_t,t,w_{\tau(u),j}),
+\]
+and moreover $B_0\le2nmb\,x^{\eps}$, $N_c\le n_{T_2}kb\,x^{2\eps}/n^2$, the numbers $x,\eps,b,k,m$
+agree with those of the host, and $a=a_E$.
+
+\begin{corollary}\label{cor:gap}
+Let a host at scale $x$ carry a tied slope datum satisfying \ref{S0}--\ref{S10} and the windows of
+Proposition~\ref{prop:errsize}. Then the gap inequality \ref{B8} holds with
+$C=e_{\mathrm{Div}}+e_L+3$.
+\end{corollary}
+
+\begin{proof}
+By the tie, $\mathrm{Main}(u)=\sum_t\sum_j\re\MAIN(a_t,w_{\tau(u),j})$ for every $u\in U$
+(Definition~\ref{def:ask}). Every $u\in A_0$ is of the form $\tau(u')$. Theorem~\ref{thm:C1} and
+Proposition~\ref{prop:errsize} give
+\[
+\sum_t\sum_j\bigl(\ASK(a_t,t,w_{u,j})-\re\MAIN(a_t,w_{u,j})\bigr)\le x^{C\eps}\Bigl(n_Ta\Bigl(1+\frac{m^2}k\Bigr)+m(B_0+N_c)\Bigr)\le x^{C\eps}\mathcal E,
+\]
+using the bounds on $B_0$ and $N_c$.
+\end{proof}
+
+\begin{remark}
+In the bracket, the term $n_Ta(1+m^2/k)$, which produces $x/m$, collects the multiples of
+$n_TaL_a$ in \ref{S1}, \ref{S3} and \ref{S5}; the term $mB_0$, which produces $m$, collects the
+per-lift allowances in \ref{S1}, \ref{S2}, \ref{S3} and \ref{S6}.
+\end{remark}
+% ======================================================================
+\section{The arithmetic input: Theorems C and C2}\label{sec:C}
 % ======================================================================
 
 \subsection{Statement}
@@ -1204,103 +1446,676 @@ numbers $x_0$, $C_E\ge0$ and $K_0\ge0$ such that:
 \end{enumerate}
 \end{theorem}
 
-The constant $e$ does not depend on $\eps$. This matters, because the final exponent is
-$1/2+(e+4)\eps$ (Section~\ref{sec:GRH}).
+The constant $e$ does not depend on $\eps$; this matters because the final exponent is
+$1/2+(e+4)\eps$ (Section~\ref{sec:GRH}). By Corollary~\ref{cor:gap}, Theorem~\ref{thm:C} follows
+from the next statement, which contains all of the arithmetic of the formal proof.
+
+\begin{theorem}[Theorem C2; Alp\"oge, certified by the Lean kernel]\label{thm:C2}
+Let $\psi$ be a primitive Dirichlet character of order $o$. There are $e\ge3$ and $\eps_1>0$ with
+the following property. For every $\eps\in(0,\eps_1)$ there are a set $W\subseteq\R$ satisfying
+(i) of Theorem~\ref{thm:C}, and real numbers $x_0$, $C_E$, $K_0$, $K$, $e_K\ge0$, such that for
+every $x\in W$ with $x\ge x_0$ there is a host at scale $x$ satisfying \ref{B0}--\ref{B7} with
+parameters $(C_E,K_0,\frac1{3o+1},4o)$, with $G_K=G_{F_\psi}$ and
+$\Sigma_{\mathrm{rest}}(x)\le4o\,x^{1/2+\eps}$, which carries a tied slope datum satisfying
+\ref{S0}--\ref{S10} and the windows of Proposition~\ref{prop:errsize} with constants $K$, $e_K$ and
+$e_{\mathrm{Div}}+e_L+3\le e$.
+\end{theorem}
+
+\begin{proof}[Proof of Theorem~\ref{thm:C} from Theorem~\ref{thm:C2}]
+By Corollary~\ref{cor:gap}, each host provided by Theorem~\ref{thm:C2} satisfies \ref{B8} with
+$C=e_{\mathrm{Div}}+e_L+3\le e$. Since $x\ge1$, it then satisfies \ref{B8} with $C=e$.
+\end{proof}
 
 \subsection{Provenance}
 
-Theorem~\ref{thm:C} is not stated as a single theorem in the formal development. It is the
-composite of the following kernel-checked steps, which we have read in the source at commit
-\texttt{40e56bab}. The formal names are listed in Appendix~\ref{app:lean}.
-\begin{enumerate}
-\item The arithmetic construction, together with the supply of hosts on windows, gives for every
-  primitive $\psi$ the following statement for the level of $\psi$. There are $e_D$, $e_L$ and
-  $\eps_1>0$ such that, for every $\eps<\eps_1$, a family of hosts exists whose set of scales
-  contains windows of exponent $3/2$, and at every large scale in that set a tie condition holds
-  with constants independent of the scale. This is (i).
-\item From the tie condition at a scale $x$, the development constructs a frame, a host and a set
-  $T$ satisfying two bundles of hypotheses, called \lean{EAtH} and \lean{CoreAtH}.
-\item The proof of the formal analogue of Theorem~\ref{thm:B} (\lean{core_gm}) derives (B0)--(B8)
-  from these two bundles with $C=\max(e_D+e_L,0)+3$, $c=1/(3o+1)$ and $M=4o$. It derives (B8) from
-  a pointwise inequality per point and per lift. It also proves $G_K=G_{F_\psi}$ and the bound for
-  $\Sigma_{\mathrm{rest}}$. This is (ii), with $e=\max(e_D+e_L,0)+3$.
-\end{enumerate}
-The formulation above is our paraphrase of this composite. We have checked it against the source;
-a reader who wants certainty about the paraphrase, as opposed to the formal statements themselves,
-should compare Appendix~\ref{app:lean} with the archive.
+Neither theorem is a single formal statement; each is a composite of kernel-checked steps, listed
+in Appendix~\ref{app:lean}. The arithmetic construction gives, for each primitive $\psi$, hosts on
+a set of scales containing windows of exponent $3/2$, and at each large scale a tie condition
+(\lean{ChainTied}) with constants independent of the scale. The tie condition consists of a
+real-number record satisfying \texttt{SizeData}$_2$, which is \ref{S0}--\ref{S10}, the windows
+\lean{ErrWindows} of Proposition~\ref{prop:errsize}, and identities (\lean{TieGlobal},
+\lean{TieLocal}, \lean{TieArith}) tying the record to a host and a family of lattices. The formal bridge to Theorem~\ref{thm:B} (Theorem~\ref{thm:C}(ii), \lean{core_gm}) derives
+(B0)--(B7) from it with $c=1/(3o+1)$ and $M=4o$, together with $G_K=G_{F_\psi}$ and the bound on
+$\Sigma_{\mathrm{rest}}$, and derives (B8) with $C=\max(e_D+e_L,0)+3$ through the formal versions
+of Theorem~\ref{thm:C1} and Proposition~\ref{prop:errsize}, invoking Theorem~\ref{thm:B}
+(\lean{Deduction.ch_core}) to obtain the window bound for $G_m$. The statements above are our
+paraphrase of this composite.
 
-\subsection{How the formal proof establishes Theorem C}
+\subsection{Outline of the formal proof of Theorem C2}
 
-The following description is not used in any proof in this paper. It summarises the structure
-of the formal proof of Theorem~\ref{thm:C}, as read from the source; the account~\cite{dixit-account}
-gives each step with file and line references. We use the notation of Definition~\ref{def:host}.
+This outline is not used in any proof. Step-by-step references are in~\cite{dixit-account}.
 
-\emph{The host.} The group $H$ has order $n$ with $x^{2+8\eps}\le n\le2x^{2+8\eps}$, and the
-quadratic characters of the auxiliary primes $q\equiv3\pmod8$ and $d\equiv7\pmod{16}$ supply the
-characters of $E_0$. The auxiliary primes are chosen outside a small exceptional set given by a
-zero-density estimate~\cite[Chapter~10]{iwaniec-kowalski}. Their characters therefore satisfy
-square-root bounds at the scale $x$ without any hypothesis on their $L$-functions; bounds of this
-kind are what the estimate for $\Sigma_{\mathrm{rest}}$ in Theorem~\ref{thm:C}(ii) records. The thick set $T_2$ is a set without nontrivial linear relations
-$j(s_2-s_1)=i(s_3-s_1)$ with small coefficients, of Behrend type, of density
-$e^{-O(\sqrt{\log n\log L})}/L$.
+\emph{The host.} $|H|=n$ with $x^{2+8\eps}\le n\le2x^{2+8\eps}$. The characters of $E_0$ come from
+auxiliary primes $q\equiv3\pmod8$ and $d\equiv7\pmod{16}$ chosen outside the exceptional set of a
+zero-density estimate~\cite[Chapter~10]{iwaniec-kowalski}, which gives the square-root bounds behind
+$\Sigma_{\mathrm{rest}}$. The thick set $T_2$ is a Behrend-type set without short linear relations.
 
-\emph{The weights.} The weights $w_{u,j}$ are the archimedean weights of a family of Hermitian
-lattices over a CM field of degree $f=2n$, indexed by \emph{words} $u$. The lattices are carried
-along a chain of $m$ theta lifts between unitary groups of signatures
+\emph{The lattices.} The weights $w_{u,j}$ are the archimedean weights of Hermitian lattices over a
+CM field of degree $f=2n$, indexed by words and carried along a chain of $m$ theta lifts between
+unitary groups of signatures $(k-1,m)\to(k,m-1)\to\cdots\to(k+m-1,0)$; the index $j$ is the lift.
+Here $m=2\lceil\frac12x^{1/2-\eps/16}\rceil$ and $x^{9/2+10\eps}\le k\le2x^{9/2+10\eps}$.
+Table~\ref{tab:slopemeaning} gives the meaning of each quantity of the slope datum. For each word
+$\nu$ there is a lattice $N_\nu$ divisible by the prime powers counted in $\ASK$. Its slope is
+computed at the finite places as a reference slope plus local indices \ref{S6}, which dominate
+$\ASK$ up to losses \ref{S7}; and at the infinite places through one common lattice $R$ (denoted
+\lean{RR} in the formal development), whose dual slope is bounded by a Chowla--Selberg main
+term~\cite{chowla-selberg} and the height of a chain of $m$ maps \ref{S1}. The frame inequality
+\ref{S8} joins the two computations.
+
+\begin{table}[ht]
+\centering
+\small
+\renewcommand{\arraystretch}{1.15}
+\begin{tabular}{@{}p{36mm}p{96mm}@{}}
+\toprule
+Quantity & Meaning in the formal proof (from \lean{TieLocal}, \lean{TieGlobal})\\
+\midrule
+$d(\nu)$, $\mu(\nu)$, $\mu^+(\nu)$ & rank, slope and maximal slope of the lattice $N_\nu$\\
+$h(\nu)$, $T(\nu)$ & height of the word; an auxiliary integer of the word\\
+$\mu_0(\nu)$, $\mu_0^+(\nu)$ & slope and maximal slope of the first lattice of the chain\\
+$E_j(\nu)$ & local energy at lift $j$, summed over the support\\
+$\mu_\ast(u)$, $\mu_\ast^-(u)$ & dual slope and minimal dual slope of $R$ (\lean{RR})\\
+$F(u)$, $\mathcal G(u)$, $I(u)$ & fixed part, gain and loss at the finite places\\
+$b,b',a,k,$ $L,L_a,B_0,N_c$ & scale parameters; $B_0$ is the per-lift budget\\
+$\lambda$, $v$ & $\log(g_0g_1)$ for the two host primes; a parameter of the CM datum\\
+\bottomrule
+\end{tabular}
+\caption{The slope datum in the formal proof.}\label{tab:slopemeaning}
+\end{table}
+
+\emph{The error terms.} The term $n_Ta(1+m^2/k)$ comes from the top weights $a_t\approx xb$. The
+term $mB_0$ is a height bound for a product of $m$ operators with a fixed budget $B_0$ per lift.
+Only one charge uses its full size: a Selmer-rank charge of $m$ per local piece, fixed by the
+Hodge--Tate weights~\cite{bloch-kato}. Each local piece is charged to exactly one lift, which is
+what avoids the compounding of Proposition~\ref{prop:twothirds}. Losses from Tate--Shafarevich
+groups along cyclotomic towers are bounded by $\exp(x^\eps/2)$ using formal proofs of the
+Ferrero--Washington theorem~\cite{ferrero-washington}, Poitou--Tate duality~\cite{nsw},
+Grothendieck--Messing theory, local Bloch--Kato duality and complex multiplication~\cite{shimura}.
+
+\subsection{Verification}
+
+Beyond the checks listed in the introduction, the kernel replay was also run single-threaded. Of
+the $175{,}187$ compiled files, $76{,}968$ agree byte for byte with Sutherland's manifest; each of
+the others stores its absolute build path, and a random sample of $300$, recompiled at his path,
+agrees byte for byte~\cite{dixit-repo}. Whether each formal classical theorem is as strong as its
+namesake does not affect the correctness of the final theorem~\cite{dixit-account,jaswal}.
+% ======================================================================
+\section{The frame, local-index and loss inequalities}\label{sec:three}
+% ======================================================================
+
+We prove the general statements behind \ref{S8}, \ref{S6} and \ref{S7}: a frame theorem for
+Hermitian lattices (Theorem~\ref{thm:F}), a summation of local indices
+(Proposition~\ref{prop:localindex}) and a congruence lemma (Lemma~\ref{lem:sqrtp}). After each we
+say what the family must supply.
+
+\subsection{Hermitian lattices}
+
+Let $K$ be a totally complex number field, with $n_K=[K:\Q]$, discriminant $d_K$ and $r=n_K/2$
+complex places. A \emph{Hermitian space} over $K$ is a finite-dimensional $K$-vector space $V$
+with, for every complex place $v$, a positive definite Hermitian inner product on $V\otimes_{K,v}\CC$.
+Taking the real parts of these inner products makes $E_V=\bigoplus_v V\otimes_{K,v}\CC$ a Euclidean
+space. A \emph{lattice} in $V$ is a finitely generated $\Oc_K$-submodule $L$. Its image in $E_V$ is a
+discrete subgroup of rank $n_K\,\rk_K L$, where $\rk_KL=\dim_K(KL)$. We write $\deg L=-\log\mathrm{covol}(L)$
+for the covolume in its real span, and we use the normalised slope
 \[
-(k-1,m)\to(k,m-1)\to\cdots\to(k+m-1,0),
+\hat\mu(L)=\frac{2\deg L}{n_K\rk_KL}-\log2+\frac{\log|d_K|}{n_K}\qquad(L\ne0),
 \]
-one unit of signature per lift. The index $j$ of the weight system is the lift. The sizes are
-$m=2\lceil\frac12x^{1/2-\eps/16}\rceil$ and $x^{9/2+10\eps}\le k\le2x^{9/2+10\eps}$. The value of
-$m$ is chosen, as Section~\ref{sec:balance} requires. The exponents of $n$ and $k$ then follow from
-the window of (B5) and from the fact that the family needs about $\exp(Cm^5fL)$ words, coded in $k$
-bits.
+as in the formal development. We let $\hat\mu_{\max}(L)$ and
+$\hat\mu_{\min}(L)$ be the largest slope of a nonzero sublattice and the smallest slope of a nonzero
+quotient by a saturated sublattice, in the same normalisation. For a $K$-linear map $\varphi:V\to W$
+between Hermitian spaces, its \emph{height} is
+$h(\varphi)=\frac1r\sum_v\log\|\varphi\|_v^2$, with operator norms at the complex places.
 
-\emph{The gap inequality.} For each word and each lift, the formal proof shows
-$\ASK\le\MAIN+(\text{error})$ by computing the Arakelov degree of one common lattice in two ways.
-At the finite places, the slope of a divisible lattice splits into local indices bounded below by
-the counts of Definition~\ref{def:ask}. This uses a congruence argument in an extension where $p$
-has a square root, which explains why only odd exponents $i$ appear. At the infinite places, the
-dual slope is bounded by a main term built from Chowla--Selberg periods~\cite{chowla-selberg}, which
-is where $\ell(\chi_C)$, a value of $L'/L$ at $s=1$, enters $\MAIN$. A slope inequality for a single
-lattice shared by all words joins the two sides. The common lattice is the intersection over all
-places of the images of local lattices under the composite of the $m$ lift steps. The Gram
-matrix of the words is the identity up to $\exp(-x^{\eps/8})$.
+We use four standard facts: the Harder--Narasimhan filtration~\cite{stuhler,grayson} and the slope
+inequality~\cite{bost-bourbaki}; see also~\cite{gaudron,bost-chen}. Each is proved in the formal
+development in this normalisation. Let $L\ne0$ be a
+lattice in $V$ with $KL=V$ and $R=n_K\dim_KV$.
+\begin{enumerate}[label=\textup{(HN\arabic*)}, leftmargin=3.6em]
+\item For every $\theta\in\R$ there is a saturated sublattice $L_{\ge\theta}\subseteq L$ (the
+  Harder--Narasimhan step) such that $\hat\mu_{\min}(L_{\ge\theta})\ge\theta$ if $L_{\ge\theta}\ne0$, and
+  every nonzero sublattice $M\subseteq L$ with $\hat\mu_{\min}(M)\ge\theta$ is contained in $L_{\ge\theta}$.
+\item There are real numbers $\hat\sigma_1\ge\dots\ge\hat\sigma_R$ (the slope list) with
+  $\#\{j:\hat\sigma_j\ge\theta\}=n_K\rk_KL_{\ge\theta}$ for every $\theta$, mean
+  $\frac1R\sum_j\hat\sigma_j=\hat\mu(L)$, and $\hat\mu_{\min}(L)\le\hat\sigma_j\le\hat\mu_{\max}(L)$.
+\item (Slope inequality) If $\varphi:V\to W$ is $K$-linear and $\varphi(L)\ne0$, then
+  $\hat\mu_{\min}(\varphi(L))\ge\hat\mu_{\min}(L)-h(\varphi)$.
+\item For every complex place $v$, the $\CC$-span of the image of $L$ in $V\otimes_{K,v}\CC$ has
+  dimension $\rk_KL$.
+\end{enumerate}
 
-\emph{The error terms.} In the formal error bracket, the term $n_Ta_E(1+m^2/k)$ comes from the top
-weights $a_t\approx xb$. The term $m\cdot2nmb\,x^{\eps}$ is a divisibility error: a height bound
-for a product of $m$ operators, one per lift, with a fixed budget $B_0=2nmb\,x^{\eps}$ per lift.
-Of the charges inside that budget, only one uses its full size: a Selmer-rank charge, equal to $m$
-lifts times a Bloch--Kato rank~\cite{bloch-kato} of $m$ per local piece. The rank is fixed at $m$
-by the Hodge--Tate weight pattern, whose $m$ small weights are the indefinite part of the starting
-signature. Every local piece is charged to exactly one lift. This is the accounting that avoids the
-compounding of Proposition~\ref{prop:twothirds}. The losses from Tate--Shafarevich groups along
-cyclotomic towers are bounded by $\exp(x^{\eps}/2)$ and absorbed. That bound uses formal proofs of
-the Ferrero--Washington theorem~\cite{ferrero-washington}, Poitou--Tate duality~\cite{nsw},
-Grothendieck--Messing deformation theory, local Bloch--Kato duality and the main theorem of complex
-multiplication~\cite{shimura}, all proved inside the development rather than assumed.
+\subsection{A linear-algebra lemma}
 
-\emph{What is not used.} The development also states many classical theorems that the final proof
-never applies. These include the full local Langlands correspondence for $\mathrm{GL}_n$,
-Ohsawa--Takegoshi $L^2$ extension and several representation-theoretic statements; only a weak
-assignment of local parameters is used. A load-bearing audit of the compiled development, and
-community pull requests that remove such statements, are described in~\cite{dixit-account}.
+For a linear map $A$ between finite-dimensional complex inner product spaces,
+$\|A\|_{HS}^2=\mathrm{tr}(A^*A)$.
 
-\subsection{Verification record}
+\begin{lemma}[Frame lemma]\label{lem:framela}
+Let $V_i$ $(i\in I)$ and $\mathcal H$ be finite-dimensional complex inner product spaces, with
+$d_i=\dim V_i$, $R=\sum_id_i>0$ and $D=\dim\mathcal H>0$. Let $\beta_i:V_i\to\mathcal H$ be linear,
+$\gamma_i>0$, $K_i=\gamma_i\beta_i^*\beta_i$ and $Q=\sum_i\gamma_i\beta_i\beta_i^*$. Let $U_i\subseteq V_i$
+be subspaces. Suppose that
+\begin{gather*}
+\sum_i\|K_i-1\|_{HS}^2\le eR,\quad 0\le e\le\tfrac14,\qquad
+\mathrm{tr}(Q^2)\le(1+\eta)\frac{(\mathrm{tr}\,Q)^2}{D},\quad\eta\ge0,\\
+\sum_i(d_i-\dim U_i)\le\varepsilon R.
+\end{gather*}
+Then $\dim\bigl(\sum_i\beta_i(U_i)\bigr)^{\perp}\le(\eta+4\varepsilon+4\sqrt e)\,D$.
+\end{lemma}
 
-Theorem~\ref{thm:C} rests on the correctness of the kernel check. The development has been accepted
-by the Lean kernel (\texttt{leanchecker}, including a complete single-threaded replay) and by the
-independent checkers \texttt{nanoda}, \texttt{con-leche} and \texttt{lean4lean}~\cite{sutherland}.
-The statement checked is Mathlib's \texttt{RiemannHypothesis} and the four statements about
-Dirichlet $L$-functions, with axioms \texttt{propext}, \texttt{Quot.sound} and
-\texttt{Classical.choice} only. Our independent rebuild of all $175{,}187$ modules reproduces the
-published kernel export of the final theorem byte for byte ($61{,}570{,}595{,}788$ bytes), so the
-declarations checked by the independent checkers are those produced from the published source.
-Of the compiled files, $76{,}968$ agree byte for byte with Sutherland's manifest. Each of the
-other $98{,}219$ stores the absolute build path, and a random sample of $300$ of them, recompiled
-at his build path, agrees byte for byte~\cite{dixit-repo}. The formal statements of the classical theorems used have been compared with
-the published theorems by several readers; whether each is as strong as its namesake is a separate
-question, which does not affect the correctness of the final theorem~\cite{dixit-account,jaswal}.
+\begin{proof}
+We may assume $D>0$. Note $\varepsilon\ge0$. Put $t=\mathrm{tr}\,Q=\sum_i\mathrm{tr}\,K_i$. By
+Cauchy--Schwarz, $|\mathrm{tr}(K_i-1)|\le\sqrt{d_i}\,\|K_i-1\|_{HS}$ and
+$\sum_i\sqrt{d_i}\|K_i-1\|_{HS}\le\sqrt R\sqrt{eR}$, so $t\ge R(1-\sqrt e)>0$.
+
+Let $\mathcal W=(\sum_i\beta_i(U_i))^\perp$, $w=\dim\mathcal W$, with an orthonormal basis
+$(g_l)$, and put $t_{\mathcal W}=\sum_l\langle Qg_l,g_l\rangle=\sum_i\gamma_i\sum_l\|\beta_i^*g_l\|^2$.
+
+\emph{Upper bound.} Since $g_l\perp\beta_i(U_i)$, we have $\beta_i^*g_l\in U_i^\perp$. Let $P_i$ be the
+orthogonal projection onto $U_i^\perp$, $k_i=\dim U_i^\perp=d_i-\dim U_i$, and $(f_m)$ an orthonormal
+basis of $U_i^\perp$. Then
+$\sum_l\|\beta_i^*g_l\|^2=\|P_i\beta_i^*P_{\mathcal W}\|_{HS}^2\le\|P_i\beta_i^*\|_{HS}^2=\sum_m\|\beta_if_m\|^2$,
+so
+\[
+\gamma_i\sum_l\|\beta_i^*g_l\|^2\le\sum_m\langle K_if_m,f_m\rangle\le k_i+\sqrt{k_i}\,\|K_i-1\|_{HS}.
+\]
+Summing and applying Cauchy--Schwarz again,
+$t_{\mathcal W}\le\varepsilon R+\sqrt{\varepsilon R}\sqrt{eR}=\varepsilon R+R\sqrt{\varepsilon e}$.
+
+\emph{Lower bound.} Put $A=Q-(t/D)1$. Since $Q$ is self-adjoint,
+$X:=\|A\|_{HS}^2=\mathrm{tr}(Q^2)-t^2/D\le\eta t^2/D$. Then
+$t_{\mathcal W}=(t/D)w+\sum_l\langle Ag_l,g_l\rangle\ge(t/D)w-\sqrt w\sqrt X$.
+
+\emph{Conclusion.} If $\varepsilon\ge\frac14$ the claim is trivial, since $w\le D$. Otherwise
+$\sqrt e\le\frac12$ gives $R\le2t$. Put $q=\sqrt{\varepsilon e}\le\sqrt e$ and $y=(D/t)\sqrt X$, so
+$y^2\le\eta D$. The two bounds give $(t/D)w-\sqrt w\sqrt X\le R(\varepsilon+q)\le2t(\varepsilon+q)$. Hence
+$w-\sqrt w\,y\le2D(\varepsilon+q)$. Since $\sqrt w\,y\le(w+y^2)/2$, this gives
+$w\le4D(\varepsilon+q)+y^2\le(4\varepsilon+4\sqrt e+\eta)D$.
+\end{proof}
+
+\subsection{The frame theorem}
+
+For $H\ge0$ let $g_H(z)=z\log(1+H/z)$ for $z>0$, with $g_H(0)=0$ (and $g_0\equiv0$), as in Section~\ref{sec:slope}.
+
+\begin{theorem}[Frame theorem]\label{thm:F}
+Let $K$ be a totally complex number field, $I$ a finite nonempty set, and $V_i$ $(i\in I)$ and $W$
+Hermitian spaces over $K$, with $d_i=\dim_KV_i$, $\sum_id_i>0$ and $D_0=\dim_KW>0$. Let $N_i\subseteq V_i$
+and $\Lambda\subseteq W$ be lattices with $KN_i=V_i$ and $K\Lambda=W$, and let $B_i:V_i\to W$ be
+$K$-linear with $B_i(N_i)\subseteq\Lambda$. Let $h_i\in\R$ with $h(B_i)\le h_i$ whenever $B_i\ne0$. Fix
+a complex place $v$ and bases of $V_i\otimes_{K,v}\CC$ and $W\otimes_{K,v}\CC$. Let $D_1\ge0$, and for
+each $i$ let $\tilde\beta_i:\CC^{d_i}\to\CC^{D_0}\oplus\CC^{D_1}$ be a linear map whose first
+component is the matrix of $B_i\otimes_v\CC$. Suppose that, for some $\gamma_i>0$, the maps
+$\tilde\beta_i$ satisfy the first two hypotheses of Lemma~\ref{lem:framela} with constants $e$ and
+$\eta$ and $D=D_0+D_1$, and that $0\le\delta<1$ with $(1-\delta)(D_0+D_1)\le D_0$. Let $s\in\R$, $u\ge0$ and $H\ge0$
+satisfy
+\[
+s\sum_id_i\le\sum_id_i\bigl(\hat\mu(N_i)-h_i\bigr),\qquad
+\hat\mu_{\max}(N_i)-h_i\le s+u\ \ \text{for all }i,\qquad
+s-\hat\mu_{\min}(\Lambda)\le H.
+\]
+Then
+\[
+\hat\mu(\Lambda)\ge s-\frac{4g_H(u)+(\eta+4\sqrt e)H}{1-\delta}.
+\]
+\end{theorem}
+
+\begin{proof}
+For $\tau\ge0$ put $\varepsilon(\tau)=u/(u+\tau)$, read as $0$ when $u=\tau=0$.
+
+\emph{Step 1 (rank of the HN steps of the $N_i$).} Let $\hat\sigma_{i,j}$ $(1\le j\le n_Kd_i)$ be the
+slope list of $N_i$ and $x_{i,j}=\hat\sigma_{i,j}-h_i$. By (HN2) and the hypotheses,
+$\sum_{i,j}x_{i,j}\ge n_Ks\sum_id_i$ and $x_{i,j}\le\hat\mu_{\max}(N_i)-h_i\le s+u$. Hence
+$\sum_{i,j}(s+u-x_{i,j})\le u\,n_K\sum_id_i$. Every $x_{i,j}<s-\tau$ contributes more than $u+\tau$ to
+the left side, so the number of such pairs is at most $\varepsilon(\tau)\,n_K\sum_id_i$. (If
+$u=\tau=0$, all $x_{i,j}$ equal $s$ and there are none.) Let $N_i(\tau)$ be the HN step of $N_i$ at
+$s-\tau+h_i$. By (HN2), $\#\{j:x_{i,j}<s-\tau\}=n_K(d_i-\rk_KN_i(\tau))$, so
+\[
+\textstyle\sum_i\bigl(d_i-\rk_KN_i(\tau)\bigr)\le\varepsilon(\tau)\sum_id_i.
+\]
+
+\emph{Step 2 (images).} Let $\Lambda(\tau)$ be the HN step of $\Lambda$ at $s-\tau$. If
+$B_i(N_i(\tau))\ne0$, then by (HN1) and (HN3)
+$\hat\mu_{\min}(B_i(N_i(\tau)))\ge(s-\tau+h_i)-h(B_i)\ge s-\tau$, so $B_i(N_i(\tau))\subseteq\Lambda(\tau)$
+by (HN1). Hence $M(\tau):=\sum_iB_i(N_i(\tau))\subseteq\Lambda(\tau)$.
+
+\emph{Step 3 (one place).} Let $U_i\subseteq\CC^{d_i}$ be the span of the image of $N_i(\tau)$ at $v$,
+of dimension $\rk_KN_i(\tau)$ by (HN4). By Step~1 and Lemma~\ref{lem:framela}, the subspace
+$S=\sum_i\tilde\beta_i(U_i)$ of $\CC^{D_0+D_1}$ satisfies
+$\dim S^\perp\le(\eta+4\varepsilon(\tau)+4\sqrt e)(D_0+D_1)$. The projection $\mathrm{pr}$ to
+$\CC^{D_0}$ maps $S$ into the span of the image of $M(\tau)$ at $v$, which has dimension $\rk_KM(\tau)$
+by (HN4), and $\dim S\le\dim\mathrm{pr}(S)+D_1$. Therefore
+\begin{gather*}
+D_0-\rk_K\Lambda(\tau)\le D_0-\rk_KM(\tau)\le D_0+D_1-\dim S=\dim S^\perp\le w(\tau)D_0,\\
+w(\tau)=\frac{\eta+4\varepsilon(\tau)+4\sqrt e}{1-\delta}.
+\end{gather*}
+
+\emph{Step 4 (layer cake).} Let $\hat\sigma_1,\dots,\hat\sigma_R$ be the slope list of $\Lambda$, with
+$R=n_KD_0$. By (HN2) all $\hat\sigma_j\ge\hat\mu_{\min}(\Lambda)\ge s-H$, and by (HN2) and Step~3,
+$\#\{j:\hat\sigma_j<s-\tau\}=n_K(D_0-\rk_K\Lambda(\tau))\le w(\tau)R$ for $\tau\ge0$. For $y\ge s-H$ we have
+$(s-y)_+=\int_0^H\mathbf 1[y<s-\tau]\,d\tau$. Hence, by (HN2),
+\[
+s-\hat\mu(\Lambda)=\frac1R\sum_j(s-\hat\sigma_j)\le\int_0^H\frac{\#\{j:\hat\sigma_j<s-\tau\}}{R}\,d\tau\le\int_0^Hw(\tau)\,d\tau
+=\frac{(\eta+4\sqrt e)H+4\,g_H(u)}{1-\delta},
+\]
+since $\int_0^Hu/(u+\tau)\,d\tau=u\log(1+H/u)$ for $u>0$.
+\end{proof}
+
+\begin{remark}[How \ref{S8} is obtained]\label{rem:S8}
+In the formal proof (\lean{frame_theorem_sharp}), \ref{S8} is Theorem~\ref{thm:F} with the word
+lattices $N_\nu$ as the $N_i$, the heights $h(\nu)$ as the $h_i$, $\Lambda$ the dual of $R$
+(\lean{RR}), $s=s(u)$, $u=u^F(u)$ and $H=H_\ast(u)$; the extra term $-\log|\mathcal W(u)|$ only
+weakens it. The family must supply the hypotheses (\lean{frameF_of}): the height bounds
+$h(B_\nu)\le h(\nu)$ (\lean{LinkDIV_at}), and near-orthogonality constants with
+$(\eta_u+4\sqrt{e_u})x^{c_{HH}}\le6$, which come from the Gram matrix of the words being the
+identity up to $\exp(-x^{\eps/8})$ (\lean{LinkS}).
+\end{remark}
+
+\subsection{Local indices}
+
+\begin{proposition}[Summation of local indices]\label{prop:localindex}
+Let $\mathcal P$ be a finite set (places) with weights $l_w\ge0$, $\mathcal P_T\subseteq\mathcal P$, and $J$
+a finite set (lifts). Let $\mathrm{gain}_j,F_j,E_j,\tau,\mathrm{io},\mathrm{len},\sigma'$ be real
+functions on $\mathcal P$ $(j\in J)$, and put
+$\sigma(w)=\sum_j(\mathrm{gain}_j(w)+F_j(w)-E_j(w))$ and
+\[
+\mathcal G=2\sum_wl_w\Bigl(\sum_j\mathrm{gain}_j(w)-\tau(w)\Bigr),\quad F=2\sum_{j,w}l_wF_j(w),\quad E=2\sum_{j,w}l_wE_j(w),
+\]
+$\mathcal I=\sum_w2l_w\mathrm{io}(w)$ and $T_a=2\sum_wl_w\tau(w)$. Let $d_M>0$, $0\le\delta\le\frac12$,
+$d_u=(1-\delta)d_M$, and let $f,b,P_T,R_d,L_T,R_X$ be real numbers and $T>2$. Suppose:
+\begin{enumerate}[label=\textup{(L\arabic*)}]
+\item $\tau=0$ on $\mathcal P_T$; $\tau\ge0$ and $\mathrm{io}\ge0$ on $\mathcal P$; and
+  $\mathrm{len}(w)\le d_M(\tau(w)+\mathrm{io}(w))$ for $w\notin\mathcal P_T$;
+\item $\sum_{w\in\mathcal P_T}2l_w\mathrm{len}(w)/d_u\le P_T\le L_T$ and
+  $\sum_w2l_w(\sigma(w)-\sigma'(w))\le R_d\le R_X$;
+\item (slope identity)
+  $\mu=\mu_\mu+\sum_w2l_w(\sigma'(w)-\tau(w))-\sum_w2l_w\bigl(\mathrm{len}(w)-d_u\tau(w)\bigr)/d_u$;
+\item $\mu_\mu=\mu_0-f\log(T-1)/(T-2)$, $\delta\le2f/T\le\frac12$, $T_a\le b^2$, and
+  $4fb^2/T+f\log(T-1)/(T-2)\le1$.
+\end{enumerate}
+Then $\mu\ge\mu_0+\mathcal G+F-E-(2\mathcal I+L_T+R_X+1)$. If moreover $\sigma'\le\sigma$ on $\mathcal P$,
+$\mu^+\le\mu^+_\mu+\sum_w2l_w(\sigma'(w)-\tau(w))$ and $\mu^+_\mu\le\mu_0^+$, then
+$\mu^+\le\mu_0^++\mathcal G+F-E$.
+\end{proposition}
+
+\begin{proof}
+Exchanging sums gives the identity $\sum_w2l_w(\sigma(w)-\tau(w))=\mathcal G+F-E$. By (L2) and (L3),
+$\mu\ge\mu_\mu+\mathcal G+F-E-R_d-\Sigma$, where $\Sigma=\sum_w2l_w(\mathrm{len}(w)-d_u\tau(w))/d_u$. On
+$\mathcal P_T$ the summand is $2l_w\mathrm{len}(w)/d_u$, contributing at most $P_T$. Off $\mathcal P_T$,
+(L1) and $d_M/d_u=1/(1-\delta)$ give
+$(\mathrm{len}-d_u\tau)/d_u\le\mathrm{io}/(1-\delta)+\tau\,\delta/(1-\delta)$. With $l_w,\mathrm{io},\tau\ge0$
+this yields $\Sigma\le P_T+\mathcal I/(1-\delta)+\frac{\delta}{1-\delta}T_a$. Since $\delta\le\frac12$,
+$\mathcal I/(1-\delta)\le2\mathcal I$ and $\frac{\delta}{1-\delta}T_a\le2\delta b^2\le4fb^2/T$. Now use (L4)
+and $P_T\le L_T$, $R_d\le R_X$. For the upper bound,
+$\sum_w2l_w(\sigma'-\tau)\le\sum_w2l_w(\sigma-\tau)=\mathcal G+F-E$.
+\end{proof}
+
+\begin{remark}[How \ref{S6} is obtained]\label{rem:S6}
+In the formal proof (\lean{slopesN_at_of}) this is applied to each word, with $\mathcal P$ the places
+in the support, $J$ the $m$ lifts, $\mu,\mu^+$ the slopes of $N_\nu$, $\mu_0,\mu_0^+$ those of the first
+lattice of the chain, $\mathcal I=2I(u)$ and $c_1\ge4$. The family must supply \lean{Places_at}: the
+slope identity (L3) and the bounds (L1), (L2), (L4).
+\end{remark}
+
+\subsection{Local divisibility and the losses}
+
+The losses \ref{S7} bound $A(u)$ by the gain $\mathcal G(u)$. In the formal proof the gain at an
+inert place dominates the prime-power counts of Definition~\ref{def:ask} (\lean{LinkG}), and the
+half-units behind the odd exponents $i$ come from the following congruence.
+
+\begin{lemma}[The $\sqrt p$ lemma]\label{lem:sqrtp}
+Let $A$ be a commutative ring, $p$ a prime and $w\in A$ with $w^2=p$. Let $k,e\ge0$ and let $M,N'$
+be $(k+1)\times(k+1)$ matrices over $A$ with $M_{ba}^{p^e}\equiv N'_{ba}\pmod{pA}$ for all $a,b$. Let
+$u,u'\in A^{k+1}$ with $w\mid u_b$ and $w\mid u'_b$ for all $b\ne0$. Then for every column $c$,
+\[
+w\ \Big|\ \Bigl(\sum_bu'_bN'_{bc}\Bigr)\Bigl(\sum_bu_bM_{b0}\Bigr)^{p^e}-\Bigl(\sum_bu'_bN'_{b0}\Bigr)\Bigl(\sum_bu_bM_{bc}\Bigr)^{p^e}.
+\]
+\end{lemma}
+
+\begin{proof}
+Work in $A/wA$. There $p=w^2=0$, so $M_{ba}^{p^e}=N'_{ba}$. Also $u_b=u'_b=0$ for $b\ne0$, so the
+sums reduce to their $b=0$ terms. The expression becomes
+$u'_0N'_{0c}\,(u_0M_{00})^{p^e}-u'_0N'_{00}\,(u_0M_{0c})^{p^e}=u'_0u_0^{p^e}(N'_{0c}N'_{00}-N'_{00}N'_{0c})=0$.
+\end{proof}
+
+In the formal proof this lemma (\lean{key_minor_dvd}) is applied over Witt vectors of a
+$\sqrt p$-ramified extension (\lean{kW_ord}) and feeds into \lean{LinkG}, which is then summed over
+the inert places to give \ref{S7} (\lean{losses_of_small_share_weight}). We do not reproduce that
+chain.
+% ======================================================================
+\section{The divisibility inequality (S1)}\label{sec:S1}
+% ======================================================================
+
+Inequality \ref{S1} is the one that contains the main term
+$\sum_t\bigl(m(\phi(a_t)-a_t\log\Omega)-a_t\log T(\nu)\bigr)$. We split its formal proof into four
+inputs \ref{D1}--\ref{D4} and a cancellation, prove the cancellation
+(Proposition~\ref{prop:cancel}), and prove the general divisor inequality behind \ref{D2}
+(Theorem~\ref{thm:divisor}).
+
+\subsection{The four inputs}
+
+Fix $u$ and a word $\nu\in\mathcal W(u)$. In the formal proof (\lean{divClausesR_of}) the following
+are attached to $\nu$.
+\begin{itemize}
+\item A base lattice and the common lattice $R$ (formally \lean{RR}), with normalised dual slopes $\mu_0$ and $\mu_C$,
+  both shifted by $\bar\kappa=\frac1r\sum_v\log\kappa_v$ for positive scalars $\kappa_v$ at the complex
+  places; thus $\mu_\ast(u)=\mu_C+\bar\kappa$.
+\item A set $J$ of $m$ lifts and a set $\mathcal P$ of at most $f$ place types containing the top
+  types $T$. For $j\in J$ and $\rho\in\mathcal P$: weights $\omega_{j\rho i}$, with
+  $\Phi_{j\rho}=\sum_i\phi(\omega_{j\rho i})$ and $N_{j\rho}=\sum_i\omega_{j\rho i}$; a log-height
+  $\log H_{j\rho}$; a multiplicity $w_{j\rho}\ge0$; and integers $p_j$. The fixed part is $F=\frac12F(u)$.
+\item The height $h(\nu)=h-\bar\kappa$, where $h=h_P+\sum_jh_{K,j}-h_X$ is a determinant term, one
+  term per step of a chain of $m$ maps, and an eigenvalue correction.
+\end{itemize}
+With $\mathrm{Main}=\sum_{t\in T}\bigl(m(\phi(a_t)-a_t\log\Omega)-a_t\log T(\nu)\bigr)$, \ref{S1} reads
+$\mu_C+h-2F\le\mathrm{Main}+E_{\mathrm{Div}}$. The inputs are:
+\begin{enumerate}[label=\textup{(D\arabic*)}, leftmargin=3.2em]
+\item\label{D1} (\emph{Passage}) $\mu_C\le\mu_0+L_{\mathrm{pass}}$.
+\item\label{D2} (\emph{Divisor inequality and main term})
+  $\mu_0\le\sum_{j,\rho}p_jw_{j\rho}\log\Omega+2F+E_b$.
+\item\label{D3} (\emph{Heights}) $h_P\le-\sum_{t\in T}a_t\log T(\nu)+e_P$,
+  $h_{K,j}\le\sum_\rho(\Phi_{j\rho}-N_{j\rho}\log\Omega)+e_{K,j}$ and
+  $h_X\ge\sum_{j,\rho}\log H_{j\rho}-e_6$.
+\item\label{D4} (\emph{Weights}) $\Phi_{j\rho}-\log H_{j\rho}\le[\rho\in T]\,\phi(a_\rho)+e_{E,j\rho}$ and
+  $N_{j\rho}=[\rho\in T]\,a_\rho+k\,w_{j\rho}+\delta_{j\rho}$.
+\end{enumerate}
+The period terms $k\,w_{j\rho}\log\Omega$ from \ref{D4} cancel against $p_jw_{j\rho}\log\Omega$ from
+\ref{D2} up to $|p_j-k|\le m$, leaving $m(\phi(a_t)-a_t\log\Omega)$ at each top type.
+
+\subsection{The cancellation}
+
+\begin{proposition}[Cancellation]\label{prop:cancel}
+Let $J$ be a finite set with $|J|=m$, $\mathcal P$ a finite set and $T\subseteq\mathcal P$. Assume
+\ref{D1}--\ref{D4}. Then
+\[
+\mu_C+h-2F\le\sum_{t\in T}\bigl(m(\phi(a_t)-a_t\log\Omega)-a_t\log T(\nu)\bigr)+\mathrm{Err},
+\]
+where
+\[
+\mathrm{Err}=\sum_{j,\rho}(p_j-k)w_{j\rho}\log\Omega-\sum_{j,\rho}\delta_{j\rho}\log\Omega
++\sum_{j,\rho}e_{E,j\rho}+\sum_je_{K,j}+e_P+e_6+E_b+L_{\mathrm{pass}}.
+\]
+\end{proposition}
+
+\begin{proof}
+By \ref{D3},
+\[
+h\le-\sum_{t\in T}a_t\log T(\nu)+e_P+\sum_{j,\rho}\bigl(\Phi_{j\rho}-\log H_{j\rho}-N_{j\rho}\log\Omega\bigr)+\sum_je_{K,j}+e_6,
+\]
+and by \ref{D4}
+\[
+\sum_{j,\rho}\bigl(\Phi_{j\rho}-\log H_{j\rho}-N_{j\rho}\log\Omega\bigr)\le
+\sum_{j}\sum_{t\in T}\bigl(\phi(a_t)-a_t\log\Omega\bigr)-\sum_{j,\rho}(k\,w_{j\rho}+\delta_{j\rho})\log\Omega+\sum_{j,\rho}e_{E,j\rho}.
+\]
+The first sum on the right equals $m\sum_{t\in T}(\phi(a_t)-a_t\log\Omega)$. By \ref{D1} and \ref{D2},
+$\mu_C-2F\le\sum_{j,\rho}p_jw_{j\rho}\log\Omega+E_b+L_{\mathrm{pass}}$. Adding, the terms
+$p_jw_{j\rho}\log\Omega$ and $-k\,w_{j\rho}\log\Omega$ combine to $(p_j-k)w_{j\rho}\log\Omega$.
+\end{proof}
+
+\begin{lemma}[Size of the error]\label{lem:cancelerr}
+In Proposition~\ref{prop:cancel} suppose $|\mathcal P|\le f$, $n_T=|T|$, and the following windows
+hold, with $1\le C_0\le c_e$:
+\begin{enumerate}[label=\textup{(\roman*)}]
+\item $x\ge1$, $\eps>0$, $L=x^\eps$, $b=e^L$, $a=xb$, $r_d\ge1$, $\log r_d\le L$, $\log x\le L$,
+  $L_a=\log(ar_d)$, $B_0=fmbx^\eps$, $N_c\ge0$;
+\item $m,f,k,N_0\ge1$, $S,t_0,\eta,b',\lambda_0,w''\ge0$, $0\le w_{j\rho}\le2b$, $|p_j-k|\le m$, $|\log\Omega|\le L_a$;
+\item $m\lambda_0\le b$, $N_0^2\le b$, $m^3N_0^2L\le b$, $m\eta N_0L\le b$, $kN_0\le b$, $kS\le w''$,
+  $m(t_0+1)\eta\le w''$, $N_0w''\le b$, $b'N_0\le a$ and $mkb'\le a$;
+\item $L_{\mathrm{pass}}\le1+C_0m\lambda_0$ and $E_b\le c_em\bigl(x^\eps B_0+(\log x)^2N_c\bigr)$;
+\item $e_{K,j}\le C_0(fN_0^2L_a+fm^3N_0^2L)$, $e_6\le C_0mfN_0^2L_a$,
+  $e_P\le C_0\bigl(n_Tb'N_0+f(m\eta+S)N_0+fN_0^2\bigr)L_a$,
+  $e_{E,j\rho}\le C_0\bigl(w_{j\rho}+S+N_0^2+m(t_0+1)\eta\bigr)L_a$ and
+  $|\delta_{j\rho}|\le C_0\bigl(w_{j\rho}+k(N_0+S)+m(t_0+1)\eta+[\rho\in T]\,kb'\bigr)$.
+\end{enumerate}
+Then
+\[
+\mathrm{Err}\le2C_0\,n_TaL_a+55\,c_e\,m\bigl(x^\eps B_0+(\log x)^2N_c\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+First some consequences of the windows. $L\ge1$, $b\ge1$ and $B_0\ge b$. $L_a=\log x+L+\log r_d\le3L$,
+and $L_a\ge0$. Since $N_0\ge1$ and $w''\ge kS\ge0$, $w''\le N_0w''\le b$, hence $S\le kS\le b$ and
+$m(t_0+1)\eta\le b$. Also $k(N_0+S)\le b+w''\le2b$, $m\eta N_0\le m\eta N_0L\le b$ and $SN_0\le kSN_0\le w''N_0\le b$.
+Finally $mfbL_a\le3mfbL=3B_0$. We bound the terms of $\mathrm{Err}$, using $|J\times\mathcal P|\le mf$:
+\begin{align*}
+\textstyle\sum(p_j-k)w_{j\rho}\log\Omega&\le mf\cdot m\cdot2b\cdot L_a=2m\cdot mfbL_a,\\
+\textstyle-\sum\delta_{j\rho}\log\Omega&\le C_0L_a\bigl(mf(2b+2b+b)+mn_Tkb'\bigr)\le5C_0\,mfbL_a+C_0n_TaL_a,\\
+\textstyle\sum e_{E,j\rho}&\le C_0L_amf(2b+b+b+b)=5C_0\,mfbL_a,\\
+\textstyle\sum_je_{K,j}&\le C_0m(fbL_a+fb)\le C_0\,mfbL_a+C_0B_0,\\
+e_P&\le C_0L_a(n_Ta+3fb)\le C_0n_TaL_a+3C_0\,mfbL_a,\\
+e_6&\le C_0\,mfbL_a,\qquad L_{\mathrm{pass}}\le1+C_0b\le2C_0B_0.
+\end{align*}
+Summing, $\mathrm{Err}\le2C_0n_TaL_a+(2m+15C_0)\,mfbL_a+3C_0B_0+E_b$. With $mfbL_a\le3B_0$ this is at
+most $2C_0n_TaL_a+(6m+48C_0)B_0+E_b\le2C_0n_TaL_a+54c_emB_0+E_b$, using $1\le m$ and $C_0\le c_e$.
+Since $x^\eps\ge1$ and $N_c\ge0$, the bound on $E_b$ gives the claim.
+\end{proof}
+
+\begin{remark}
+The formal statement (\lean{DivIneqRecord}) has the weaker constants $50C_0+10$ and $60c_e$. Since
+$C_0$ and $c_e$ are absolute and the windows hold for large $x$, this gives \ref{S1} with
+$E_{\mathrm{Div}}=c_{\mathrm{Div}}\bigl(n_TaL_a+m(B_0+N_c)x^{e_{\mathrm{Div}}\eps}\bigr)$
+(\lean{wordFacts_of}, \lean{linkDIV_at_words}).
+\end{remark}
+
+\subsection{The divisor inequality}
+
+Input \ref{D2} combines the following inequality for lattices given by local data with a lower
+bound for the slopes of the lattices $M_j$.
+
+\emph{Setting.} Let $K$ be a totally complex number field of degree $n$ with an involutive
+automorphism $a\mapsto a^\ast$, and fix an embedding $\sigma_v$ for each of its $r=n/2$ complex
+places $v$. For a finite place $y$ let $\bar y$ be its image under ${}^\ast$, $v_y$ the
+normalised valuation and $l_y=\log N(y)/n$; then $l_{\bar y}=l_y$ and $v_y(a^\ast)=v_{\bar y}(a)$. A
+\emph{metric} on $K^d$ is a family $X=(X_v)$ of invertible complex matrices, with inner product
+$\langle x,x'\rangle_v=(X_v^{-1}\sigma_vx)^\ast(X_v^{-1}\sigma_vx')$ at $v$, and $\mathrm{Gr}^X_v(e)$ denotes
+the Gram matrix of a tuple $e$ of vectors. For a lattice $L\subseteq K^d$ (a finitely generated
+$\Oc_K$-submodule spanning $K^d$) put $\ell_X(L)=-d\,\hat\mu_X(L)$, with $\hat\mu$ as in
+Section~\ref{sec:three}. For $\varphi\in\mathrm{GL}_d(K)$ and two metrics let
+$\delta_v(X,X',\varphi)=\det\mathrm{Gr}^{X'}_v(\varphi\varepsilon)/\det\mathrm{Gr}^X_v(\varepsilon)>0$, where
+$\varepsilon$ is the standard basis. For lattices $A,B$ let
+$\mathrm{idx}_y(A,B)=\mathrm{len}(A_y/(A\cap B)_y)-\mathrm{len}(B_y/(A\cap B)_y)$, lengths over the local
+ring at $y$. A $K$-basis $f$ of $K^d$ is a \emph{local basis} of $L$ at $y$ if its $\Oc_K$-span
+$\langle f\rangle$ and $L$ have the same localisation at the semilocal ring at $\{y,\bar y\}$. For
+$\Gamma\in M_d(K)$ and $e=(e_1,\dots,e_d)$ put $g_\Gamma(e)=\det(e_a^\ast\Gamma e_b)\in K$. For a
+Hermitian $H\in\mathrm{GL}_d(K)$ (that is, $H^\ast=H$) let $T^\#=\{x:x^\ast Ht\in\Oc_K\ \forall t\in T\}$ and
+$j_y(H,T)=\mathrm{idx}_y(T,T^\#)$. A metric $X$ \emph{represents} $H$ at $v$ if
+$X_v^{-\ast}X_v^{-1}=\sigma_v(H)$. Finally let $K_0\subseteq K$ be a subfield with
+$\sigma(a^\ast)=\overline{\sigma(a)}$ for all embeddings $\sigma$ and $a\in K_0$, and $v_0$ a place with
+$\sigma_{v_0}(a^\ast)=\overline{\sigma_{v_0}(a)}$ for all $a\in K$.
+
+\emph{Standard facts.} Each of the following is proved in the formal development.
+\begin{enumerate}[label=\textup{(A\arabic*)}, leftmargin=3.2em]
+\item\label{A1} (Product formula) $\frac2n\sum_v\log|\sigma_va|=\sum_yl_yv_y(a)$ for $a\in K^\times$.
+\item\label{A2} (Index change) $\ell_X(B)=\ell_X(A)+2\sum_yl_y\,\mathrm{idx}_y(A,B)$, and
+  $\mathrm{idx}_y(A,C)=\mathrm{idx}_y(A,B)+\mathrm{idx}_y(B,C)$.
+\item\label{A3} (Basis and image formulas) For a $K$-basis $e$,
+  $\ell_X(L)=\frac2n\sum_v\log\det\mathrm{Gr}^X_v(e)+2\sum_yl_y\,\mathrm{idx}_y(\langle e\rangle,L)$; and
+  $\ell_{X'}(\varphi L)=\ell_X(L)+\frac2n\sum_v\log\delta_v(X,X',\varphi)$.
+\item\label{A4} (Rational forms) If $H$ has entries in $K_0$ and $X$ represents $H$ at every place,
+  then $\ell_X(T)=-\sum_yl_y\,j_y(H,T)$.
+\item\label{A5} (Local bases) Local bases exist. If $e$ is a $K$-basis and $e\gamma$ a local basis of
+  $L$ at $y$, then $\mathrm{idx}_y(\langle e\rangle,L)=v_y(\det\gamma)$ and
+  $\mathrm{idx}_{\bar y}(\langle e\rangle,L)=v_{\bar y}(\det\gamma)$. If $f$ is a local basis of $T$ at $y$ and
+  $H$ is Hermitian, $j_y(H,T)=-v_y(g_H(f))$. Moreover $g_\Gamma(e\gamma)=(\det\gamma)^\ast\det\gamma\,g_\Gamma(e)$.
+\item\label{A6} (Determinantal Cauchy--Schwarz) For $H_c>0$ and complex matrices $A,B$ of the same
+  size, $|\det(AH_cB^\ast)|^2\le\det(AH_cA^\ast)\det(BH_cB^\ast)$.
+\item\label{A7} (Duality) For the dual lattice with the dual metric, $\hat\mu(R^\vee)=\ell_X(R)/D$.
+\end{enumerate}
+Facts \ref{A1}--\ref{A5} are the product formula and the elementary-divisor description of lattices
+over a Dedekind domain~\cite{neukirch}; \ref{A6} follows from the Cauchy--Binet formula; \ref{A7} is
+the duality of slopes in the normalisation of $\hat\mu$~\cite{bost-bourbaki,gaudron}. We also use two
+elementary consequences. If $e$ is any tuple, $\det\mathrm{Gr}^{X'}_v(\varphi e)=\delta_v(X,X',\varphi)
+\det\mathrm{Gr}^X_v(e)$, since both Gram matrices transform by the same change of basis. If $X$ represents
+$H$ at $v_0$, then $\det\mathrm{Gr}^X_{v_0}(f)=\sigma_{v_0}(g_H(f))$, since
+$\sigma_{v_0}(x^\ast)=\overline{\sigma_{v_0}(x)}$.
+
+\begin{lemma}[Quotients of rational forms]\label{lem:quotgram}
+Let $H\in M_{D'}(K_0)$ be Hermitian and positive definite at every place, $P\in M_{D\times D'}(K)$
+of rank $D$, and $X_Q$ the quotient metric, $X_{Q,v}^{-\ast}X_{Q,v}^{-1}=(\sigma_vP\,\sigma_vH^{-1}\,(\sigma_vP)^\ast)^{-1}$.
+Let $M'\subseteq K^{D'}$ be a lattice, $\Lambda=PM'$, $\Gamma=(PH^{-1}P^\ast)^{-1}$, and $e_y$ a local basis of
+$\Lambda$ at each $y$. Then $\ell_{X_Q}(\Lambda)\le\sum_yl_y\,v_y(g_\Gamma(e_y))$.
+\end{lemma}
+
+\begin{proof}
+Let $c=g_\Gamma(\varepsilon)=\det(PH^{-1}P^\ast)^{-1}\in K^\times$ and $q_v=\det(\sigma_vP\,\sigma_vH^{-1}(\sigma_vP)^\ast)$, so
+$\det\mathrm{Gr}^{X_Q}_v(\varepsilon)=q_v^{-1}$. For a place $v$ let $\tau_v(a)=\overline{\sigma_v(a^\ast)}$ and let $v'$ be the place of the
+embedding $\tau_v$; $v\mapsto v'$ is an involution, and $q_{v'}=\det(\tau_vP\,\tau_vH^{-1}(\tau_vP)^\ast)$ because
+$q$ is real and so does not depend on the choice of embedding at a place. Since $H$ has entries in
+$K_0$, $\tau_v(H)=\sigma_v(H)$, and $\sigma_v(P^\ast)=(\tau_vP)^\ast$. Hence
+$\sigma_v(c)^{-1}=\det(\sigma_vP\,\sigma_vH^{-1}(\tau_vP)^\ast)$, and \ref{A6} with $H_c=\sigma_vH^{-1}$ gives
+$|\sigma_vc|^{-2}\le q_vq_{v'}$, that
+is, $\log\det\mathrm{Gr}_v(\varepsilon)+\log\det\mathrm{Gr}_{v'}(\varepsilon)\le2\log|\sigma_vc|$. Summing over $v$ and using
+\ref{A1},
+$\frac2n\sum_v\log\det\mathrm{Gr}_v(\varepsilon)\le\frac2n\sum_v\log|\sigma_vc|=\sum_yl_yv_y(c)$.
+Write $e_y=\varepsilon\gamma_y$. By \ref{A5}, $v_y(g_\Gamma(e_y))=v_{\bar y}(\det\gamma_y)+v_y(\det\gamma_y)+v_y(c)
+=\mathrm{idx}_{\bar y}(\langle\varepsilon\rangle,\Lambda)+\mathrm{idx}_y(\langle\varepsilon\rangle,\Lambda)+v_y(c)$. Multiplying by $l_y$,
+summing, and pairing $y$ with $\bar y$ gives
+$\sum_yl_yv_y(g_\Gamma(e_y))=\sum_yl_yv_y(c)+2\sum_yl_y\mathrm{idx}_y(\langle\varepsilon\rangle,\Lambda)$. The claim
+follows from the basis formula in \ref{A3}.
+\end{proof}
+
+The data are as follows; $D\ge1$ and $J$ is a finite set.
+\begin{enumerate}[label=\textup{(T\arabic*)}, leftmargin=3.2em]
+\item\label{T1} (\emph{Types}) A set of types with a base type $\alpha_0$, and a type $\alpha_y$ for each
+  finite place $y$, with $\alpha_{\bar y}=\alpha_y$ and $\alpha_y=\alpha_0$ for almost all $y$.
+\item\label{T2} (\emph{The lattice}) For each type $\alpha$ a metric $X_{Q,\alpha}$, a lattice $\Lambda_\alpha$ and
+  $\iota_\alpha\in\mathrm{GL}_D(K)$. A lattice $R$ with metric $X_E$ such that $R$ and
+  $\iota_{\alpha_y}\Lambda_{\alpha_y}$ have the same localisation at every $y$.
+\item\label{T3} (\emph{The factors}) Lattices $M_j\subseteq K^D$ with metrics $X_{W,j}$. For each $j$ and type $\alpha$,
+  a Hermitian $H_{j,\alpha}$, a metric $X_{T,j,\alpha}$ representing it at $v_0$, a lattice $T_{j,\alpha}$ and
+  $\theta_{j,\alpha}\in\mathrm{GL}_D(K)$; at $\alpha_0$, $H_{j,\alpha_0}$ has entries in $K_0$ and $X_{T,j,\alpha_0}$
+  represents it at every place.
+\item\label{T4} (\emph{The base}) $\Lambda_{\alpha_0}=PM'$ and $X_{Q,\alpha_0}$ is a quotient metric as in
+  Lemma~\ref{lem:quotgram}.
+\item\label{T5} (\emph{Determinants}) Positive reals $\kappa_v$ and, for each type, $\rho_\alpha\in K$ with
+  $\sigma_{v_0}(\rho_\alpha)=r_\alpha>0$, $\rho_{\alpha_0}=1$ and $v_y(\rho_{\alpha_y})=0$, such that
+  $\delta_v(X_{Q,\alpha_0},X_E,\iota_{\alpha_0})=\kappa_v^D\prod_j\delta_v(X_{T,j,\alpha_0},X_{W,j},\theta_{j,\alpha_0})$ at every
+  $v$, and $\delta_{v_0}(X_{Q,\alpha},X_E,\iota_\alpha)=(\kappa_{v_0}r_\alpha)^D\prod_j\delta_{v_0}(X_{T,j,\alpha},X_{W,j},\theta_{j,\alpha})$ for
+  every $\alpha$.
+\item\label{T6} (\emph{Local Gram elements}) For each $\alpha$ and $y$, a local basis $e_{\alpha,y}$ of $\Lambda_\alpha$
+  at $y$ and $G_{\alpha,y}\in K$ with $\sigma_{v_0}(G_{\alpha,y})=\det\mathrm{Gr}^{X_{Q,\alpha}}_{v_0}(e_{\alpha,y})$, and
+  $G_{\alpha_0,y}=g_\Gamma(e_{\alpha_0,y})$.
+\end{enumerate}
+For a type $\alpha$ and a place $y$ write $N_{j,\alpha}=\theta_{j,\alpha}T_{j,\alpha}$ and
+\[
+c_y(\alpha)=v_y(G_{\alpha,y})+\sum_j\bigl(\mathrm{idx}_y(M_j,N_{j,\alpha})+\mathrm{idx}_{\bar y}(M_j,N_{j,\alpha})+j_y(H_{j,\alpha},T_{j,\alpha})\bigr).
+\]
+
+\begin{lemma}[Local identity]\label{lem:localid}
+Assume \ref{T1}, \ref{T2}, \ref{T3}, \ref{T5}, \ref{T6}. For every finite place $y$, with $\alpha=\alpha_y$,
+\[
+\mathrm{idx}_y(\iota_{\alpha_0}\Lambda_{\alpha_0},R)+\mathrm{idx}_{\bar y}(\iota_{\alpha_0}\Lambda_{\alpha_0},R)=c_y(\alpha)-c_y(\alpha_0).
+\]
+\end{lemma}
+
+\begin{proof}
+Write the subscripts $0$ for $\alpha_0$ and $1$ for $\alpha$. By \ref{T1} and \ref{T2}, $\alpha_{\bar y}=\alpha_y=\alpha_1$,
+so $R$ may be replaced by $\iota_1\Lambda_1$ at $y$ and at $\bar y$. Let $f_{i,j}$ be local bases of $T_{i,j}$ at $y$ and
+$\gamma,\gamma_j$ the matrices with $\iota_1e_{1,y}=(\iota_0e_{0,y})\gamma$ and
+$\theta_{1,j}f_{1,j}=(\theta_{0,j}f_{0,j})\gamma_j$. By \ref{A5} and \ref{A2},
+\begin{align*}
+\mathrm{idx}_y(\iota_0\Lambda_0,\iota_1\Lambda_1)+\mathrm{idx}_{\bar y}(\iota_0\Lambda_0,\iota_1\Lambda_1)&=v_y(\det\gamma)+v_{\bar y}(\det\gamma)=v_y(\gamma^\ast\gamma),\\
+\mathrm{idx}_u(M_j,N_{1,j})-\mathrm{idx}_u(M_j,N_{0,j})&=\mathrm{idx}_u(N_{0,j},N_{1,j})=v_u(\det\gamma_j)\quad(u=y,\bar y),\\
+j_y(H_{i,j},T_{i,j})&=-v_y(g_{H_{i,j}}(f_{i,j})),
+\end{align*}
+where $\gamma^\ast\gamma$ stands for $(\det\gamma)^\ast\det\gamma$, and likewise for $\gamma_j$. Hence the claim is
+equivalent to
+\[
+v_y\Bigl(\rho_1^D\,G_{1,y}\prod_j\gamma_j^\ast\gamma_j\,g_{H_{0,j}}(f_{0,j})\Bigr)=v_y\Bigl(\gamma^\ast\gamma\,G_{0,y}\prod_jg_{H_{1,j}}(f_{1,j})\Bigr),
+\]
+because $v_y(\rho_1)=0$. We show that the two elements of $K$ are equal, by comparing their images
+under $\sigma_{v_0}$, which is injective. Write $g_E(i)=\det\mathrm{Gr}^{X_E}_{v_0}(\iota_ie_{i,y})$ and
+$g_W(i,j)=\det\mathrm{Gr}^{X_{W,j}}_{v_0}(\theta_{i,j}f_{i,j})$. Then
+\begin{align*}
+g_E(1)&=\sigma_{v_0}(\gamma^\ast\gamma)\,g_E(0), & g_E(i)&=\delta_{v_0}(X_{Q,i},X_E,\iota_i)\,\sigma_{v_0}(G_{i,y}),\\
+g_W(1,j)&=\sigma_{v_0}(\gamma_j^\ast\gamma_j)\,g_W(0,j), & g_W(i,j)&=\delta_{v_0}(X_{T,i,j},X_{W,j},\theta_{i,j})\,\sigma_{v_0}(g_{H_{i,j}}(f_{i,j})),
+\end{align*}
+the first column because the Gram matrices transform by $\gamma$ and $\gamma_j$, the second by the two
+elementary consequences above, \ref{T6}, and \ref{T3}. Dividing the two cases of \ref{T5} at $v_0$,
+\[
+\frac{\delta_{v_0}(X_{Q,1},X_E,\iota_1)}{\delta_{v_0}(X_{Q,0},X_E,\iota_0)}=r_1^D\prod_j\frac{\delta_{v_0}(X_{T,1,j},X_{W,j},\theta_{1,j})}{\delta_{v_0}(X_{T,0,j},X_{W,j},\theta_{0,j})}.
+\]
+Substituting the four relations into this identity and clearing denominators gives
+\[
+\sigma_{v_0}(\gamma^\ast\gamma)\,\sigma_{v_0}(G_{0,y})\prod_j\sigma_{v_0}(g_{H_{1,j}}(f_{1,j}))
+=r_1^D\,\sigma_{v_0}(G_{1,y})\prod_j\sigma_{v_0}(\gamma_j^\ast\gamma_j)\,\sigma_{v_0}(g_{H_{0,j}}(f_{0,j})).
+\]
+Since
+$\sigma_{v_0}(\rho_1)=r_1$, this is $\sigma_{v_0}$ of the required equality. All factors are nonzero, because
+Gram determinants of bases are positive.
+\end{proof}
+
+\begin{proposition}[Global inequality]\label{prop:globaldiv}
+Assume \ref{T1}--\ref{T6}. Then $l_yc_y(\alpha_y)=0$ for all but finitely many $y$, and
+\[
+\ell_{X_E}(R)\le D\bar\kappa+\sum_j\ell_{X_{W,j}}(M_j)+\sum_yl_y\,c_y(\alpha_y),\qquad
+\bar\kappa=\frac1r\sum_v\log\kappa_v.
+\]
+\end{proposition}
+
+\begin{proof}
+Put $\Lambda^\circ=\iota_{\alpha_0}\Lambda_{\alpha_0}$. By \ref{A2}, pairing $y$ with $\bar y$ and using
+Lemma~\ref{lem:localid} (with \ref{T1}, $\alpha_{\bar y}=\alpha_y$),
+\[
+\ell(R)=\ell(\Lambda^\circ)+\sum_yl_y\bigl(\mathrm{idx}_y(\Lambda^\circ,R)+\mathrm{idx}_{\bar y}(\Lambda^\circ,R)\bigr)
+=\ell(\Lambda^\circ)+\sum_yl_y\bigl(c_y(\alpha_y)-c_y(\alpha_0)\bigr).
+\]
+By the image formula \ref{A3} and the first case of \ref{T5},
+\[
+\ell(\Lambda^\circ)=\ell_{X_{Q,\alpha_0}}(\Lambda_{\alpha_0})+D\bar\kappa+\sum_j\frac2n\sum_v\log\delta_v(X_{T,j,\alpha_0},X_{W,j},\theta_{j,\alpha_0}),
+\]
+since $\frac2n\sum_vD\log\kappa_v=D\bar\kappa$. Again by \ref{A3}, then \ref{A2} and \ref{A4},
+\begin{align*}
+\tfrac2n\textstyle\sum_v\log\delta_v(\cdots)&=\ell(N_{j,\alpha_0})-\ell(T_{j,\alpha_0})\\
+&=\ell(M_j)+\textstyle\sum_yl_y\bigl(\mathrm{idx}_y(M_j,N_{j,\alpha_0})+\mathrm{idx}_{\bar y}(M_j,N_{j,\alpha_0})\bigr)+\sum_yl_yj_y(H_{j,\alpha_0},T_{j,\alpha_0}).
+\end{align*}
+Finally $\ell(\Lambda_{\alpha_0})\le\sum_yl_yv_y(G_{\alpha_0,y})$ by Lemma~\ref{lem:quotgram} and \ref{T4}, \ref{T6}. Adding,
+the terms $c_y(\alpha_0)$ cancel. Each sum is finite by \ref{A2}--\ref{A4} and \ref{A1}.
+\end{proof}
+
+\begin{theorem}[Divisor inequality]\label{thm:divisor}
+Assume \ref{T1}--\ref{T6}, and let $T_w\subseteq S$ be finite sets of places.
+For $y\in S$ let $g_y$, $\varpi_y>0$, and for $y\in T_w$ and $j\in J$ let $F_{y,j}$, $\epsilon_{y,j}$,
+$\beta_{y,j}$, $\eta_{y,j}$ be real numbers. Write $\alpha=\alpha_y$ and suppose:
+\begin{enumerate}[label=\textup{(\alph*)}]
+\item $l_yc_y(\alpha)=0$ for $y\notin S$, and $c_y(\alpha)=v_y(G_{\alpha,y})$ for $y\in S\setminus T_w$;
+\item $v_y(G_{\alpha,y})\le Dg_y$ for $y\in S$, and $\sum_{y\in S}l_yg_y\le L_G$;
+\item for $y\in T_w$, $\sum_j(\mathrm{idx}_y+\mathrm{idx}_{\bar y})(M_j,N_{j,\alpha})\le D\bigl(\sum_j(2F_{y,j}+\epsilon_{y,j})+2/\varpi_y^2\bigr)$
+  and $j_y(H_{j,\alpha},T_{j,\alpha})\le D\beta_{y,j}+\eta_{y,j}$;
+\item $\sum_{y\in T_w}l_y(\epsilon_{y,j}+\beta_{y,j})\le E_{1,j}$, $\sum_{y\in T_w}l_y\eta_{y,j}/D\le E_{2,j}$ and
+  $\sum_{y\in S}2l_y/\varpi_y^2\le E_3$.
+\end{enumerate}
+Then
+\[
+\hat\mu(R^\vee)\le\bar\kappa-\sum_j\hat\mu(M_j)+2\sum_j\sum_{y\in T_w}l_yF_{y,j}+L_G+\sum_j(E_{1,j}+E_{2,j})+E_3.
+\]
+\end{theorem}
+
+\begin{proof}
+By (a)--(c) and $l_y\ge0$,
+\[
+\sum_yl_yc_y(\alpha_y)\le D\sum_{y\in S}l_yg_y+\sum_{y\in T_w}l_y\Bigl(D\sum_j(2F_{y,j}+\epsilon_{y,j}+\beta_{y,j})+\frac{2D}{\varpi_y^2}+\sum_j\eta_{y,j}\Bigr),
+\]
+which by (b) and (d) is at most $D\bigl(L_G+2\sum_j\sum_{T_w}l_yF_{y,j}+\sum_jE_{1,j}+E_3+\sum_jE_{2,j}\bigr)$, using
+$T_w\subseteq S$ for $E_3$. Insert this into Proposition~\ref{prop:globaldiv}, divide by $D$, and use
+$\ell(M_j)=-D\hat\mu(M_j)$ and \ref{A7}.
+\end{proof}
+
+\begin{remark}
+The formal statement is \lean{BoundsMu}; Appendix~\ref{app:lean} lists the formal counterparts of
+the lemmas and of \ref{A1}--\ref{A7}. It also allows terms $F_{y,j}$ on $S\setminus T_w$, required to
+vanish there.
+\end{remark}
+
+\subsection{What the family must supply}
+
+Theorem~\ref{thm:divisor} gives \ref{D2} once three facts are checked for the family: its
+hypotheses for the base lattice, the local bounds (a)--(d), and the main-term bound
+$-\sum_j\hat\mu(M_j)\le\sum_{j,\rho}p_jw_{j\rho}\log\Omega+E_{l3}$, which is where the Chowla--Selberg
+periods enter. The family must also supply \ref{D1}, a perturbation bound between the two sides of
+an indefinite form; \ref{D3}, a determinant estimate at the top types and explicit sizes of the
+lifted maps; and \ref{D4}, relations for the Hodge-type weights of the lifts. The same division
+package (\lean{DivInputsR}) gives two clauses used elsewhere: the shifted lattice of $\nu$ maps into
+the dual of $R$ (\lean{RR}), and $h(B_\nu)\le h(\nu)$ (Remark~\ref{rem:S8}), from a chain of $m$ maps whose
+step norms multiply (\lean{height_chain_atR}).
 % ======================================================================
 \section{Proof of the Corollary}\label{sec:GRH}
 % ======================================================================
@@ -1334,25 +2149,23 @@ $\re s=1/2$. Since there are none with $\re s>1/2$, there are none with $\re s<1
 \section{What remains for a complete human proof}\label{sec:remarks}
 % ======================================================================
 
-The Corollary is proved in this paper only modulo Theorem~\ref{thm:C}, which is certified by a
-machine. A complete human-readable proof of the Generalized Riemann Hypothesis along these lines
-would also have to supply the following.
+The Corollary is proved here modulo Theorem~\ref{thm:C2}. A complete conventional proof
+needs:
 \begin{enumerate}
-\item A conventional proof of Theorem~\ref{thm:C}. The formal proof consists of the steps
-  summarised in Section~\ref{sec:C}: the degree identity, the divisibility inequality with its
-  per-lift budget, the Selmer-rank bound, the common lattice, local divisibility and
-  near-orthogonality of the words, and the Tate--Shafarevich window. Each is a substantial
-  argument.
-\item Conventional proofs, or exact literature references, for the classical inputs proved inside
-  the development: Ferrero--Washington, Poitou--Tate duality, local Bloch--Kato duality,
-  Grothendieck--Messing theory and complex multiplication. In each case one must check that the
-  formal statement is the published theorem, or a consequence of it.
-\item Explicit constants. The development proves the existence of the constants $e$, $\eps_1$,
-  $x_0$ and so on without computing them. The Corollary does not need their values, because
-  $\eps\to0$ removes them from the exponent, but an effective version of the argument would.
+\item A construction of hosts and lattices satisfying \ref{S0}--\ref{S10}. The general parts of
+  \ref{S1}, \ref{S6}, \ref{S7} and \ref{S8} are proved in Sections~\ref{sec:three}
+  and~\ref{sec:S1}. What is left is family-specific: the inputs \ref{D1}--\ref{D4} and the
+  hypotheses of Theorem~\ref{thm:divisor} for \ref{S1}; \lean{Places_at} for \ref{S6}; the per-place
+  gain inequality and its summation for \ref{S7}; near-orthogonality and height bounds for
+  \ref{S8}; the inequalities \ref{S2}--\ref{S5}, \ref{S9}, \ref{S10}; and the host windows. Since
+  Theorem~\ref{thm:C1} uses only the inequalities, each can be treated separately.
+\item Exact references for the classical theorems proved inside the development
+  (Ferrero--Washington, Poitou--Tate duality, local Bloch--Kato duality, Grothendieck--Messing
+  theory, complex multiplication), with a check that each formal statement follows from the
+  published one.
+\item For an effective result, explicit values of $e$, $\eps_1$, $x_0$ and the other constants. The
+  Corollary itself does not need them.
 \end{enumerate}
-The interface of Definition~\ref{def:host} is designed so that these tasks can be carried out
-independently of the analytic part treated here.
 
 % ======================================================================
 \section*{Acknowledgements}
@@ -1379,6 +2192,10 @@ source. The author takes full responsibility for the content.
   \url{https://alpo.ge/remark.pdf}.
 \bibitem{bloch-kato} S.~Bloch and K.~Kato, \emph{$L$-functions and Tamagawa numbers of motives}, in:
   The Grothendieck Festschrift, Vol.~I, Progr. Math. 86, Birkh\"auser, Boston, 1990, 333--400.
+\bibitem{bost-bourbaki} J.-B.~Bost, \emph{P\'eriodes et isog\'enies des vari\'et\'es ab\'eliennes sur les corps de nombres (d'apr\`es D.~Masser et G.~W\"ustholz)}, S\'eminaire Bourbaki, Exp.~795, Ast\'erisque \textbf{237} (1996), 115--161.
+
+\bibitem{bost-chen} J.-B.~Bost and H.~Chen, \emph{Concerning the semistability of tensor products in Arakelov geometry}, J. Math. Pures Appl. \textbf{99} (2013), 436--488.
+
 \bibitem{chowla-selberg} S.~Chowla and A.~Selberg, \emph{On Epstein's zeta-function}, J. reine angew.
   Math. 227 (1967), 86--110.
 \bibitem{davenport} H.~Davenport, \emph{Multiplicative Number Theory}, 3rd ed., revised by
@@ -1391,12 +2208,16 @@ source. The author takes full responsibility for the content.
   November 2026.
 \bibitem{ferrero-washington} B.~Ferrero and L.~C.~Washington, \emph{The Iwasawa invariant $\mu_p$
   vanishes for abelian number fields}, Ann. of Math. (2) 109 (1979), 377--395.
+\bibitem{gaudron} \'E.~Gaudron, \emph{Pentes des fibr\'es vectoriels ad\'eliques sur un corps global}, Rend. Sem. Mat. Univ. Padova \textbf{119} (2008), 21--95.
+
+\bibitem{grayson} D.~R.~Grayson, \emph{Reduction theory using semistability}, Comment. Math. Helv. \textbf{59} (1984), 600--634.
+
 \bibitem{iwaniec-kowalski} H.~Iwaniec and E.~Kowalski, \emph{Analytic Number Theory}, American
   Mathematical Society Colloquium Publications 53, American Mathematical Society, Providence, RI, 2004.
 \bibitem{jaswal} M.~Jaswal, \emph{The Riemann hypothesis for Dirichlet $L$-functions [after Levent
   Alp\"oge]}, preprint, 21 November 2026, \url{https://doi.org/10.5281/zenodo.24410057}.
 \bibitem{johnston-trudgian} D.~R.~Johnston and T.~Trudgian, \emph{A round of Pintz to celebrate
-  oscillations in sums}, arXiv:2511.09978.
+  oscillations in sums}, preprint (2025), arXiv:2511.09978.
 \bibitem{landau} E.~Landau, \emph{Handbuch der Lehre von der Verteilung der Primzahlen}, Teubner,
   Leipzig, 1909.
 \bibitem{lean4} L.~de Moura and S.~Ullrich, \emph{The Lean~4 theorem prover and programming
@@ -1410,12 +2231,16 @@ source. The author takes full responsibility for the content.
   Cambridge, 2007.
 \bibitem{naskrecki} B.~Naskr\k{e}cki, \texttt{riemann-rev}: status dashboard, proof guide and book,
   \url{https://github.com/nasqret/riemann-rev}, November 2026.
+\bibitem{neukirch} J.~Neukirch, \emph{Algebraic Number Theory}, Grundlehren der mathematischen Wissenschaften \textbf{322}, Springer, Berlin, 1999.
+
 \bibitem{nsw} J.~Neukirch, A.~Schmidt and K.~Wingberg, \emph{Cohomology of Number Fields}, 2nd ed.,
   Grundlehren der mathematischen Wissenschaften 323, Springer, Berlin, 2008.
 \bibitem{rosser-schoenfeld} J.~B.~Rosser and L.~Schoenfeld, \emph{Approximate formulas for some
   functions of prime numbers}, Illinois J. Math. 6 (1962), 64--94.
 \bibitem{shimura} G.~Shimura, \emph{Introduction to the Arithmetic Theory of Automorphic Functions},
   Princeton University Press, Princeton, 1971.
+\bibitem{stuhler} U.~Stuhler, \emph{Eine Bemerkung zur Reduktionstheorie quadratischer Formen}, Arch. Math. (Basel) \textbf{27} (1976), 604--610.
+
 \bibitem{sutherland} A.~V.~Sutherland, build and verification page for the Lean development,
   \url{https://math.mit.edu/~drew/grh/}, November 2026.
 \end{thebibliography}
@@ -1428,14 +2253,15 @@ source. The author takes full responsibility for the content.
 
 All names refer to the published archive (commit \texttt{40e56bab}; source sha256
 \texttt{9631b4f0\ldots c7fc}). Paths are relative to \texttt{src/}, with
-\texttt{Dev/AA/DL} abbreviating \texttt{Development/AutomorphicArithmetic/DedekindLFunctions},
-\texttt{Dev/AA/PC} abbreviating \texttt{Development/AutomorphicArithmetic/PrimitiveCosets}, and
-\texttt{SWB} abbreviating \texttt{Formalism/SizeWindowBrackets}. Every declaration listed is in the
+\texttt{Dev/AA/DL} abbreviating \lean{Development/AutomorphicArithmetic/DedekindLFunctions},
+\texttt{Dev/AA/PC} abbreviating \lean{Development/AutomorphicArithmetic/PrimitiveCosets}, and
+\texttt{SWB} abbreviating \lean{Formalism/SizeWindowBrackets}, \texttt{HN} abbreviating
+\lean{Formalism/HarderNarasimhan} and \texttt{SR} abbreviating \lean{Formalism/SharpRestriction}. Every declaration listed is in the
 dependency closure of the final theorem, as recorded in the list of $1{,}484{,}733$ names published
 with~\cite{dixit-repo}. Where a statement here is a simplification of the formal one, this is noted.
 
 \begin{small}
-\begin{longtable}{@{}p{38mm}p{58mm}p{50mm}@{}}
+\begin{longtable}{@{}p{28mm}p{64mm}p{56mm}@{}}
 \toprule
 Here & Formal declaration & Location \\
 \midrule
@@ -1461,9 +2287,23 @@ Lemma~\ref{lem:lip} & \lean{lipschitz_weight_all} (\lean{LipW}) & \lean{.../Lips
 Lemmas~\ref{lem:thick}, \ref{lem:average}, \ref{lem:core} & \lean{CharacterBalanceMoves.th_le}, \lean{sum_Th}, \lean{core} & \lean{Dev/AA/DL/LandauTheorems/ChCore.lean} \\
 Lemma~\ref{lem:move} & \lean{CharacterBalanceMoves.one_char}, \lean{move}, \lean{sum_vv} & \lean{.../ChCore.lean} \\
 Lemma~\ref{lem:size} & \lean{proposition_size_bound} (\lean{GrowthSizeBound}, \lean{SizeWindows}) & \lean{SWB/ChainSlopeWindows/LipschitzWeightAndMinimum.lean:507} \\
+Def.~\ref{def:slopedatum}, (S0)--(S10) & \lean{Data}, \texttt{SizeData}$_2$ (\lean{HidaSetting}, \lean{DIV}, \lean{EComp5}, \lean{HComp}, \lean{Count5}, \lean{Slopes}, \lean{QuotientSlopeBoundsWith}, \lean{LossBounds}, \lean{SlopeIneq}, \lean{HHBound}, \lean{FParams}) & \lean{Formalism/RankGapBounds/MeanBoundSecondForm.lean}, \lean{SWB/QuotientSlopeBoundsWith.lean}, \lean{SWB/SChain.lean:17} \\
+Theorem~\ref{thm:C1}, Lemmas~\ref{lem:keyid}--\ref{lem:gmono} & \lean{each_unit_bound_statement} (\lean{PointwiseBoundVariant}), \lean{key_identity5}, \lean{s_lower5}, \lean{u_function_le_mean}, \lean{Vvar_bound5}, \lean{weighted_mean_lower_bound_le}, \lean{phi_bound}, \lean{Ga_bound5} & \lean{SWB/ChainSlopeWindows/LevelOfCongruence.lean:175} \\
+Proposition~\ref{prop:errsize} & \lean{errX5at_le}, \lean{ErrWindows}, \lean{LargeX}, \lean{core_ineq} (constant $200$ in \lean{KBig}) & \lean{SWB/ChainSlopeWindows/PChain.lean:613}, \lean{SWB/ErrorFormsWeakWindowsFalse.lean} \\
+Corollary~\ref{cor:gap} & \lean{Deduction.ch_top}, \lean{IdentU}, \lean{BNBoundsU} & \lean{Dev/AA/DL/LandauTheorems/ChTop.lean:37} \\
+Theorem~\ref{thm:C2} & \lean{ChainTied}, \lean{TieGlobal}, \lean{TieLocal}, \lean{TieArith}, \lean{tiedCore_of_chainTied} & \lean{Formalism/SharpRestriction/GlobalSchurBounds/TieGlobal.lean:97} \\
+Lemma~\ref{lem:framela} & \lean{FrameLA1}, \lean{frame_linear_algebra_first}, \lean{final_real1} & \lean{HN/StatementFrameF.lean}, \lean{HN/HarderNarasimhanProofs/FrameLinearAlgebraFirst.lean:77} \\
+Theorem~\ref{thm:F} & \lean{TheoremFSharp}, \lean{frame_theorem_sharp}, \lean{thmF_share}, \lean{thmF_place}; (HN1)--(HN4): \lean{frameB_hnStep}, \lean{polygon_slopes_characterization}, \lean{slope_inequality_mean}, \lean{finrank_span_complex} & \lean{HN/HarderNarasimhanProofs/TheoremFSharp.lean:388} \\
+Remark~\ref{rem:S8} & \lean{frameF_of}, \lean{FrameReal_at}, \lean{Frame_at}, \lean{LinkS}, \lean{LinkDIV_at} & \lean{SR/GlobalSchurBounds/TopDensityNGeSixteen.lean:606} \\
+Proposition~\ref{prop:localindex} & \lean{HypLow}, \lean{HypLow2}, \lean{HypHigh}, \lean{weightedSlopeExcess_decomposition}, \lean{lower_bound_simplified}, \lean{claimHigh_valid} & \lean{SWB/ClaimGaFree.lean}, \lean{SWB/ChainSlopeWindows/WeightedSlopeExcessDecomposition.lean} \\
+Remark~\ref{rem:S6} & \lean{slopesN_at_of}, \lean{Places_at} & \lean{SR/GlobalSchurBounds/TopDensityNGeSixteen.lean:1529} \\
+Lemma~\ref{lem:sqrtp} & \lean{key_minor_dvd}, \lean{kW_ord}; summation: \lean{LinkG}, \lean{losses_of_small_share_weight} & \lean{SR/GrowthBounds/CoarseMultiplicity/KeyMinorDvd.lean:132} \\
+Proposition~\ref{prop:cancel}, Lemma~\ref{lem:cancelerr} & \lean{DivIneqRecord}, \lean{divisor_inequality_explicit}, \lean{RecNums.divIneq} & \lean{Formalism/QuotientMetricDivisors/ScalarLiftLowerBoundFull.lean:52}, \lean{Formalism/LocalToGlobal/Divisibility/DivisionHeightBoundStatement.lean:131} \\
+(D1)--(D4), clauses of (S1) & \lean{DivInputsR}, \lean{DivClausesR}, \lean{divClausesR_of}, \lean{height_chain_atR}, \lean{wordFacts_of}, \lean{linkDIV_at_words} & \lean{Formalism/LocalToGlobal/Divisibility/ConstantGeTwentyEight.lean}, \lean{Formalism/LocalToGlobal/Divisibility/RecBridge.lean:135} \\
+Theorem~\ref{thm:divisor}, Proposition~\ref{prop:globaldiv}, Lemmas~\ref{lem:quotgram}, \ref{lem:localid}; (A1)--(A7) & \lean{BoundsMu}, \lean{slope_bounds}, \lean{divisor_bounds_chain_weak}, \lean{divisor_bounds_sum}, \lean{second_step_refined_weak}, \lean{stepBW_of}, \lean{local_idW}, \lean{key_alg}, \lean{lemmaRb_of}, \lean{place_ineq}; \lean{ProdFormula}, \lean{IdxLcv}, \lean{LcvBasis}, \lean{ImageLcv}, \lean{RatHermLcv}, \lean{IdxChange}, \lean{JwGramW}, \lean{DetCS}, \lean{DualMu} & \lean{Formalism/DivisorInequality/StatementObj.lean:17}, \lean{Formalism/QuotientMetricDivisors/HermitianTwistDivisors/} \\
 Theorem~\ref{thm:C}(i) & \lean{UpperTheory.Top.zeroFreeAll_of_topG}, \lean{TopG}, \lean{HostExW}, \lean{ChebyshevInequalityAtWindowScale}, \lean{ChainTied} & \lean{Development/AutomorphicArithmetic/CharacterBoxes/ZeroFreeAllOfTopG.lean:26} \\
 Theorem~\ref{thm:C}(ii) & \lean{tiedCore_of_chainTied}, \lean{windowInequality_of_artinInputs}, \lean{core_gm}, \lean{Deduction.ch_top}, \lean{hostFactsS}, \lean{charsA}, \lean{gmA_eq}, \lean{sigA_le}, \lean{EAtH}, \lean{CoreAtH} & \lean{Dev/AA/PC/}, \lean{Dev/AA/DL/LandauTheorems/ChTop.lean:37} \\
-$F_\psi$ & \lean{Formalism.HC.Level.cyc}, \lean{Level.Gm} & \lean{Formalism/SharpRestriction/RamificationFrobenius/TotientGaloisClasses/ExplicitFormula}\allowbreak\lean{ErrorOfHostConditions.lean} \\
+$F_\psi$ & \lean{Formalism.HC.Level.cyc}, \lean{Level.Gm} & \lean{Formalism/SharpRestriction/RamificationFrobenius/TotientGaloisClasses/ExplicitFormulaErrorOfHostConditions.lean} \\
 Section~\ref{sec:GRH} & \lean{formB}, \lean{level_of_tiedWin}, \lean{zeroFreeOn_of_tiedWin_cyc}, \lean{everyCharacter}, \lean{rh_of_every}, \lean{riemannHypothesis} & \lean{Dev/AA/PC/Imports.lean:8}, \lean{.../TotientGaloisClasses/TopWin.lean:68, 90}, \lean{Main.lean} \\
 \bottomrule
 \end{longtable}
