@@ -81,9 +81,9 @@ conditions (S0)--(S10) (Theorem~C1), and the general lattice theorems behind fou
 conditions. What remained was Theorem~C2: the existence of hosts on arbitrarily large scale windows
 $[Y,Y^{3/2}]$ carrying tied slope data satisfying (S0)--(S10) and the error windows.
 
-This paper gives a conventional account and proof of Theorem~C2, modulo seven explicitly isolated
-classical arithmetic inputs \textup{(C1)--(C7)} from the published literature (zero-density
-estimates, Behrend-type relation-free sets, the Chowla--Selberg formula, the Ferrero--Washington
+This paper gives a conventional account and proof of Theorem~C2, modulo explicitly isolated
+classical inputs \textup{(C1)} and \textup{(C3)--(C7)} from the published literature (standard
+theorems on zeros of Dirichlet $L$-functions and primes in progressions, the Chowla--Selberg formula, the Ferrero--Washington
 theorem, Poitou--Tate duality, local Bloch--Kato duality, and Grothendieck deformation / Kato
 Iwasawa bounds) together with the family-specific unitary theta-lift and Gram-decorrelation
 package \textup{(C8)} verified in the Lean kernel closure. We construct the scale parameters and
@@ -135,7 +135,7 @@ $W\subseteq\R$ and real numbers $x_0$, $C_E$, $K_0$, $K$, $e_K\ge0$ such that:
 In the Lean~4 development~\cite{alpoge-remark}, every theorem used inside Theorem~C2 is proved from
 scratch from the three standard axioms (\texttt{propext}, \texttt{Quot.sound},
 \texttt{Classical.choice}). In a conventional mathematical exposition it is cleaner to isolate
-seven classical arithmetic inputs \textup{(C1)--(C7)} from the published literature together with
+the classical inputs \textup{(C1)} and \textup{(C3)--(C7)} from the published literature together with
 one family-specific automorphic package \textup{(C8)} (verified in the live Lean closure), and to
 prove Theorem~C2 from them by following the exact architecture of the formal development, with
 every Lean correspondence recorded in Appendix~\ref{app:lean}.
@@ -143,21 +143,17 @@ every Lean correspondence recorded in Appendix~\ref{app:lean}.
 \subsection{The classical inputs (C1)--(C7) and automorphic package (C8)}
 
 Every proof in Sections~\ref{sec:host}--\ref{sec:assembly} is elementary and self-contained given
-the following seven classical inputs \textup{(C1)--(C7)} and the family-specific automorphic
+the following classical inputs \textup{(C1)--(C7)} (of which \textup{(C2)} is now proved) and the family-specific automorphic
 package \textup{(C8)} (each of which is also proved internally inside the Lean archive):
 \begin{enumerate}[label=\textup{(C\arabic*)}, leftmargin=3.4em]
-\item\label{C1} \emph{Zero-density box estimate}~\cite[Chapter~10]{iwaniec-kowalski}: for every
-  fixed primitive character $\psi$, $\tau>0$, and $J\ge2$, there is $C=C(\tau,\psi,J)>0$ such that
-  for all large $Y$ and $Q\ge Y^{\tau}$, the number of bad prime moduli $q\le Q$ (or prime moduli
-  $d\le Q$ for a fixed good $q$) for which some twist $\chi\in\{\psi^a\chi_q,\psi^a\chi_d,
-  \psi^a\chi_{qd}\}$ fails to satisfy $|G_\chi(y)|\le y^{1/2+\tau}$ and
-  $|L'/L(1,\chi)|\le C\log Y$ uniformly on $[Y,Y^J]$ is at most $C Q^{1/4}$
-  (\lean{ZD.zero_density_box}, \lean{count_bad_core}).
-\item\label{C2} \emph{Behrend-type relation-free sets}~\cite{behrend}: for any finite abelian group
-  $H$ of order $n$ and integer $L_{\mathrm{rel}}\ge1$, there exists a subset $T_2\subseteq H$ of
-  size $|T_2|\ge n\exp(-C\sqrt{\log n\log L_{\mathrm{rel}}})/L_{\mathrm{rel}}$ with no nontrivial
-  3-term linear relations $j(s_2-s_1)=i(s_3-s_1)$ for $0<|i|,|j|\le L_{\mathrm{rel}}$, $i\neq j$
-  (\lean{hostThickExists}).
+\item\label{C1} \emph{Standard analytic number theory}: the five classical theorems
+  \ref{N1}--\ref{N5} stated in Section~\ref{sec:pairs} (zero-free region with Landau--Page, the
+  prime number theorem for one character, the explicit formula, a zero-density estimate near
+  $\sigma=1$, and Linnik's theorem in quantitative form). Version~1.2 stated here a square-root
+  bound for the auxiliary twists as if it were a zero-density theorem; that bound is now proved in
+  Theorem~\ref{thm:goodpair}.
+\item\label{C2} \emph{Behrend-type relation-free sets}~\cite{behrend}: no longer an input; proved in
+  full in Lemma~\ref{lem:behrend} (\lean{hostThickExists}).
 \item\label{C3} \emph{Chowla--Selberg period formula}~\cite{chowla-selberg}: for the CM datum with
   archimedean period normalization parameter $v>0$ (Part~I, Table~1), the mean archimedean
   log-period of the CM abelian varieties attached to $\Q(\sqrt{-d})$ equals
@@ -264,7 +260,7 @@ $\kappa\le 2\nu+1/2-\eps$. Eliminating $\kappa$ gives $\nu\ge 5\mu-1/2$. At the 
 $\mu=1/2$, this forces $\nu=2$ and $\kappa=9/2$, matching \eqref{eq:nwin} and (i).
 \end{remark}
 
-\subsection{Auxiliary primes $(q,d)$, the thick set $T_2$, and conditions (B0)--(B7)}
+\subsection{Auxiliary primes $(q,d)$}
 
 \begin{definition}[Window prime pair]\label{def:winpair}
 For $0<\eps<1/52$ and $Y>1$, a pair of primes $(q,d)$ is a \emph{window pair} at $(\eps,Y)$
@@ -276,55 +272,618 @@ For $0<\eps<1/52$ and $Y>1$, a pair of primes $(q,d)$ is a \emph{window pair} at
 \end{enumerate}
 \end{definition}
 
-\begin{proposition}[Host construction and verification of (B0)--(B7)]\label{prop:hostB}
-Assume \ref{C1} and \ref{C2}. Let $\psi$ be a primitive Dirichlet character of order $o$,
-$0<\eps<1/52$, $J\ge2$, and $Y\ge Y_0(\psi,\eps,J)$ be large. There exists a window pair $(q,d)$
-at $(\eps,Y)$ such that for every $x\in[Y,Y^J]$:
-\begin{enumerate}[label=(\roman*)]
-\item the auxiliary quadratic characters $\chi_q$, $\chi_d$, $\chi_{qd}$ and their twists by
-  $\langle\psi\rangle$ satisfy $|G_\chi(x)|\le x^{1/2+\eps}$ and $|L'/L(1,\chi)|\le C_L\log x$,
-  whence $\Sigma_{\mathrm{rest}}(x)\le 4o\,x^{1/2+\eps}$;
-\item with $H$ of order $n=2^e\in[x^{2+8\eps},2x^{2+8\eps}]$ and $E_0=(\Z/2\Z)^2$ generated by the
-  quadratic characters at $q,d$, the group $G=E_0\times H$ carries an arithmetic host datum with
-  $G_K=G_{F_\psi}$ and $c=\frac{1}{3o+1}$;
-\item for any polylogarithmic relation-length cutoff $L_{\mathrm{rel}}\ll(\log x)^A$, there is a
-  thick set $T_2\subseteq H$ with no short 3-term linear relations for $L_{\mathrm{rel}}$ and
-  density $\delta_2=|T_2|/n\ge x^{-\eps}$;
-\item all host axioms \textup{(B0)--(B7)} of Part~I (with $C_E=C_L$,
-  $K_0=\max_{\xi\in\langle\psi\rangle\setminus\{1\}}|L'/L(1,\xi^\ast)|$) and domain conditions
-  \textup{(S0)} hold.
+Sections~\ref{sec:pairs} and~\ref{sec:hostfield} construct a window pair whose auxiliary
+characters have square-root size on a whole range of scales (Theorem~\ref{thm:goodpair}), build
+the host field from it, and check the host conditions (B0)--(B7) of Part~I one by one
+(Proposition~\ref{prop:hostB}).
+
+% ======================================================================
+\section{Good auxiliary pairs}\label{sec:pairs}
+% ======================================================================
+
+This section replaces the zero-density paraphrase used in version~1.2. The bounds
+$|G_\chi(y)|\le y^{1/2+\eps}$ for the auxiliary twists do \emph{not} follow from a zero-density
+estimate alone. In the formal proof they come from a mean-square argument over the auxiliary prime,
+in which a zero-density estimate is used only to control a tail. We give that argument in full.
+
+\subsection{Notation and the classical inputs}
+
+For a Dirichlet character $\chi$ put $\psi(u,\chi)=\sum_{n\le u}\Lambda(n)\chi(n)$ and
+$\psi(u)=\psi(u,1)$. For nonprincipal primitive $\chi$, $G_\chi$ is the function of Part~I,
+$G_\chi(y)=\sum_{n\le y}\Lambda(n)\chi(n)(y/n-1)+y\,L'(1,\chi)/L(1,\chi)$, and $G_\zeta(y)=
+\sum_{n\le y}\Lambda(n)(y/n-1)-y\log y+(1+\gE)y$. We write $\chi_q(n)=(n/q)$ and
+$\chi_d(n)=(n/d)$ for the Legendre symbols, which are the primitive real characters modulo the odd
+primes $q,d$. For a primitive character $\chi$ of conductor $r$ and $Q\ge1$ we say that $\chi$
+satisfies the \emph{box condition} $\mathrm{Box}(\chi,Q)$ (\lean{ZeroFreeBox}) if
+\[
+L(s,\chi)\neq0\qquad\text{for }\re s>1-\tfrac1{400},\ |\im s|\le Q.
+\]
+Constants $C,c$ below are positive and absolute unless dependence is indicated. Besides the facts
+(F1)--(F5) of Part~I (in particular Mertens' bound $|\sum_{n\le y}\Lambda(n)/n-\log y|\le C_M$
+and Chebyshev's bound $\sum_{n\le y}\Lambda(n)\le2y$) we use five classical theorems.
+
+\begin{enumerate}[label=\textup{(N\arabic*)}, leftmargin=3.2em]
+\item\label{N1} \emph{Zero-free region, Landau--Page, effective real zeros}
+  \cite[Chapter~14]{davenport}. There is an absolute $c_0\in(0,\frac18]$ such that for every
+  primitive $\chi$ of conductor $r$, $L(\sigma+it,\chi)\ne0$ for
+  $\sigma\ge1-c_0/\log(r(|t|+2))$, except possibly for one simple real zero $\beta_\chi$ when
+  $\chi$ is real and nonprincipal (the \emph{exceptional zero}). For every $Q\ge3$ at most one real
+  primitive character of conductor $\le Q$ has a real zero in $(1-c_0/\log Q,1)$. If $\chi$ is real
+  and nonprincipal of conductor $r\ge3$, every real zero $\beta$ of $L(s,\chi)$ satisfies
+  $\beta\le1-c_0/(\sqrt r\log^2 r)$.
+\item\label{N2} \emph{Prime number theorem for one character} \cite[Theorem~5.27]{iwaniec-kowalski}.
+  For primitive $\chi$ of conductor $r$ and $u\ge2$,
+  \[
+  \Bigl|\psi(u,\chi)-\delta_\chi u+\epsilon_\chi\frac{u^{\beta_\chi}}{\beta_\chi}\Bigr|
+  \le C\,u\exp\Bigl(-\frac{c\log u}{\sqrt{\log u}+\log r}\Bigr)(\log r+1)^4,
+  \]
+  where $\delta_\chi=1$ if $\chi=1$ and $0$ otherwise, and the term with $\epsilon_\chi$ is present
+  ($\epsilon_\chi=1$) only if $\chi$ is real and $L(s,\chi)$ has a real zero
+  $\beta_\chi\ge1-c/\log(r+2)$; otherwise $\epsilon_\chi=0$.
+\item\label{N3} \emph{Explicit formula and zero counting} \cite[Chapters~16 and~19]{davenport}.
+  For nonprincipal primitive $\chi$ of conductor $r$ and $2\le T\le u$,
+  \[
+  \Bigl|\psi(u,\chi)+\sum_{|\gamma|<T}\frac{u^\rho}{\rho}\Bigr|\le C\Bigl(\frac{u\log^2(ruT)}{T}+u^{1/4}\log u\Bigr),
+  \]
+  the sum running over the nontrivial zeros $\rho=\beta+i\gamma$ of $L(s,\chi)$. The number of
+  nontrivial zeros with $|\gamma-t|\le1$ is at most $C\log(r(|t|+2))$.
+\item\label{N4} \emph{Zero density} \cite[Theorem~12.2]{montgomery-topics}. Writing
+  $N(\alpha,T,\chi)$ for the number of zeros of $L(s,\chi)$ with $\beta\ge\alpha$ and
+  $|\gamma|\le T$,
+  \[
+  \sum_{r\le Q}\ \sideset{}{^*}\sum_{\chi\bmod r}N(\alpha,T,\chi)\le C\,(Q^2T)^{3(1-\alpha)/(2-\alpha)}\log^9(QT)
+  \qquad(\tfrac12\le\alpha\le1,\ Q,T\ge2),
+  \]
+  the inner sum running over primitive characters. (Any bound of the shape
+  $(Q^2T)^{A(1-\alpha)}(QT)^{o(1)}$ with $A<33$ would do; Gallagher's log-free estimate
+  \cite[Theorem~6]{gallagher} is of this shape.)
+\item\label{N5} \emph{Primes in progressions with the exceptional term} (the quantitative form of
+  Linnik's theorem; it follows from the log-free density estimate and the Deuring--Heilbronn
+  phenomenon, see \cite[Chapter~18]{iwaniec-kowalski}, \cite[Theorem~7]{gallagher}).
+ ). There are absolute $A_0,C_0,c_3>0$ such that for every modulus $M\ge3$, every
+  $b$ coprime to $M$ and every $X$ with $\log X\ge C_0\log M\log\log M$,
+  \[
+  \bigl|\pi(X;M,b)-\mathrm{main}(X;M,b)\bigr|\le
+  A_0\Bigl(e^{-c_3\log X/\log M}+e^{-\sqrt{c_3\log X}}\Bigr)\,\mathrm{main}(X;M,b),
+  \]
+  where, if some real nonprincipal $\chi_1\bmod M$ has a zero $\beta_1\in(1-\frac1{8\log M},1)$,
+  $(\chi_1,\beta_1)$ is one such pair and
+  $\mathrm{main}(X;M,b)=(\mathrm{li}\,X-\chi_1(b)\,\mathrm{li}(X^{\beta_1}))/\varphi(M)$, and otherwise
+  $\mathrm{main}(X;M,b)=\mathrm{li}\,X/\varphi(M)$. This is
+  \lean{PNTAPRelW}, proved in the formal development from a log-free density estimate
+  (\lean{LogDensityM}) and a Deuring--Heilbronn estimate (\lean{DeuringHeilbronnMB}).
 \end{enumerate}
+
+\subsection{Identities for $G_\chi$}
+
+\begin{lemma}\label{lem:Gident}
+Let $\chi$ be a nonprincipal primitive character and $y\ge1$. Put
+$c_y(n)=\Lambda(n)\min(1,y/n)$, and for $Z\ge y$ put
+\[
+S_Z(y;\chi)=\sum_{n\le Z}c_y(n)\chi(n),\qquad \tau_Z(\chi)=\sum_{n>Z}\frac{\Lambda(n)\chi(n)}n.
+\]
+Then:
+\begin{enumerate}[label=(\alph*)]
+\item $L'(1,\chi)/L(1,\chi)=-\sum_{n\ge1}\Lambda(n)\chi(n)/n$, the series converging;
+\item $G_\chi(y)=-\sum_{n\ge1}c_y(n)\chi(n)=-S_Z(y;\chi)-y\,\tau_Z(\chi)$;
+\item $G_\chi(y)=-y\int_y^\infty\psi(u,\chi)\,u^{-2}\,du$ and $G_\zeta(y)=-y\int_y^\infty(\psi(u)-u)\,u^{-2}\,du$;
+\item $|L'(1,\chi)/L(1,\chi)|\le |G_\chi(y)|/y+\log y+C_M$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+By \ref{N2}, $\psi(u,\chi)=o(u)$. Partial summation gives, for $1\le y\le Y'$,
+\begin{equation}\label{eq:partsum}
+\sum_{y<n\le Y'}\frac{\Lambda(n)\chi(n)}n=\frac{\psi(Y',\chi)}{Y'}-\frac{\psi(y,\chi)}y+\int_y^{Y'}\frac{\psi(u,\chi)}{u^2}\,du,
+\end{equation}
+and the integral converges absolutely as $Y'\to\infty$ by \ref{N2}. Hence
+$\sum_n\Lambda(n)\chi(n)n^{-s}$ converges at $s=1$, and by Abel's theorem for Dirichlet series and
+(F3), (F4) of Part~I its value is $-L'(1,\chi)/L(1,\chi)$. This is (a). Inserting (a) in the
+definition of $G_\chi$ gives $G_\chi(y)=-\sum_{n\le y}\Lambda(n)\chi(n)-y\sum_{n>y}\Lambda(n)\chi(n)/n
+=-\sum_nc_y(n)\chi(n)$, and splitting at $Z\ge y$ (where $c_y(n)=y\Lambda(n)/n$ for $n>Z$) gives (b).
+Formula \eqref{eq:partsum} with $Y'\to\infty$ turns (b) into the first identity in (c).
+For $\zeta$, partial summation gives $\sum_{n\le y}\Lambda(n)/n=\psi(y)/y+\log y+\int_1^y(\psi(u)-u)u^{-2}\,du$,
+and $\int_1^\infty(\psi(u)-u)u^{-2}\,du=-1-\gE$ (compare the Laurent expansions at $s=1$ of
+$-\zeta'(s)/\zeta(s)=s\int_1^\infty\psi(u)u^{-s-1}\,du$ and of $1/(s-1)-\gE$, using (F3) of Part~I).
+Inserting this into the definition of $G_\zeta$ gives the second identity. For (d), the definition
+of $G_\chi$ gives $L'(1,\chi)/L(1,\chi)=G_\chi(y)/y-\sum_{n\le y}\Lambda(n)\chi(n)(1/n-1/y)$, and the
+last sum is at most $\sum_{n\le y}\Lambda(n)/n\le\log y+C_M$ in absolute value by (F1) of Part~I.
+\end{proof}
+
+\subsection{The tail under a box condition}
+
+\begin{lemma}[Tail bound, \lean{tailK}]\label{lem:tail}
+Let $\chi$ be primitive of conductor $r\ge r_0$ (an absolute constant), let $Q\ge r$, and assume
+$\mathrm{Box}(\chi,Q)$. Then for $3\le Z\le Q$,
+\[
+|\tau_Z(\chi)|\le C\bigl(Z^{-1/400}\log^6(2Q)+r^{-c}\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+If $\rho=\beta+i\gamma$ is a nontrivial zero of $L(s,\chi)$ then so is $1-\bar\rho$, by the
+functional equation together with $\overline{L(\bar s,\chi)}=L(s,\bar\chi)$. Hence $\mathrm{Box}(\chi,Q)$
+gives $\frac1{400}\le\beta\le1-\frac1{400}$ for all zeros with $|\gamma|\le Q$. In particular
+$L(s,\chi)$ has no real zero in $(1-\frac1{400},1)$, so for $r\ge r_0$ the term with $\epsilon_\chi$ in
+\ref{N2} is absent. For $|\gamma|\le Q$ we have
+$|\rho|\ge\frac1{400}$, and by the zero count in \ref{N3},
+$\sum_{|\gamma|<T}1/|\rho|\le C\log^2(rT)$ for $2\le T\le Q$. So \ref{N3} gives, for
+$2\le T\le\min(u,Q)$,
+\begin{equation}\label{eq:psibox}
+|\psi(u,\chi)|\le C\Bigl(u^{1-1/400}\log^2(ruT)+\frac{u\log^2(ruT)}{T}+u^{1/4}\log u\Bigr).
+\end{equation}
+By \eqref{eq:partsum},
+\[
+\tau_Z(\chi)=-\frac{\psi(Z,\chi)}Z+\int_Z^\infty\frac{\psi(u,\chi)}{u^2}\,du.
+\]
+Put $Z_1=\max(Q,\exp(\log^2(2r)))$, so that $\log Z_1\le\log^2(2Q)$. We bound the pieces.
+
+On $[Z,Q]$ take $T=u$ in \eqref{eq:psibox}; since $\log(ru^2)\le3\log(2Q)$, this gives $|\psi(u,\chi)|/u\le C(u^{-1/400}+u^{-1})\log^2(2Q)+Cu^{-3/4}\log u$,
+so $|\psi(Z,\chi)|/Z+\int_Z^Q|\psi(u,\chi)|u^{-2}\,du\le CZ^{-1/400}\log^2(2Q)$.
+On $[Q,Z_1]$ take $T=Q$: since $\log(ruQ)\le3\log Z_1\le3\log^2(2Q)$,
+\[
+\int_Q^{Z_1}\frac{|\psi(u,\chi)|}{u^2}\,du\le C\Bigl(Q^{-1/400}\log^4(2Q)+\frac{\log^6(2Q)}{Q}+Q^{-3/4}\log^2(2Q)\Bigr)
+\le CZ^{-1/400}\log^6(2Q).
+\]
+On $[Z_1,\infty)$ use \ref{N2} with $\epsilon_\chi=0$: for $u\ge Z_1$ we have
+$\sqrt{\log u}\ge\log(2r)$, so the exponent there is at least $\frac c2\sqrt{\log u}$ and
+\[
+\int_{Z_1}^\infty\frac{|\psi(u,\chi)|}{u^2}\,du\le C(\log r+1)^4\int_{\log^2(2r)}^\infty e^{-\frac c2\sqrt t}\,dt
+\le C(\log r+1)^5(2r)^{-c/2}\le Cr^{-c/4}.
+\]
+Adding the three pieces proves the lemma (with $c$ replaced by $c/4$).
+\end{proof}
+
+\subsection{Mean square over a set of auxiliary primes}
+
+For $8\mid m_0$ and $n\ge1$ let $s_{m_0}(n)$ be the product of the primes $\ell\nmid m_0$ with
+$v_\ell(n)$ odd. For a prime $\ell$ and $Z\ge2$ put $s_\ell=\sum_{a\ge1,\,\ell^a\le Z}c_y(\ell^a)$, and
+put $R_{m_0}=\sum c_y(\ell^a)$, the sum over prime powers $\ell^a\le Z$ with $a$ even or
+$\ell\mid m_0$. Let $B_y=\max_\ell s_\ell$.
+
+\begin{lemma}[Expansion, \lean{meanSq_abs}]\label{lem:msexpand}
+Let $8\mid m_0$, $a_0$ coprime to $m_0$, $Z\ge2$, $\eta\ge0$, and let $P$ be a finite set of primes
+$p\equiv a_0\pmod{m_0}$ with $p>Z$. Suppose there is $s^\ast\in\N$ such that
+$|\sum_{p\in P}(p/s)|\le\eta|P|$ for every odd squarefree $s$ with $1<s\le Z^2$, $(s,m_0)=1$ and
+$s\ne s^\ast$. Then for every $y\ge1$ and every $\kappa:\N\to\CC$ with $|\kappa|\le1$,
+\[
+\sum_{p\in P}\Bigl|\sum_{n\le Z}c_y(n)\kappa(n)\Bigl(\frac np\Bigr)\Bigr|^2\le
+\Bigl(\sum_\ell s_\ell^2+R_{m_0}^2+2B_y^2+2B_yR_{m_0}+\eta\Bigl(\sum_{n\le Z}c_y(n)\Bigr)^2\Bigr)|P|.
+\]
+\end{lemma}
+
+\begin{proof}
+Expanding the square, the left side is
+$\sum_{n,n'\le Z}c_y(n)c_y(n')\kappa(n)\overline{\kappa(n')}\sum_{p\in P}(nn'/p)$. Fix $n,n'$ and
+put $s=s_{m_0}(nn')$. For $p\in P$: $(2/p)$ depends only on $p\bmod8$, hence is constant on $P$;
+for an odd prime $\ell\mid m_0$, quadratic reciprocity gives $(\ell/p)=\pm(p/\ell)=\pm(a_0/\ell)$
+with a sign depending only on $\ell$ and $a_0\bmod4$; for an odd prime $\ell\nmid m_0$ it gives
+$(\ell/p)=\pm(p/\ell)$ with such a sign. Since $p\nmid nn'$, it follows that
+$(nn'/p)=\epsilon(n,n')(p/s)$ with $|\epsilon(n,n')|=1$ independent of $p$, and $s$ is odd,
+squarefree, coprime to $m_0$ and $\le Z^2$. Hence the left side is at most
+$\sum_{n,n'}c_y(n)c_y(n')|\sum_{p\in P}(p/s_{m_0}(nn'))|$. Since $c_y$ is supported on prime
+powers, we sort the pairs $(n,n')=(\ell^a,\ell'^b)$:
+\begin{itemize}
+\item $s_{m_0}(nn')=1$: either $\ell=\ell'$, contributing at most $\sum_\ell s_\ell^2$, or
+  $\ell\neq\ell'$ and both $\ell^a,\ell'^b$ are counted in $R_{m_0}$, contributing at most
+  $R_{m_0}^2$; the inner sum is $|P|$.
+\item $s_{m_0}(nn')=s^\ast$: then $s^\ast$ has at most two prime factors, and one of $n,n'$ is a
+  power of a prime factor of $s^\ast$. If $s^\ast=\ell_1$ the other is a power of $\ell_1$ or is
+  counted in $R_{m_0}$; if $s^\ast=\ell_1\ell_2$ the two are powers of $\ell_1$ and $\ell_2$. Either
+  way these pairs contribute at most $(2B_y^2+2B_yR_{m_0})|P|$.
+\item all other pairs contribute at most $\eta|P|\,c_y(n)c_y(n')$.\qedhere
+\end{itemize}
+\end{proof}
+
+\begin{lemma}[Sizes, \lean{sPsq_le}, \lean{RR_le}]\label{lem:mssizes}
+Let $y$ be large and $Z\ge y$. Suppose every prime factor of $m_0$ is at most $y^{1/5}$, except
+for at most one, which exceeds $y$. Then $B_y\le3\log y$, $\sum_\ell s_\ell^2\le42\,y\log y$,
+$R_{m_0}\le20\sqrt y$ and $\sum_{n\le Z}c_y(n)\le2y\log Z$. Consequently the bracket in
+Lemma~\ref{lem:msexpand} is at most $50\,y\log y+4\eta y^2\log^2Z$.
+\end{lemma}
+
+\begin{proof}
+For $\ell\le y$, the exponents with $\ell^a\le y$ contribute at most $\log y$ to $s_\ell$, and those
+with $\ell^a>y$ form a geometric series with ratio $\le\frac12$ and first term $<\log\ell$; so
+$s_\ell\le\log y+2\log\ell\le3\log y$. For $\ell>y$, $s_\ell\le2y\log\ell/\ell\le2\log y$. This gives
+$B_y\le3\log y$. Next, $\sum_{\ell\le y}s_\ell\le\psi(y)+2\theta(y)\le6y$ by Chebyshev, so
+$\sum_{\ell\le y}s_\ell^2\le3\log y\cdot6y=18\,y\log y$. For the large primes let
+$g(t)=\log t/t^2$, which is decreasing for $t\ge2$; partial summation against $\theta(t)\le2t$ gives
+$\sum_{\ell>y}\log\ell\,g(\ell)\le2\int_y^\infty t\,|g'(t)|\,dt=2yg(y)+2\int_y^\infty g(t)\,dt\le(4\log y+2)/y$,
+so $\sum_{\ell>y}s_\ell^2\le4y^2(4\log y+2)/y\le24\,y\log y$.
+
+For $R_{m_0}$: prime powers $\ell^a\le y$ with $a\ge2$ contribute at most
+$\psi(y)-\theta(y)\le\sum_{2\le a\le\log_2y}\theta(y^{1/a})\le6\sqrt y$; those with $\ell^a>y$, $a\ge2$
+and $\ell\le\sqrt y$ at most $2\theta(\sqrt y)\le4\sqrt y$; those with $\ell>\sqrt y$ at most
+$\sum_{\ell>\sqrt y}2y\log\ell/\ell^2\le8\sqrt y$ (partial summation as before). The prime factors of
+$m_0$ contribute at most $3\log y\cdot\pi(y^{1/5})+2\log y\le3y^{1/5}\log y+2\log y$. So
+$R_{m_0}\le20\sqrt y$. Finally
+$\sum_{n\le Z}c_y(n)\le\psi(y)+y\sum_{n\le Z}\Lambda(n)/n\le2y+y(\log Z+C_M)\le2y\log Z$, and
+$42y\log y+400y+18\log^2y+120\sqrt y\log y\le50\,y\log y$.
+\end{proof}
+
+\begin{lemma}[Uniformity in $y$, \lean{bad_share}]\label{lem:badshare}
+Let $K\ge1$, $Z=Y^{400K}$, and let $m_0,a_0,P,\eta,s^\ast$ be as in Lemma~\ref{lem:msexpand}
+with $\eta\le Y^{-K-2}$. Suppose every prime factor of $m_0$ is at most $Y^{1/5}$, except for at
+most one, which exceeds $4Y^K$. Let $0<\tau<\frac12$
+and fix $\kappa$ with $|\kappa|\le1$. Then for $Y\ge Y_0(K,\tau)$ the set of $p\in P$ for which
+\[
+\Bigl|\sum_{n\le Z}c_y(n)\kappa(n)\Bigl(\frac np\Bigr)\Bigr|>\tfrac12y^{1/2+\tau}\quad\text{for some }y\in[Y,Y^K]
+\]
+has at most $Y^{-\tau}|P|$ elements.
+\end{lemma}
+
+\begin{proof}
+Write $S_p(y)$ for the sum. By Lemmas~\ref{lem:msexpand} and~\ref{lem:mssizes}, and since
+$4\eta y^2\log^2Z\le16Y^{-2}y\log^2Z\le y$, we have $\sum_{p\in P}|S_p(y)|^2\le51\,y\log y\,|P|$
+for $y\in[Y,4Y^K]$, uniformly in $\kappa$. The function $y\mapsto S_p(y)$ is continuous and
+piecewise linear, and for $y\notin\N$,
+\[
+yS_p'(y)=\sum_{y<n\le Z}\Lambda(n)\frac yn\kappa(n)\Bigl(\frac np\Bigr)=\sum_{n\le Z}c_y(n)\kappa_y(n)\Bigl(\frac np\Bigr),
+\qquad\kappa_y=\kappa\cdot\mathbf 1_{(y,\infty)},
+\]
+which is again a sum of the same type. Let $V\in[Y,2Y^K]$. For $y\in[V,2V]$, Cauchy--Schwarz gives
+$|S_p(y)|^2\le2|S_p(V)|^2+2V\int_V^{2V}|S_p'(v)|^2\,dv$, so
+\[
+\sum_{p\in P}\sup_{V\le y\le2V}|S_p(y)|^2\le102\,V\log V|P|+2V\int_V^{2V}\frac{51\,v\log v}{v^2}\,dv\,|P|
+\le180\,V\log(2V)\,|P|.
+\]
+By Markov's inequality the number of $p$ with $\sup_{[V,2V]}|S_p|>\frac12V^{1/2+\tau}$ is at most
+$720\,V^{-2\tau}\log(2V)|P|$. Apply this with $V=2^jY$, $0\le j\le\lceil(K-1)\log_2Y\rceil$; these
+intervals cover $[Y,Y^K]$, and on $[V,2V]$ we have $\frac12y^{1/2+\tau}\ge\frac12V^{1/2+\tau}$.
+Summing, the exceptional set has at most
+$720\log(4Y^K)\,Y^{-2\tau}(1-4^{-\tau})^{-1}|P|\le Y^{-\tau}|P|$ elements for large $Y$.
+\end{proof}
+
+\subsection{Equidistribution of the auxiliary prime}
+
+\begin{lemma}[Twists and counts, \lean{twistK}, \lean{count_a}]\label{lem:twist}
+Let $8\mid m_0$, $a_0$ coprime to $m_0$, $S_0\ge1$, and $X$ with
+$\frac12\log X\ge C_0\log(m_0S_0)\log\log(m_0S_0)$. Put $P=\{p\text{ prime}:\sqrt X<p\le X,\ p\equiv a_0\ (m_0)\}$,
+$Q_0=m_0S_0$, and
+\[
+\eta_X=3A_0\Bigl(e^{-c_3\log X/(2\log Q_0)}+e^{-\sqrt{c_3\log X/2}}\Bigr)+32\,e^{-c_0\log X/\log Q_0}.
+\]
+Assume $\eta_X\le\frac14$ and $X\ge X_0$ (absolute). Then $|P|\ge X/(4m_0^2\log X)$, and there is $s^\ast\in\N$, depending
+only on $m_0$ and $S_0$, such that $|\sum_{p\in P}(p/s)|\le\eta_X|P|$ for every odd squarefree
+$s$ with $1<s\le S_0$, $(s,m_0)=1$ and $s\ne s^\ast$.
+\end{lemma}
+
+\begin{proof}
+By \ref{N1} there is at most one real primitive $\chi^\ast$ of conductor $\le Q_0$ with a real zero
+in $(1-c_0/\log Q_0,1)$. Write its conductor as $f_1f_2$ with $f_1\mid m_0^\infty$ and
+$(f_2,m_0)=1$, and put $s^\ast=f_2$ (put $s^\ast=0$ if there is no such character).
+
+Fix an admissible $s$ (including $s=1$ for the count), put $M=m_0s\le Q_0$, and let $b$ run over
+the $\varphi(s)$ classes modulo $M$ with $b\equiv a_0\pmod{m_0}$ and $(b,s)=1$. Then
+$\sum_{p\in P}(p/s)=\sum_b(b/s)N(b)$, where $N(b)=\pi(X;M,b)-\pi(\sqrt X;M,b)$. Apply \ref{N5} at
+$X$ and at $\sqrt X$ (both satisfy its hypothesis), and write $\epsilon$ for the larger of the two
+relative errors, so that $3\epsilon\le\eta_X$ and $\epsilon\le\frac1{12}$. With $\mu(b)=\mathrm{main}(X;M,b)-\mathrm{main}(\sqrt X;M,b)$,
+\[
+|N(b)-\mu(b)|\le\epsilon\bigl(\mathrm{main}(X;M,b)+\mathrm{main}(\sqrt X;M,b)\bigr).
+\]
+
+\emph{Size of the main terms.} If an exceptional pair $(\chi_1,\beta_1)$ modulo $M$ exists, then
+$1-\beta_1\ge c_0/(\sqrt M\log^2M)$ by \ref{N1}, so
+$\mathrm{li}\,X-\mathrm{li}(X^{\beta_1})\ge(X-X^{\beta_1})/\log X\ge X\min(\frac12,\frac12(1-\beta_1)\log X)/\log X
+\ge X/(M\log X)$, because $(1-\beta_1)\log X\ge c_0\log X/(\sqrt M\log^2M)\ge2/M$ for $X\ge X_0$. In
+all cases $\mathrm{main}(X;M,b)\ge X/(M\varphi(M)\log X)$ and
+$\mathrm{main}(\sqrt X;M,b)\le2\,\mathrm{li}\sqrt X/\varphi(M)\le8\sqrt X/(\varphi(M)\log X)$. Since
+$\varphi(M)=\varphi(m_0)\varphi(s)$, summing over the $\varphi(s)$ classes gives
+$\Sigma_X:=\sum_b\mathrm{main}(X;M,b)\ge X/(M\varphi(m_0)\log X)$ and
+$\sum_b\mathrm{main}(\sqrt X;M,b)\le8\sqrt X/(\varphi(m_0)\log X)\le\frac14\Sigma_X$, the last because
+$32M\le\sqrt X$. Every $p\in P$ is prime to $s$, so $|P|=\sum_bN(b)\ge(1-\epsilon)\Sigma_X-(1+\epsilon)\frac14\Sigma_X\ge\frac12\Sigma_X$;
+with $s=1$ this is the count $|P|\ge X/(2m_0^2\log X)$. Also
+$\sum_b(\mathrm{main}(X;M,b)+\mathrm{main}(\sqrt X;M,b))\le\frac54\Sigma_X\le\frac52|P|$.
+
+\emph{The twist.} By the Chinese remainder theorem the classes $b$ correspond to the residues
+$b''\bmod s$ prime to $s$. If there is no exceptional pair modulo $M$, $\mu(b)$ does not depend on
+$b$ and $\sum_b(b/s)\mu(b)=\mu\sum_{b''}(b''/s)=0$, since $(\cdot/s)$ is a nonprincipal character
+modulo $s$. If $(\chi_1,\beta_1)$ exists, write $\chi_1=\chi_1'\chi_1''$ with $\chi_1'$ modulo $m_0$
+and $\chi_1''$ modulo $s$. Then
+$\sum_b(b/s)\chi_1(b)=\chi_1'(a_0)\sum_{b''}(b''/s)\chi_1''(b'')$, which vanishes unless
+$\chi_1''=(\cdot/s)$. In that case the primitive character inducing $\chi_1$ has prime-to-$m_0$
+conductor $s$. If moreover $\beta_1>1-c_0/\log Q_0$, then by \ref{N1} that primitive character is
+$\chi^\ast$, so $s=s^\ast$, which is excluded. Otherwise $\beta_1\le1-c_0/\log Q_0$ and
+\[
+\Bigl|\sum_b\Bigl(\frac bs\Bigr)\mu(b)\Bigr|\le\frac{\varphi(s)\,2\,\mathrm{li}(X^{\beta_1})}{\varphi(M)}
+\le\frac{8X^{1-c_0/\log Q_0}}{\varphi(m_0)\log X}=16\,e^{-c_0\log X/\log Q_0}\cdot\frac{X}{2\varphi(m_0)\log X}.
+\]
+In this case $\mathrm{li}(X^{\beta_1})\le\frac12\mathrm{li}\,X$ (as $32e^{-c_0\log X/\log Q_0}\le\frac14$),
+so $\Sigma_X\ge\mathrm{li}\,X/(2\varphi(m_0))\ge X/(2\varphi(m_0)\log X)$, and the right side is at most
+$16e^{-c_0\log X/\log Q_0}\Sigma_X\le32e^{-c_0\log X/\log Q_0}|P|$. Combining with the error terms,
+$|\sum_{p\in P}(p/s)|\le\frac52\epsilon|P|+32e^{-c_0\log X/\log Q_0}|P|\le\eta_X|P|$.
+\end{proof}
+
+\subsection{Counting box failures}
+
+\begin{lemma}[\lean{count_bad_core}, \lean{ZeroDensityBox}]\label{lem:countbad}
+For $Q\ge Q_0$, the number of primitive characters $\chi$ of conductor $\le Q$ for which
+$\mathrm{Box}(\chi,Q)$ fails is at most $Q^{1/4}$.
+\end{lemma}
+
+\begin{proof}
+Each such character has a zero with $\beta>1-\frac1{400}$ and $|\gamma|\le Q$, so it is counted in
+\ref{N4} with $\alpha=1-\frac1{400}$ and $T=Q$. The bound there is
+$C(Q^3)^{3/401}\log^9(Q^2)\le CQ^{9/401}(2\log Q)^9\le Q^{1/4}$ for large $Q$.
+\end{proof}
+
+\subsection{Existence of good pairs}
+
+Fix $\psi$ primitive of order $o$ and conductor $f_\psi$, and put $F=\mathrm{lcm}(8,f_\psi)$. Let
+$\Xi$ be the finite set of primitive characters whose conductor divides $F$; it contains
+$\xi^\ast$ for every $\xi\in\langle\psi\rangle$ and every real primitive character of conductor
+dividing $F$. For $\rho\in\Xi$ and primes $q,d\nmid F$ the products $\rho\chi_q$, $\rho\chi_d$,
+$\rho\chi_q\chi_d$ are primitive of conductor $f_\rho q$, $f_\rho d$, $f_\rho qd$.
+
+\begin{theorem}[Good window pairs, \lean{pairEx}, \lean{pair_exists}]\label{thm:goodpair}
+Let $0<\eps<1/52$ and $J\ge2$. For $Y\ge Y_1(\psi,\eps,J)$ there is a window pair $(q,d)$ at
+$(\eps,Y)$ such that every $\chi\in\Xi\chi_q\cup\Xi\chi_d\cup\Xi\chi_q\chi_d$, of conductor $r$,
+satisfies $\mathrm{Box}(\chi,r)$ and, for all $y\in[Y,Y^J]$,
+\[
+|G_\chi(y)|\le y^{1/2+\eps},\qquad |L'(1,\chi)/L(1,\chi)|\le2\log Y.
+\]
+\end{theorem}
+
+\begin{proof}
+Put $z=Y^{\eps/5}$, $U=e^z$, $X=\exp(z\log^2Y)$, $K=J$, $Z=Y^{400J}$ and $\tau=\eps$.
+
+\emph{Step 1: the prime $q$} (\lean{stage1}). Apply Lemma~\ref{lem:twist} with $m_0=8$, $a_0=3$,
+$S_0=Z^2$ and $X$ replaced by $U$. Here $\log Q_0=\log(8Z^2)\le801J\log Y$ while $\log U=z$, so
+the hypothesis holds and $\eta_U\le Y^{-J-2}$ for large $Y$. Let $P_1$ be the resulting set of primes
+$q\equiv3\pmod8$ in $(\sqrt U,U]$; then $|P_1|\ge U/(256\log U)$, every $q\in P_1$ exceeds $Z^2$,
+and the only prime factor of $m_0$ is $2\le Y^{1/5}$. For each $\rho\in\Xi$, Lemma~\ref{lem:badshare}
+with $\kappa=\rho$ excludes at most $Y^{-\eps}|P_1|$ primes; and by Lemma~\ref{lem:countbad} with
+$Q=FU$, at most $(FU)^{1/4}$ primes $q$ have some $\rho\chi_q$ failing $\mathrm{Box}(\rho\chi_q,FU)$
+(distinct pairs $(\rho,q)$ give distinct characters). Since $|\Xi|Y^{-\eps}+(FU)^{1/4}\cdot256\log U/U<1$
+for large $Y$, there is $q\in P_1$ such that for every $\rho\in\Xi$: $\mathrm{Box}(\rho\chi_q,FU)$
+holds and $|S_Z(y;\rho\chi_q)|\le\frac12y^{1/2+\eps}$ for $y\in[Y,Y^J]$. Then
+$\frac12z<\log q\le z$, which is (a) of Definition~\ref{def:winpair}.
+
+\emph{Step 2: the prime $d$} (\lean{stage2}). Let $m_0=16q\prod_{3\le p\le z}p$ and let $a_0$ be the
+class with $a_0\equiv7\pmod{16}$ and $a_0\equiv-1$ modulo $q$ and modulo every odd prime $p\le z$.
+Since $q>z$, these conditions are compatible and $(a_0,m_0)=1$. By Chebyshev,
+$\log m_0\le\log16+z+2z\le4z$. Apply Lemma~\ref{lem:twist} with this $m_0,a_0$, $S_0=Z^2$ and $X$:
+now $\log Q_0\le5z$ and $\log X=z\log^2Y$, so the hypothesis holds and
+$\eta_X\le3A_0(e^{-c_3\log^2Y/10}+e^{-\sqrt{c_3z/2}})+16e^{-c_0\log^2Y/5}\le Y^{-J-2}$ for large $Y$.
+Let $P_2$ be the resulting set, so $|P_2|\ge X/(4m_0^2\log X)\ge X^{9/10}$. The prime factors of $m_0$
+are $\le z=Y^{\eps/5}\le Y^{1/5}$, except $q>\sqrt U>4Y^J$. For $\rho\in\Xi$ and $\kappa\in\{\rho,\rho\chi_q\}$,
+Lemma~\ref{lem:badshare} excludes at most $Y^{-\eps}|P_2|$ primes, and Lemma~\ref{lem:countbad} with
+$Q=FUX$ excludes at most $(FUX)^{1/4}\le|P_2|/4$ primes. Hence there is $d\in P_2$ such that for
+every $\chi\in\Xi\chi_d\cup\Xi\chi_q\chi_d$: $\mathrm{Box}(\chi,FUX)$ holds and
+$|S_Z(y;\chi)|\le\frac12y^{1/2+\eps}$ for $y\in[Y,Y^J]$. By construction $d\equiv7\pmod{16}$,
+$q\mid d+1$, $p\mid d+1$ for odd $p\le z$, and $\frac12z\log^2Y<\log d\le z\log^2Y$, so $(q,d)$ is a
+window pair.
+
+\emph{Step 3: from $S_Z$ to $G_\chi$} (\lean{box_of_S}). Let $\chi$ be one of the characters, of
+conductor $r$, and let $Q\in\{FU,FUX\}$ be the height of its box, so $r\le Q$ and $r\ge q>e^{z/2}\ge r_0$.
+Since $Z\le Q$, Lemma~\ref{lem:tail} gives
+$y|\tau_Z(\chi)|\le Y^JC(Y^{-J}\log^6(2Q)+r^{-c})\le2C\log^6(2Q)\le2C(2z\log^2Y)^6$ for
+$y\le Y^J$, and this is $\le\frac12Y^{1/2}$ for large $Y$ because $6\eps/5<\frac12$. By
+Lemma~\ref{lem:Gident}(b), $|G_\chi(y)|\le|S_Z(y;\chi)|+y|\tau_Z(\chi)|\le\frac12y^{1/2+\eps}+\frac12y^{1/2}\le y^{1/2+\eps}$
+for $y\in[Y,Y^J]$. Lemma~\ref{lem:Gident}(d) at $y=Y$ gives
+$|L'(1,\chi)/L(1,\chi)|\le Y^{-1/2+\eps}+\log Y+C_M\le2\log Y$.
+\end{proof}
+
+\begin{remark}
+In the formal proof the same three steps appear as \lean{stage1}, \lean{stage2} and
+\lean{box_of_S}, with \lean{meanSqK} (Lemmas~\ref{lem:msexpand}--\ref{lem:mssizes}),
+\lean{bad_share} (Lemma~\ref{lem:badshare}), \lean{twistK} and \lean{count_a}
+(Lemma~\ref{lem:twist}), \lean{count_bad} (Lemma~\ref{lem:countbad}) and \lean{tailK}
+(Lemma~\ref{lem:tail}). Version~1.2 of this paper stated the conclusion of
+Theorem~\ref{thm:goodpair} as a zero-density input; that was a misreading of the formal
+statement, which is the box condition with a $Q^{1/4}$ count.
+\end{remark}
+
+% ======================================================================
+\section{The host field and the host conditions}\label{sec:hostfield}
+% ======================================================================
+
+Fix $\psi$, $\eps$, $J$ and a window pair $(q,d)$ at $(\eps,Y)$ as in Theorem~\ref{thm:goodpair},
+and let $x\in[Y,Y^J]$ be large. Put $z=Y^{\eps/5}$.
+
+\subsection{The group}
+
+Let $X_e$ be the group of even Dirichlet characters of conductor dividing $2^{e+2}$; it is cyclic
+of order $2^e$, being dual to $(\Z/2^{e+2}\Z)^\times/\{\pm1\}$. Let $j_\psi=|X_e\cap\langle\psi\rangle|$,
+which does not depend on $e$ once $2^{e+2}\ge f_\psi$. Choose $e$ with
+\[
+x^{2+8\eps}\le n:=\frac{2^eo}{j_\psi}<2x^{2+8\eps}
+\]
+(\lean{PageN}), and put $Q_S=\mathrm{lcm}(2^{e+2},f_\psi)$ and $N=Q_Sqd$. Since $q,d>z>f_\psi$, the
+three factors are pairwise coprime, and $Q_S\le4f_\psi n$.
+
+Let $U_S=\{a\in(\Z/Q_S\Z)^\times:a\equiv\pm1\ (2^{e+2}),\ \psi(a)=1\}$ and
+$H=(\Z/Q_S\Z)^\times/U_S$. By the Chinese remainder theorem,
+\[
+G:=(\Z/N\Z)^\times/\{a:\ a\bmod Q_S\in U_S,\ \chi_q(a)=\chi_d(a)=1\}\ \cong\ \{\pm1\}\times\{\pm1\}\times H,
+\]
+via $a\mapsto(\chi_d(a),\chi_q(a),a\bmod U_S)$. Writing the first two factors additively we identify
+$G$ with $E_0\times H$ as in Part~I~\cite[\S4]{dixit-part1}: $g=(\epsilon_1,\epsilon_2;h)$ with
+$(-1)^{\epsilon_1}=\chi_d(g)$ and $(-1)^{\epsilon_2}=\chi_q(g)$. Then $\Phi=\ker\chi_d$,
+$\chi_C=\chi_d$ and $\varsigma=(1,0;0)$. This is the Galois group of the abelian field $E$ cut out
+in $\Q(\zeta_N)$ by the subgroup above (\lean{KerChi}).
+
+\begin{lemma}[Structure of $H$]\label{lem:Hstruct}
+\begin{enumerate}[label=(\alph*)]
+\item $\widehat H=X_e\cdot\langle\psi\rangle$, viewed as characters modulo $Q_S$, and $|H|=n$.
+\item $A_0:=\ker(\psi:H\to\mu_o)$ is cyclic of order $n/o$, and $H/A_0\cong\Z/o\Z$.
+\item $\Gh_{A_0}=\{\xi\chi_q^i\chi_d^j:\ \xi\in\langle\psi\rangle,\ i,j\in\{0,1\}\}$, so $|\Gh_{A_0}|=4o$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) The characters of $(\Z/Q_S\Z)^\times$ trivial on $U_S=A\cap B$, with
+$A=\{a\equiv\pm1\ (2^{e+2})\}$ and $B=\ker\psi$, form $A^\perp B^\perp=X_e\langle\psi\rangle$, of order
+$2^eo/j_\psi=n$. (b) $\psi$ maps $H$ onto $\mu_o$ since $\psi$ has order $o$, so $|A_0|=n/o$; and
+$A_0=B/(A\cap B)\cong AB/A\le(\Z/Q_S\Z)^\times/A\cong(\Z/2^{e+2}\Z)^\times/\{\pm1\}$, which is cyclic.
+(c) A character of $G=E_0\times H$ is trivial on $\iota(A_0)$ iff its $H$-component is trivial on
+$A_0=B/(A\cap B)$, i.e.\ lies in $B^\perp=\langle\psi\rangle$.
+\end{proof}
+
+\subsection{The arithmetic datum}
+
+Let $S$ be the set of primes dividing $Q_Sq$, i.e.\ $2$, $q$ and the odd primes dividing $f_\psi$.
+For a prime $p$ write $N=p^{v}N_p$ with $p\nmid N_p$. Let $I_p\le G$ be the image of
+$\{a:a\equiv1\ (N_p)\}$, and let $F_p$ be the image of an $a_p$ with $a_p\equiv p\ (N_p)$ and
+$a_p\equiv1\ (p^v)$. For $p\nmid N$ this is $I_p=0$ and $F_p=$ the class of $p$. These are the
+inertia group and a Frobenius element of $E$ at $p$ (\lean{art_spec}, \lean{art_d}, \lean{art_q}).
+
+\begin{lemma}[Datum, \lean{arith}, \lean{HostAddCharCompatible}]\label{lem:datum}
+$D=(q,d,(I_p),(F_p))$ satisfies (H1)--(H4) of Part~I~\cite[Definition~4.1]{dixit-part1} relative
+to $S$. For every $\theta\in\Gh$, regarded as a character modulo $N$ with primitive character
+$\theta^\ast$, the function $\theta_D$ of Part~I~\cite[Definition~4.3]{dixit-part1} equals
+$\theta^\ast$. Consequently, with $\ell(\theta)=L'(1,\theta^\ast)/L(1,\theta^\ast)$ for
+$\theta\neq\mathbf1$, $G_\theta=G_{\theta^\ast}$ for all $\theta$.
+\end{lemma}
+
+\begin{proof}
+(H1): $d$ is prime, $2,q\in S$, and $d\notin S$ since $d>q>f_\psi$. (H2): for $p\notin S\cup\{d\}$,
+$p\nmid N$ and $I_p=0$. (H3): for $p\in S$, $I_p$ is the image of units $\equiv1\pmod{N_p}$ and
+$d\mid N_p$, so $\chi_d$ is trivial on $I_p$, i.e.\ $I_p\subseteq\Phi$. Also
+$\chi_d(F_p)=\chi_d(a_p)=(p/d)$. For $p=2$, $(2/d)=1$ since $d\equiv7\pmod8$. For odd $p$, since
+$d\equiv3\pmod4$, reciprocity gives $(p/d)=(-d/p)$, and $-d\equiv1\pmod p$ because $p\mid d+1$
+(for $p=q$ by (c), for $p\mid f_\psi$ because $f_\psi\le z$ and (c)). So $F_p\in\Phi$. (H4): $I_d$ is
+the image of the units $\equiv1\pmod{Q_Sq}$; on these $\chi_q$ and the $H$-component are trivial and
+$\chi_d$ takes both values, so $I_d=\{0,\varsigma\}$.
+
+For $\theta_D$: if $p\nmid N$, $\theta_D(p^k)=\theta(kF_p)=\theta(p)^k=\theta^\ast(p^k)$. If $p\mid N$,
+the average of $\theta(kF_p+x)$ over $x\in I_p$ is $\theta(a_p)^k$ if $\theta$ is trivial on $I_p$
+and $0$ otherwise. Now $\theta$ is trivial on $I_p$ iff the $p$-component of $\theta$ (under
+$(\Z/N\Z)^\times=(\Z/p^v)^\times\times(\Z/N_p)^\times$) is trivial, iff $p\nmid\mathrm{cond}(\theta)$,
+and then $\theta(a_p)=\theta^\ast(p)$. So $\theta_D=\theta^\ast$ on prime powers, and both are
+multiplicative. The last claim is the remark after Definition~4.3 of Part~I.
+\end{proof}
+
+\subsection{The thick set}
+
+\begin{lemma}[Relation-free sets; Behrend, \lean{hostThickExists}]\label{lem:behrend}
+For integers $n_0\ge1$ and $L\ge2$ there is a set $T\subseteq\{0,1,\dots\}$ with $4Ls<n_0$ for
+all $s\in T$,
+\[
+|T|\ge\frac{n_0}{L}\exp\bigl(-16\sqrt{\log n_0\log L}\bigr),
+\]
+and no relation $j(s_2-s_1)=i(s_3-s_1)$ with $s_1,s_2,s_3\in T$ pairwise distinct and
+$i,j\in\Z$, $0<|i|,|j|\le L$, $i\neq j$.
+\end{lemma}
+
+\begin{proof}
+Put $\lambda=\log(4L)$ and $\nu=\log(n_0/(4L))$. If $\nu<4\lambda$, then $n_0<(4L)^5$ and the bound is
+$<1$ (as $16\sqrt{\log n_0\log L}\ge\log n_0$ when $\log n_0\le15\log L$), so $T=\{0\}$ works.
+Otherwise let $\Sigma=\lfloor\sqrt{\nu/\lambda}\rfloor\ge2$, $D=\lfloor e^{\nu/\Sigma-\lambda}\rfloor$ and
+$B=4LD$. Since $\nu/\Sigma\ge\sqrt{\nu\lambda}\ge2\lambda$, $D\ge e^{\lambda}/2\ge4$, and
+$B^\Sigma\le e^\nu=n_0/(4L)$. For $v\in\{0,\dots,D-1\}^\Sigma$ put $s(v)=\sum_mv_mB^m<B^\Sigma$.
+By pigeonhole some $k\le\Sigma D^2$ has $|\{v:\sum_mv_m^2=k\}|\ge D^\Sigma/(\Sigma D^2+1)$; let $T$ be
+the image of this sphere under $s$, which is injective since $D<B$.
+
+Suppose $j(s_2-s_1)=i(s_3-s_1)$ with $s_\nu=s(v_\nu)$. The integers
+$c_m=j(v_{2,m}-v_{1,m})-i(v_{3,m}-v_{1,m})$ satisfy $|c_m|\le2L(D-1)<B$ and $\sum_mc_mB^m=0$, so all
+$c_m=0$ (look at the largest $m$ with $c_m\ne0$). Thus $j(v_2-v_1)=i(v_3-v_1)$ as vectors. Put
+$w=v_3-v_1$, so $v_2-v_1=(i/j)w$. Since $|v_1|^2=|v_2|^2=|v_3|^2$,
+$2\langle v_1,w\rangle+|w|^2=0$ and $2(i/j)\langle v_1,w\rangle+(i/j)^2|w|^2=0$. Subtracting $i/j$
+times the first from the second gives $(i/j)(i/j-1)|w|^2=0$, so $w=0$ and $s_3=s_1$, a
+contradiction.
+
+For the size: $D^\Sigma\ge(e^{\nu/\Sigma-\lambda}/2)^\Sigma=e^\nu e^{-\Sigma(\lambda+\log2)}$,
+$\Sigma D^2+1\le2\Sigma e^{2\nu/\Sigma}$, and with $\nu/\Sigma\le2\sqrt{\nu\lambda}$,
+$\Sigma(\lambda+\log2)\le2\sqrt{\nu\lambda}$, $2\Sigma\le e^{\sqrt{\nu\lambda}}$ we get
+$|T|\ge e^\nu e^{-7\sqrt{\nu\lambda}}\ge\frac{n_0}{4L}e^{-7\sqrt{3\log n_0\log L}}\ge\frac{n_0}{L}e^{-16\sqrt{\log n_0\log L}}$,
+using $\lambda\le3\log L$.
+\end{proof}
+
+Let $a_0$ generate the cyclic group $A_0$ (Lemma~\ref{lem:Hstruct}(b)), and let $L\le(\log x)^A$ be
+the relation cutoff used by the family. Apply Lemma~\ref{lem:behrend} with $n_0=n/o$ and put
+$T_2=\{s\,a_0:s\in T\}\subseteq A_0$. A relation $j(s_2a_0-s_1a_0)=i(s_3a_0-s_1a_0)$ in $A_0$ means
+$j(s_2-s_1)\equiv i(s_3-s_1)\pmod{n_0}$, and both sides are $<n_0/2$ in absolute value, so it is an
+equality of integers; hence $T_2$ has no such relations. Its size is
+$|T_2|\ge(n/o)L^{-1}e^{-16\sqrt{\log n\log L}}\ge x^{-\eps}n$ for large $x$.
+
+\subsection{The remaining host data}
+
+\begin{itemize}
+\item $K=\{\xi\circ\mathrm{pr}_H:\xi\in\langle\psi\rangle\}\subseteq\Gh$, the characters that factor
+  through $H\to\mu_o$.
+\item $\ell(\theta)=L'(1,\theta^\ast)/L(1,\theta^\ast)$ for $\theta\ne\mathbf1$, and $\ell(\mathbf1)=0$.
+\item $T\subseteq H$: with $N_0=\lfloor x^{-\eps/8}n/(3o+1)\rfloor$, take $4N_0$ elements of $A_0$ and
+  $3N_0$ elements of each other coset of $A_0$ (possible since $4N_0\le n/o$). Then
+  $n_T=(3o+1)N_0$ (\lean{Shares} with $\lambda(\gamma)=4/(3o+1)$ on $A_0$ and $3/(3o+1)$ off it, with
+  no error).
+\item $X'=\exp(x^{\eps/3})$ and $\vartheta=\exp(-x^{\eps/8})$; $b=\exp(x^\eps)$; $m,k$ as in
+  Proposition~\ref{prop:ranks}.
+\end{itemize}
+
+\begin{lemma}[Large scales, \lean{thin}, \lean{g_integral}]\label{lem:thin}
+For $x$ large, every $\theta\in\Gh$ and every $y\ge X'/3$, $|G_\theta(y)|\le\vartheta y$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:datum}, $G_\theta=G_{\theta^\ast}$, and $\theta^\ast$ has conductor $r\mid N$, with
+$\log r\le\log(4f_\psi n)+z+z\log^2Y\le2x^{\eps/5}\log^2x$. First we locate exceptional zeros. Write
+$\theta^\ast=\rho\chi_q^i\chi_d^j$ with $\rho$ primitive of conductor dividing $Q_S$. If $\theta^\ast$
+is complex it has none. If it is real, then $\rho$ is real; a real character in $X_e\langle\psi\rangle$
+has $2$-part of conductor dividing $8$ and odd part dividing $f_\psi$, so $\rho\in\Xi$. If
+$(i,j)\ne(0,0)$, Theorem~\ref{thm:goodpair} gives $\mathrm{Box}(\theta^\ast,r)$, so $L(s,\theta^\ast)$
+has no real zero in $(1-\frac1{400},1)$ and, as $r\ge q$ is large, the term with $\epsilon_\chi$ in
+\ref{N2} is absent. If $(i,j)=(0,0)$, $\theta^\ast$ is one of finitely
+many real characters depending only on $\psi$; let $\beta_\psi<1$ be the largest of their real zeros
+in $(\frac12,1)$ (or $\frac12$).
+
+By Lemma~\ref{lem:Gident}(c), $|G_{\theta^\ast}(y)|\le y\int_y^\infty|\psi(u,\theta^\ast)-\delta u|u^{-2}\,du$.
+The exceptional term of \ref{N2} contributes at most
+$y\int_y^\infty u^{\beta_\psi-2}\,du/\beta_\psi\le C_\psi y^{\beta_\psi}\le\frac12\vartheta y$, since
+$\log y\ge x^{\eps/3}/2$. For the error term of \ref{N2} put $t=\log u\ge t_0=\log y\ge x^{\eps/3}/2$
+and $\lambda_r=\log r$. Then
+\begin{gather*}
+\frac{c\,t}{\sqrt t+\lambda_r}\ge c\min\Bigl(\frac t{2\lambda_r},\frac{\sqrt t}2\Bigr),\\
+\int_{t_0}^\infty\bigl(e^{-ct/(2\lambda_r)}+e^{-c\sqrt t/2}\bigr)\,dt\le\frac{2\lambda_r}ce^{-ct_0/(2\lambda_r)}+\frac4c\Bigl(\sqrt{t_0}+\frac2c\Bigr)e^{-c\sqrt{t_0}/2}.
+\end{gather*}
+Here $\lambda_r\le2x^{\eps/5}\log^2x$, so $ct_0/(2\lambda_r)\ge\frac c8x^{2\eps/15}/\log^2x\ge2x^{\eps/8}$,
+and $(\sqrt{t_0}+\frac2c)e^{-c\sqrt{t_0}/2}\le\frac4ce^{-c\sqrt{t_0}/4}\le\frac4ce^{-2x^{\eps/8}}$, for large
+$x$, because $2\eps/15>\eps/8$ and $\eps/6>\eps/8$. With the factors $C(\lambda_r+1)^4$ and
+$2\lambda_r/c$, which are $\le x$, this part of the integral is at most $Cx^2e^{-2x^{\eps/8}}\le\frac12\vartheta$, so it contributes at
+most $\frac12\vartheta y$ to $|G_{\theta^\ast}(y)|$. For $\theta=\mathbf1$ the same computation applies with $r=1$.
+\end{proof}
+
+\begin{proposition}[Host construction and verification of (B0)--(B7)]\label{prop:hostB}
+Let $\psi$ be primitive of order $o$, $0<\eps<1/52$, $J\ge2$, and $Y\ge Y_1(\psi,\eps,J)$. Let
+$(q,d)$ be the window pair of Theorem~\ref{thm:goodpair}. For every large $x\in[Y,Y^J]$ the data
+above satisfy:
+\begin{enumerate}[label=(\roman*)]
+\item \textup{(B0)} by Lemma~\ref{lem:datum};
+\item \textup{(B3)} with $X'=\exp(x^{\eps/3})$, $\vartheta=\exp(-x^{\eps/8})$, and the first
+  inequality $2f(x+1)\vartheta\le1/x$ of \textup{(B4)}, since $f=2n\le4x^{2+8\eps}$;
+\item \textup{(B5)} except for the condition on $a_E$: $n_T\ge x^{-\eps/8}n-(3o+1)\ge x^{-\eps/8}n/2$,
+  $n_{T_2}\ge x^{-\eps}n$, and the bounds on $m,k$ from Proposition~\ref{prop:ranks};
+\item \textup{(B6)}: $T_2\subseteq A_0$;
+\item \textup{(B7)} with $c=\frac1{3o+1}$, $M=4o$, $C_E=2$ and
+  $K_0=\max_{\xi\in\langle\psi\rangle\setminus\{1\}}|L'(1,\xi^\ast)/L(1,\xi^\ast)|$;
+\item $G_K=G_{F_\psi}$ and $\Sigma_{\mathrm{rest}}(x)\le3o\,x^{1/2+\eps}\le4o\,x^{1/2+\eps}$.
+\end{enumerate}
+The remaining parts of the host conditions concern the lattice data and are supplied by the
+family of Sections~\ref{sec:glued}--\ref{sec:S8VWin}: the weights $w_{u,j}$, $b'$ and $\eta$ in
+\textup{(B1)} (including $b'X'\le xb$), the numbers $a_t$ in \textup{(B2)}, the second inequality
+$6f(x+1)(\eta+1)\le b/x$ of \textup{(B4)}, and $0\le a_E\le2xb$ in \textup{(B5)}. The domain
+conditions \textup{(S0)} follow from Proposition~\ref{prop:ranks}.
 \end{proposition}
 
 \begin{proof}
-By the prime number theorem in arithmetic progressions, the number of primes $q\equiv3\pmod8$ with
-$\frac12 Y^{\eps/5}<\log q\le Y^{\eps/5}$ is $\gg \exp(Y^{\eps/5})/Y^{\eps/5}$. By the zero-density
-box estimate \ref{C1} (\lean{count_bad_core}), at most $O(Q^{1/4})$ moduli $q\le Q$ fail the box
-bounds $|G_\chi(y)|\le y^{1/2+\eps}$ and $|L'/L(1,\chi)|\le C_L\log y$ on $[Y,Y^J]$. Since
-$Q^{1/4}\ll Q/\log Q$, we choose a good prime $q$. Given $q$, the congruence conditions
-$d\equiv7\pmod{16}$, $d\equiv-1\pmod q$, and $d\equiv-1\pmod p$ for all odd primes
-$p\le Y^{\eps/5}$ form a single primitive residue class modulo
-$M=16q\prod_{3\le p\le Y^{\eps/5}}p$. By Chebyshev's bound and $\frac12 Y^{\eps/5}<\log q\le Y^{\eps/5}$,
-we have $\log M=\log(16q)+(1+o(1))Y^{\eps/5}\in\bigl((\frac32+o(1))Y^{\eps/5},(2+o(1))Y^{\eps/5}\bigr)$,
-so $Q_d=\exp(Y^{\eps/5}(\log Y)^2)=M^{\Theta((\log Y)^2)}$ lies far above any fixed Linnik power
-$M^{L_{\mathrm{Lin}}}$ and satisfies $M=Q_d^{o(1)}$. By Linnik's lower bound for primes in
-arithmetic progressions~\cite[Theorem~18.7]{iwaniec-kowalski}, the number of primes
-$d\in(Q_d^{1/2},Q_d]$ in this residue class is $\ge Q_d^{1-o(1)}\gg Q_d^{1/4}$, so by \ref{C1} we
-choose a good prime $d$ in the range (b) of Definition~\ref{def:winpair}. Summing the box bounds
-over the $3o$ non-target characters in $E_0\times\langle\psi\rangle$ gives
-$\Sigma_{\mathrm{rest}}(x)\le 3o\,x^{1/2+\eps}\le 4o\,x^{1/2+\eps}$, proving (i).
-
-Choosing $e=\lceil(2+8\eps)\log_2 x\rceil$ gives $n=2^e\in[x^{2+8\eps},2x^{2+8\eps}]$
-(\lean{PageN}). The Artin reciprocity map on $(\Z/N\Z)^\times$ factors through $E_0\times H$ with
-$G_K=G_{F_\psi}$ and $c=\frac{1}{3o+1}$, proving (ii). Applying \ref{C2} (\lean{hostThickExists})
-to $H$ with $L_{\mathrm{rel}}\ll(\log x)^A$ gives $\log L_{\mathrm{rel}}=O(\log\log x)$ and
-produces $T_2\subseteq H$ of density
+(i), (ii), (iv) are proved above, and (iii) follows from the construction of $T$, the thick set
+bound and Proposition~\ref{prop:ranks}. For (v): $\mathbf1\in K$; every $\theta\in K$ is trivial on
+$\iota(A_0)$ and on $E_0$, so $K\subseteq\Gh_{A_0}$ and $\theta(\varsigma)=1$;
+$|\Gh_{A_0}|=4o$ by Lemma~\ref{lem:Hstruct}(c). For $\theta=\xi\circ\mathrm{pr}_H\in K$ with
+$\xi\ne1$, the function $\gamma\mapsto\theta(\iota(\gamma))$ is a nontrivial character of
+$H/A_0\cong\Z/o\Z$, so
 \[
-\delta_2\ge\frac{\exp\bigl(-C\sqrt{\log n\log L_{\mathrm{rel}}}\bigr)}{L_{\mathrm{rel}}}
-=\exp\bigl(-O(\sqrt{\log x\log\log x})\bigr)=x^{-o(1)}\ge x^{-\eps}
+\sum_{t\in T}\theta(\iota(t))=N_0\Bigl(4+3\sum_{\gamma\ne0}\theta(\gamma)\Bigr)=N_0(4-3)=\frac{n_T}{3o+1},
 \]
-for all $x\ge x_0(\eps)$. Together with Proposition~\ref{prop:ranks}, this verifies (B0)--(B7) and
-(S0).
+exactly. For $\theta\in K\setminus\{\mathbf1\}$, $|\ell(\theta)|\le K_0$ by definition. For
+$\theta\in\Gh_{A_0}\setminus K$, $\theta^\ast=\xi^\ast\chi_q^i\chi_d^j$ with $(i,j)\ne(0,0)$ and
+$\xi^\ast\in\Xi$, so $|\ell(\theta)|\le2\log Y\le2\log x$ by Theorem~\ref{thm:goodpair}.
+
+For (vi): in $K$ only $\mathbf1$ is trivial on $\iota(H)$, so
+$G_K=G_\zeta+\frac1{3o+1}\sum_{\xi\ne1}\re G_{\xi^\ast}=G_{F_\psi}$ by Lemma~\ref{lem:datum}. The set
+$\Gh_{A_0}\setminus K$ has $3o$ elements, and for each, $|G_\theta(x)|=|G_{\theta^\ast}(x)|\le x^{1/2+\eps}$
+by Theorem~\ref{thm:goodpair}, since $x\in[Y,Y^J]$.
 \end{proof}
 
 % ======================================================================
@@ -1467,15 +2026,16 @@ Fix a primitive Dirichlet character $\psi$ of order $o$, put $\eps_1=1/52$, and 
 $0<\eps<\eps_1$. Let $e(x)=\lceil(2+8\eps)\log_2 x\rceil$. First apply Theorem~\ref{thm:VWin}
 (using \ref{C4}, \ref{C5}, \ref{C7}) to obtain $J\ge2$ and $X_0>0$. For each sufficiently large
 $X\ge\max(X_0, Y_0(\psi,\eps,J)^J)$, Proposition~\ref{prop:hostB} applied with this $J$ and
-$Y_{\mathrm{base}}=X^{1/J}$ (using \ref{C1}) supplies a window pair $(q,d)$ at $(\eps,X^{1/J})$
-whose auxiliary characters satisfy the zero-density box bounds on the full interval
+$Y_{\mathrm{base}}=X^{1/J}$ (using Theorem~\ref{thm:goodpair}, hence \ref{C1}) supplies a window
+pair $(q,d)$ at $(\eps,X^{1/J})$ whose auxiliary characters satisfy the bounds of
+Theorem~\ref{thm:goodpair} on the full interval
 $[X^{1/J},X]=[Y_{\mathrm{base}},Y_{\mathrm{base}}^J]$. Theorem~\ref{thm:VWin} then produces a
 subwindow $[Y,Y^2]\subseteq[X^{1/J},X]$ on which the $\Sha$-window bound \eqref{eq:VVle} holds for
 every $x\in[Y,Y^2]$. Letting $W$ be the union of these windows $[Y,Y^2]$ over all large $X$, we
 obtain part~(i) of Theorem~C2 (since $[Y,Y^{3/2}]\subseteq[Y,Y^2]$ for $Y\ge1$).
 
 Now fix $x\in W$ with $x\ge x_0(\eps)$. By Proposition~\ref{prop:ranks} and
-Proposition~\ref{prop:hostB} (using \ref{C2}), we obtain a host at scale $x$ satisfying
+Proposition~\ref{prop:hostB}, we obtain a host at scale $x$ satisfying
 \textup{(B0)--(B7)} with parameters $(C_E,K_0,\frac1{3o+1},4o)$, $G_K=G_{F_\psi}$,
 $\Sigma_{\mathrm{rest}}(x)\le 4o\,x^{1/2+\eps}$, the domain conditions \textup{(S0)}, and all
 windows of Proposition~7.9 of Part~I (with absolute constants $K,e_K$ coming from the parameter
@@ -1518,8 +2078,8 @@ Input & Lean declaration(s) & Published reference & Fidelity / scope note \\
 Input & Lean declaration(s) & Published reference & Fidelity / scope note \\
 \midrule
 \endhead
-\ref{C1} & \lean{ZD.zero_density_box}, \lean{count_bad_core} & Iwaniec--Kowalski~\cite[Ch.~10]{iwaniec-kowalski} & Proved in Lean via mollifier/duality; matches classical $Q^{1/4}$ bad-modulus bound. \\
-\ref{C2} & \lean{hostThickExists} & Behrend~\cite{behrend}, sphere-packing construction & Elementary combinatorial proof in Lean; gives density $\ge\exp(-C\sqrt{\log n\log L_{\mathrm{rel}}})/L_{\mathrm{rel}}$. \\
+\ref{C1} & \lean{PNTAPRelW}, \lean{ZeroDensityBox}, \lean{ExcBound}, \lean{page_across} & Davenport~\cite[Ch.~14, 16, 19]{davenport}; Iwaniec--Kowalski~\cite[Thm.~5.27, Ch.~18]{iwaniec-kowalski}; Montgomery~\cite[Thm.~12.2]{montgomery-topics}; Gallagher~\cite{gallagher} & Formal content is a box condition ($\re s>1-\frac1{400}$, $|\im s|\le Q$) with a $Q^{1/4}$ count, plus primes in progressions with the exceptional term. Version~1.2 misdescribed it; the $y^{1/2+\eps}$ bounds are proved in Section~\ref{sec:pairs}. \\
+\ref{C2} & \lean{hostThickExists} & Behrend~\cite{behrend} & Proved in Lemma~\ref{lem:behrend}; density $\ge L^{-1}\exp(-16\sqrt{\log n\log L})$. \\
 \ref{C3} & \lean{meanPeriod} & Chowla--Selberg~\cite{chowla-selberg} & Identifies $\log\Omega=\gE+\log(\pi/v)-L'(1,\chi_d)/L(1,\chi_d)$ for CM curves over $\Q(\sqrt{-d})$. \\
 \ref{C4} & \lean{UpperTheory.V.FW.ferreroWashington} & Ferrero--Washington~\cite{ferrero-washington} & Proved in 62 Lean files; states bounded $\ell$-rank of $\mathrm{Cl}(K')/\mathrm{Cl}(K')^\ell$ ($\mu_\ell=0$). \\
 \ref{C5} & \lean{PoitouTate.ShaDual}, \lean{LitCoh}, \lean{Odd.thmBcFree_of} & Neukirch--Schmidt--Wingberg~\cite[Ch.~VIII]{nsw}; Milne~\cite{milne} & Proved and applied via \lean{PropAudit}; covers minus-part orthogonality and Euler characteristic. \\
@@ -1559,6 +2119,9 @@ were checked by the author, who takes full responsibility for the content.
   333--400.
 \bibitem{chowla-selberg} S.~Chowla and A.~Selberg, \emph{On Epstein's zeta-function}, J. reine
   angew. Math. \textbf{227} (1967), 86--110.
+\bibitem{davenport} H.~Davenport, \emph{Multiplicative Number Theory}, 3rd ed., revised by
+H.~L.~Montgomery, Graduate Texts in Mathematics~74, Springer, New York, 2000.
+
 \bibitem{diamond} F.~Diamond, \emph{Mod $p$ Hilbert modular forms and partial Hasse invariants},
   Forum Math. Sigma (2025), arXiv:2111.10160.
 \bibitem{dixit-part1} I.~Dixit, \emph{The analytic reduction in Alp\"oge's formal proof of the
@@ -1569,6 +2132,9 @@ were checked by the author, who takes full responsibility for the content.
   \url{https://github.com/ishaan2006/rh-lean-reproduction}.
 \bibitem{ferrero-washington} B.~Ferrero and L.~C.~Washington, \emph{The Iwasawa invariant $\mu_p$
   vanishes for abelian number fields}, Ann. of Math. (2) \textbf{109} (1979), 377--395.
+\bibitem{gallagher} P.~X.~Gallagher, \emph{A large sieve density estimate near $\sigma=1$},
+Invent. Math. \textbf{11} (1970), 329--339.
+
 \bibitem{grothendieck1974} A.~Grothendieck, \emph{Groupes de Barsotti--Tate et cristaux de
   Dieudonn\'e}, S\'eminaire de Math\'ematiques Sup\'erieures \textbf{45}, Presses de l'Universit\'e
   de Montr\'eal, 1974.
@@ -1578,6 +2144,9 @@ were checked by the author, who takes full responsibility for the content.
   Applications to Abelian Schemes}, Lecture Notes in Mathematics \textbf{264}, Springer, 1972.
 \bibitem{milne} J.~S.~Milne, \emph{Arithmetic Duality Theorems}, 2nd ed., BookSurge, Charleston,
   SC, 2006.
+\bibitem{montgomery-topics} H.~L.~Montgomery, \emph{Topics in Multiplicative Number Theory},
+Lecture Notes in Mathematics~227, Springer, Berlin, 1971.
+
 \bibitem{nsw} J.~Neukirch, A.~Schmidt and K.~Wingberg, \emph{Cohomology of Number Fields}, 2nd ed.,
   Grundlehren der mathematischen Wissenschaften \textbf{323}, Springer, Berlin, 2008.
 \bibitem{sutherland} A.~V.~Sutherland, build and verification page for the Lean development,
@@ -1606,7 +2175,8 @@ Here & Formal declaration & Location \\
 \endhead
 Lemma~\ref{lem:evenbetween}, Prop.~\ref{prop:ranks} & \lean{exists_even_between}, \lean{exists_ranks_of_frame}, \lean{exists_ranks_rankVal_frame}, \lean{RankVal} & \lean{Dev/AVT/Proofs/GlobalInterpolation/ExistsRanksRankValFrame.lean}, \lean{PairRowIffQdRows.lean} \\
 Prop.~\ref{prop:ranks}(iii) & \lean{m_pow_five_mul_f_mul_L_le}, \lean{size_window_at_five}, \lean{winL}, \lean{winA}, \lean{winB}, \lean{winM} & \lean{MPowFiveMulFMulLLe.lean}, \lean{QuadraticLogDerivCongr.lean} \\
-Def.~\ref{def:winpair}, Prop.~\ref{prop:hostB} & \lean{WinPair}, \lean{PageN}, \lean{QH.pairEx}, \lean{count_bad_core}, \lean{ZD.zero_density_box}, \lean{hostThickExists} & \lean{Dev/AA/CharacterBoxes/ExistsPageN.lean} \\
+Lemmas~\ref{lem:Gident}--\ref{lem:countbad}, Thm.~\ref{thm:goodpair} & \lean{QH.meanSq_abs}, \lean{QH.sPsq_le}, \lean{QH.RR_le}, \lean{QH.meanSqK}, \lean{QH.bad_share}, \lean{QH.twistK}, \lean{count_a}, \lean{page_across}, \lean{QH.count_bad}, \lean{count_bad_core}, \lean{QH.tailK}, \lean{QH.box_of_S}, \lean{QH.stage1}, \lean{QH.stage2}, \lean{QH.pairEx}, \lean{pair_exists} & \lean{Dev/AA/MeanSquareBounds/}, \lean{GL3MeanSquares/GenusMeanAsymptotics/JacobiCharacterSums/MSqCount.lean:346}, \lean{MSqPage.lean:37} \\
+Lemmas~\ref{lem:Hstruct}--\ref{lem:thin}, Prop.~\ref{prop:hostB} & \lean{WinPair}, \lean{PageN}, \lean{KerChi}, \lean{HostRaw}, \lean{arith}, \lean{HostAddCharCompatible}, \lean{Frame.Shares}, \lean{Frame.lam}, \lean{hostThickExists}, \lean{QH.thin}, \lean{QH.g_integral}, \lean{core_gm} & \lean{Dev/AA/CharacterBoxes/ExistsPageN.lean}, \lean{TwistForm.lean:9}, \lean{FrobeniusOrbitsProofs/ThickExists.lean:181}, \lean{PrimitiveCosets/CoreGm.lean:12} \\
 Section~\ref{sec:glued}, \eqref{eq:sigchain}--\eqref{eq:rowranks} & \lean{IsChiField}, \lean{Ranks}, \lean{nuRow}, \lean{nuAbs} & \lean{ExistsPageN.lean}, \lean{Formalism/LocalRingCardinality/Params.lean} \\
 Theorem~\ref{thm:gluedR} & \lean{prescribedRowLat}, \lean{exists_divStage_of_pk}, \lean{DV.RRDef}, \lean{GoodSideLattices.locMeet} & \lean{Dev/AVT/Proofs/IwasawaDecomposition/ExistsDivStageOfPk.lean:54, 76} \\
 Lemmas~\ref{lem:thetachain}--\ref{lem:steprule} & \lean{ip_unique}, \lean{thetaChain_upward_induction_fixed_metric}, \lean{chainUp_of}, \lean{rulePar_of_pairPar}, \lean{rulePar_step}, \lean{ShapeJumps}, \lean{multW_of_shape}, \lean{jump_bound_of_admitted} & \texttt{ThetaChainUpward\allowbreak InductionFixedMetric.lean:65, 81, 111}, \texttt{FirstOccurrenceRule\allowbreak ThetaChainStepBoth\allowbreak Directions.lean:57, 94}, \lean{EmbeddingTypes.lean:139}, \lean{JumpAndLengthOfAdmitted.lean:663, 769}, \lean{HodgeTateFromSandwich.lean:57} \\
