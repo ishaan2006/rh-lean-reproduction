@@ -182,7 +182,12 @@ words</a></li>
 <li><a href="#sec:F" id="toc-sec:F"><span
 class="toc-section-number">8</span> Step F: the <span
 class="math inline">\(\text{Ш}\)</span> window and the classical
-inputs</a></li>
+inputs</a>
+<ul>
+<li><a href="#sec:footprint" id="toc-sec:footprint"><span
+class="toc-section-number">8.1</span> Minimal mathematical footprint:
+load-bearing vs. dead classical inputs</a></li>
+</ul></li>
 <li><a href="#sec:23" id="toc-sec:23"><span
 class="toc-section-number">9</span> Why the <span
 class="math inline">\(2/3\)</span> barrier does not appear</a>
@@ -222,11 +227,12 @@ declarations</a></li>
 <header class="hero">
 <div class="kicker">Reading the formal proof</div>
 <h1 class="title">The Riemann Hypothesis via a chain of theta lifts: a human-readable account of the Lean proof</h1>
-<div class="byline">Ishaan Dixit · November 2026</div>
+<div class="byline">Ishaan Dixit · Updated 23 November 2026</div>
 <div class="links">
 <a href="rh_lean_proof_readable.pdf">PDF version</a>
 <a href="https://github.com/ishaan2006/rh-lean-reproduction">Repository</a>
 <a href="https://github.com/ishaan2006/rh-lean-reproduction/blob/main/mechanism/TRACE.md">Line-by-line trace</a>
+<a href="https://github.com/ishaan2006/rh-lean-reproduction/blob/main/results/audit/verdict_table.md">PropAudit verdicts</a>
 <a href="https://github.com/ishaan2006/rh-lean-reproduction/tree/main/scripts">Build scripts</a>
 </div>
 </header>
@@ -234,11 +240,12 @@ declarations</a></li>
 <section class="tldr">
 <h2>In short</h2>
 <ul>
-<li>The Lean theorem proves GRH for every Dirichlet character; RH is the trivial-character case. Our independent build is clean: 175,187 modules, Mathlib's own statement, only the three standard axioms.</li>
+<li>The Lean theorem proves GRH for every Dirichlet character; RH is the trivial-character case. Our independent build is clean: 175,187 modules, Mathlib's own statement, only the three standard axioms, and Google DeepMind's <code>formal-conjectures</code> RH/GRH statements compile and pass <code>con-leche --compare</code>.</li>
 <li>The whole square-root saving is one balance: relative to the main term the error is about <em>x/m + m</em> for a chain of <em>m</em> theta lifts, smallest at <em>m ≈ √x</em>.</li>
 <li>Both sides of that balance are paid by one inequality, the divisibility bound. Of the charges of the same nominal size, the energy and slope budgets are slack, and the "signature drift" is an artefact smaller than its bound by a factor of <em>x</em><sup>1131</sup>.</li>
 <li>The real cost is one <em>m</em> used twice: <em>m</em> lifts, each charged a Bloch–Kato rank of <em>m</em>. Charging each lift for the whole chain below it would give <em>x/m + m²</em> and stop at <em>x</em><sup>2/3</sup>, the barrier in the author's outline; the code avoids it by charging every local piece to exactly one lift.</li>
-<li>The last step is a windowed Landau theorem: a one-sided bound on windows [<em>Y</em>, <em>Y</em>²] rules out zeros. The Tate–Shafarevich step rests on formal proofs of Ferrero–Washington, Poitou–Tate and CM theory, all proved in Lean.</li>
+<li>The last step is a windowed Landau theorem: a one-sided bound on windows [<em>Y</em>, <em>Y</em><sup>3/2</sup>] rules out zeros. The Tate–Shafarevich step rests on formal proofs of Ferrero–Washington, Poitou–Tate and CM theory, all proved in Lean.</li>
+<li><b>Load-bearing audit (<code>PropAudit</code>):</b> of 610 <code>*.Published</code>/<code>OpenLiterature</code> items, 276 are unreachable, 261 are genuinely applied, and 12 types/propositions in the live closure are inert. Dropping unread hypothesis fields disconnects 14 dead classical theories (~2,600+ live declarations, including Ohsawa–Takegoshi / L² ∂̄-estimates, <code>PushDown</code>, and 12 <code>ThetaLocalInputs</code> fields) from <code>Main</code> (upstream PRs #384, #395, #398).</li>
 </ul>
 </section>
 
@@ -1258,6 +1265,19 @@ half-sum looks like the Harish-Chandra parameters at lift <span
 class="math inline">\(j\)</span>; <code>kerPlace</code> sums <span
 class="math inline">\(\phi(\nu)=\nu\log\nu-\nu\)</span> over the rows, a
 Stirling shape.</p>
+<h4 data-number="6.3.0.2" id="the-g-place-energy-bound."><span
+class="header-section-number">6.3.0.2</span> The <span class="math inline">\(g\)</span>-place energy bound.</h4>
+<p><span class="tag verified">Verified</span> (<code>linkDIVt_of_rowsF</code>,
+<code>secondComplement_of_split</code>, <code>WeightDegreeSizes.lean:142–261</code>)
+The <span class="math inline">\(g\)</span>-place energy clause of <code>LinkDIV_at</code>
+is not a global product formula across all places, but a local sum over the places
+<span class="math inline">\(w\mid g_i\)</span> (<span class="math inline">\(i\in\{0,1\}\)</span>,
+combined via <span class="math inline">\(\log(g_0g_1)=\log g_0+\log g_1\)</span> in
+<code>prod_gTypes</code>). Specifically, <code>NormDecompositionCond</code> gives
+<span class="math inline">\(\sum_{w\mid g_i}\mathrm{sz}(w,v_{NN})=(\sum_\tau\mathrm{nuAbs}(u,j,\tau))\log g_i\)</span>,
+<code>factEtaMean</code> cancels the Fock-degree offset <span class="math inline">\(2\,\mathrm{FTypeG}=-\mathrm{fockDeg}\)</span>,
+<code>DegreeCountBound</code> bounds <span class="math inline">\(|\sum_\tau\mathrm{nuAbs}-\mathrm{fockDeg}-\sum_t a_T|\le\mathrm{errG}(j)\)</span>,
+and <code>TypePrimeSizeBound</code> absorbs <span class="math inline">\((\mathrm{errG}(j)+2v_{g_i}(D_\Gamma)+2\,\mathrm{er})\log g_i\le C B_0\)</span>.</p>
 <div class="proposition">
 <p><strong>Proposition 22</strong> (<span class="tag ours">Ours</span>). <em>The real per-lift
 energy error is <span class="math inline">\(\mathrm{errG}(j)\approx
@@ -1974,6 +1994,60 @@ class="math inline">\(\exp(x^{4\varepsilon/5})\)</span> times a
 polynomial. Both are far below <span class="math inline">\(\sqrt
 b=\exp(x^\varepsilon/2)\)</span>, so the window does not touch the
 square root.</p>
+<h2 data-number="8.1" id="sec:footprint"><span
+class="header-section-number">8.1</span> Minimal mathematical footprint:
+load-bearing vs. dead classical inputs</h2>
+<p>Because the original archive bundles classical theorems into large
+hypothesis records, file-level reachability from <code>Main</code>
+overstates what the proof actually consumes. Running our compiled
+closure auditor (<code>PropAudit.lean</code>, <span class="tag verified">Verified</span>,
+at commit <code>40e56bab</code>, 1,265,279 project constants in the
+closure of the five headline theorems) separates genuinely applied
+theorems from dead weight carried in unused record fields
+(<a href="https://github.com/ishaan2006/rh-lean-reproduction/blob/main/results/audit/verdict_table.md"><code>results/audit/verdict_table.md</code></a>):</p>
+<ul>
+<li><p><strong>610 <code>*.Published</code> and <code>OpenLiterature</code> items:</strong>
+276 are unreachable from <code>Main</code> (including <code>LocalLanglandsExists</code>
+and <code>CaraianiLocalGlobal</code>), 261 are genuinely applied in the closure,
+60 are carried-only (<code>applied=0</code>, <code>carried&gt;0</code>: 1 trivial
+placeholder <code>UnusedSlot72 := True</code>, 8 parent-bundle conjuncts/aliases,
+and 51 proved by explicit witnesses), and 9 have zero proof occurrences (6 are
+<code>Set</code> definitions rather than theorems).</p></li>
+<li><p><strong>Verified load-bearing classical inputs:</strong> source-checking the
+terminal witnesses confirms genuine proofs and live applications for
+Grothendieck–Messing deformation theory
+(<code>GrothendieckDeformation</code>/<code>GrothendieckMessing</code> via
+<code>abelianScheme_hom_lifting_nilpotent_dividedPowers</code>), local Bloch–Kato
+duality and dimension formulas (<code>BlochKato.RationalDuality</code>,
+<code>IntegralDuality</code>, <code>DimFormula</code> via <code>bkAL</code> and
+<code>bkBL</code>), Poitou–Tate duality (<code>PoitouTate.ShaDual</code>), real
+Howe duality (<code>HoweDualityReal</code>), Kawamata–Viehweg vanishing
+(<code>KawamataViehweg</code>), strong approximation for special unitary groups
+(<code>StrongApproxSU</code>), and rigid de Rham vector extensions
+(<code>DeRhamVectorExtension.Family.Natural</code>).</p></li>
+<li><p><strong>Dead classical theories still inside the live closure:</strong> 12
+types/propositions in the live closure are never constructed inside the proof
+(inert-in-proof). Tracing the unread record fields that pull them in shows that
+the proof does <em>not</em> use: (i) Ohsawa–Takegoshi <span class="math inline">\(L^2\)</span>
+extension and <span class="math inline">\(\bar\partial\)</span>-estimates
+(<code>L2ExtensionLogCanonical</code>, <code>WeightedAtlas</code>, <code>OTY</code>,
+~1,645 declarations, unread field <code>PublishedHodgeBundleTheorems.q8</code> /
+<code>HSCore.Quoted.l2</code>; <a href="https://github.com/leanprover-community/riemann-hypothesis/pull/384">PR #384</a>);
+(ii) the <code>PushDown</code> / Hodge-flag / Plücker conjunct (~160+ declarations,
+unread 4th conjunct of <code>ZhangDimensionPushDownGrassmannianHeightBounds</code>;
+<a href="https://github.com/leanprover-community/riemann-hypothesis/pull/395">PR #395</a>);
+(iii) 12 classical-theorem fields of <code>GlobalTheory.FunPr.ThetaLocalInputs</code>
+(including Stone–von Neumann, metaplectic representation, Kudla splitting,
+holomorphic discrete series, Weyl branching, and cuspidal mirabolic; ~800+
+declarations; <a href="https://github.com/leanprover-community/riemann-hypothesis/pull/398">PR #398</a>);
+or (iv) the full local Langlands correspondence (<code>LocLanglands.IsRec</code> is
+inert; the proof uses only the weak assignment <code>IsRecT</code> via
+<code>recTExists</code>).</p></li>
+<li><p><strong>No hidden vacuous proofs:</strong> of 27 <code>Prop</code> declarations
+flagged as nullary in the closure, 17 are ordinary indexed inductives with a 0-field
+base constructor and only 10 have body <code>True</code> (3 explicit
+<code>UnusedSlot</code>s and 7 explicit "no extra filter" predicates).</p></li>
+</ul>
 <h1 data-number="9" id="sec:23"><span
 class="header-section-number">9</span> Why the <span
 class="math inline">\(2/3\)</span> barrier does not appear</h1>
@@ -2069,7 +2143,7 @@ class="header-section-number">10</span> The verification record</h1>
 <thead>
 <tr class="header">
 <th style="text-align: left;">Check</th>
-<th style="text-align: left;">Result (20–21 November 2026)</th>
+<th style="text-align: left;">Result (20–23 November 2026)</th>
 </tr>
 </thead>
 <tbody>
@@ -2121,6 +2195,29 @@ to completion in about 10 h 17 min (06:21 to 16:38 UTC, 21 Nov) with no
 error reported; its exit code was not recorded. Others report full
 replays too: Sutherland’s <code>leanchecker</code>, 175<span>,</span>187
 of 175<span>,</span>187 modules; Simon DeDeo, likewise</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Formal-conjectures</td>
+<td style="text-align: left;">Google DeepMind’s <code>RiemannHypothesis</code>
+and <code>GRH</code> (PR #88) compile against our build with only the three
+standard axioms; <code>con-leche --compare</code> (<code>274f0138</code>,
+<code>--verified</code>) accepts both (182 s). Single-export
+<code>con-leche</code> accepts all 1,468,418 declarations of
+<code>Main</code> (177 s, 46.4 GiB)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Load-bearing audit</td>
+<td style="text-align: left;"><code>PropAudit.lean</code> on the compiled
+closure (1,265,279 project constants, 64,730 tracked types/propositions):
+of 610 <code>*.Published</code>/<code>OpenLiterature</code> items, 276
+are unreachable, 261 applied, 60 carried-only, 9 zero-proof (6 are
+<code>Set</code> definitions). Inside the live closure, 12
+types/propositions are inert and 10 definitions have body <code>True</code>.
+Dropping unread hypothesis fields disconnects 14 classical theories
+(~2,600+ live declarations) from <code>Main</code> (PRs
+<a href="https://github.com/leanprover-community/riemann-hypothesis/pull/384">#384</a>,
+<a href="https://github.com/leanprover-community/riemann-hypothesis/pull/395">#395</a>,
+<a href="https://github.com/leanprover-community/riemann-hypothesis/pull/398">#398</a>)</td>
 </tr>
 </tbody>
 </table>
