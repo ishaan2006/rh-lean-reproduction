@@ -1,6 +1,8 @@
 # Reproducing and examining the Lean proof of the Riemann Hypothesis
 
-Ishaan Dixit, November 2026. The build is complete and clean, and the proof is now traced end to end.
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24477213.svg)](https://doi.org/10.5281/zenodo.24477213)
+
+Ishaan Dixit, November 2026. The build is complete and clean, the proof is traced end to end, and the analytic reduction is written up with full conventional proofs.
 
 On 20 November 2026 Levent Alpöge released a four-page note ([alpo.ge/remark.pdf](https://alpo.ge/remark.pdf)) and a Lean 4 project of 175,187 files and 17.4 million lines that claims to prove the Riemann Hypothesis and the Generalized Riemann Hypothesis for Dirichlet L-functions. Within hours several people had compiled it, and independent kernels (nanoda, con-leche, lean4lean, Pestka, con-agua, nanoclo, tenet) accepted it; see [Andrew Sutherland's page](https://math.mit.edu/~drew/grh/).
 
@@ -8,6 +10,7 @@ This repository is my independent look at the release. It does **not** claim to 
 
 ## Start here
 
+- **[The analytic reduction paper (34 pp., Zenodo DOI: 10.5281/zenodo.24477213)](https://doi.org/10.5281/zenodo.24477213)** (direct [PDF](https://ishaan2006.github.io/rh-lean-reproduction/analytic_reduction_grh.pdf), [Release v1.1](https://github.com/ishaan2006/rh-lean-reproduction/releases/tag/v1.1), single-file LaTeX source in [`journal/main.tex`](journal/main.tex)): self-contained conventional proofs of the windowed Landau theorem without positivity (Theorem A), group-theoretic Fourier isolation and the $x/m + m$ balance (Theorem B), the deduction from the eleven Hermitian-lattice conditions (S0) to (S10) (Theorem C), and four general host lattice theorems.
 - **[The readable account](https://ishaan2006.github.io/rh-lean-reproduction/)** (also as a [PDF](https://ishaan2006.github.io/rh-lean-reproduction/paper/), LaTeX source in `writeup/main.tex`): the whole proof top down, in six steps, with 15 figures and the load-bearing footprint of classical inputs. Every claim is labelled Exact, Verified, Reading or Ours.
 - **[`mechanism/TRACE.md`](mechanism/TRACE.md)**: the evidence, 29 sections, every declaration with file and line.
 - **[`results/audit/verdict_table.md`](results/audit/verdict_table.md)** and **[`published_now.tsv`](results/audit/published_now.tsv)**: `PropAudit.lean` load-bearing map of all 610 `*.Published` / `OpenLiterature` items and the 12 inert types/propositions inside the live closure.
@@ -229,12 +232,13 @@ python3 more.py ~/rh/lean/src && python3 cyclo.py ~/rh/lean/src
 ## Layout
 
 - `scripts/`: the build pipeline (steps 1 to 6), `7_compare.sh`, `8_export_hash.sh`, `11_path_sample.sh`, `12_formal_conjectures.sh`, `13_comparator_original.sh`, `PropAudit.lean`, and `StatementCone.lean`.
-- `analysis/`: `reach.py`, `census.py`, `levels.py`, `note_terms.py`, and `kernel-computations/`.
+- `analysis/`: `reach.py`, `census.py`, `levels.py`, `note_terms.py`, `foundations_zfc_universes.md`, and `kernel-computations/`.
 - `results/`: every output quoted above, with the date it was taken, `audit/` (`PropAudit` tables and `verdict_table.md`), `reading/` (`StatementCone` reading lists), and `used_decls.txt.gz`, the names of the 1,484,733 declarations in the export of `Main` (one `kind name` per line), so anyone can check "used / not used" with `zgrep -w`.
 - `mechanism/TRACE.md`: the mechanism trace of section 10.
 - `analysis/dead_code/`: the exact dead-code count, to be run on the finished build.
 - `visuals/`: the two interactive pages and the script for their data.
-- `docs/`: the GitHub Pages site with the readable account, its figures and the PDF.
+- `journal/`: single-file LaTeX source (`main.tex`) of the self-contained analytic reduction paper (CC BY 4.0, Zenodo DOI `10.5281/zenodo.24477213`).
+- `docs/`: the GitHub Pages site with the readable account, its figures, `rh_lean_proof_readable.pdf`, and `analytic_reduction_grh.pdf`.
 - `writeup/`: the LaTeX source of the readable account.
 
 ## Contact
@@ -246,7 +250,7 @@ Ishaan Dixit. Questions, corrections and suggestions are welcome, by email or as
 
 ## License
 
-MIT, for everything in this repository. The Lean proof itself is Levent Alpöge's and is not covered by this licence.
+MIT for scripts, analyses, and site files; CC BY 4.0 for the journal paper (`journal/main.tex`). The Lean proof itself is Levent Alpöge's and is not covered by these licences.
 
 ## How this was made
 
