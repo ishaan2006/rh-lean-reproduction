@@ -479,11 +479,69 @@ Adding $m(C\,l_{3u})\le c_3 mU$, $L_G\le c_G mU$, and $E_3\le c_E mU$ yields
 $(c_3+c_G+C+c_2+c_E)mU\le c_e mU$.
 \end{proof}
 
-In the formal record \lean{RecNums}, the word height is defined by
+\begin{lemma}[Bloch--Kato local rank from Hodge--Tate weights, \texttt{rank\_le\_col}, \texttt{rank\_le\_row}]\label{lem:ranklerow}
+Let $K_w/\Q_p$ be a finite extension of degree $\operatorname{locDeg}(w)=[K_w:\Q_p]$, and let $\rho$
+be a crystalline representation of $G_{K_w}$ over $LL$ with $H^0(K_w,\rho)=0$. Suppose that for
+every embedding $\tau:K_w\hookrightarrow LL$, the Hodge--Tate weights of $\rho$ at $\tau$ are
+supported with multiplicity $1$ on a disjoint union $\mathcal C_{\mathrm{HT}}(\tau)\cup\mathcal L_{\mathrm{HT}}(\tau)$
+where every $a\in\mathcal C_{\mathrm{HT}}(\tau)$ has $a>0$ and $|\mathcal L_{\mathrm{HT}}(\tau)|\le m$
+(or in the dual row convention, $-a-1\in\mathcal C_{\mathrm{HT}}(\tau)\cup\mathcal L_{\mathrm{HT}}(\tau)$
+with $\mathcal C_{\mathrm{HT}}(\tau)<0$). Then
+\[
+\dim_{LL} H^1_f(K_w,\rho)\le \operatorname{locDeg}(w)\cdot m.
+\]
+\end{lemma}
+
+\begin{proof}
+By the local Bloch--Kato dimension formula \ref{C6} (\lean{rank_eq_count}) with $H^0=0$,
+\[
+\dim_{LL} H^1_f(K_w,\rho)=\sum_{\tau:K_w\hookrightarrow LL}
+\#\bigl\{u\in\mathcal C_{\mathrm{HT}}(\tau)\cup\mathcal L_{\mathrm{HT}}(\tau):u<0\bigr\}.
+\]
+Since every $a\in\mathcal C_{\mathrm{HT}}(\tau)$ satisfies $a>0$, the negative subset
+$\{u\in\mathcal C_{\mathrm{HT}}(\tau)\cup\mathcal L_{\mathrm{HT}}(\tau):u<0\}$ is contained in
+$\mathcal L_{\mathrm{HT}}(\tau)$, hence has cardinality at most $|\mathcal L_{\mathrm{HT}}(\tau)|\le m$.
+Summing over the $\operatorname{locDeg}(w)$ embeddings $\tau$ gives $\operatorname{locDeg}(w)\cdot m$.
+The dual row version follows identically under $u\mapsto -u-1$.
+\end{proof}
+
+\begin{lemma}[Cutting at good Hecke operators and absorbing $|G_{\mathrm{rest}}|$, \texttt{etaJ\_le}, \texttt{linkN\_of\_gd}]\label{lem:linkNgd}
+Fix a lift $j\in\{1,\dots,m\}$ and let $c$ be a good Hecke cut of the local datum $D$ with
+residual finite group cardinality $N_{\mathrm{rest}}=|G_{\mathrm{rest}}|\ge1$ satisfying
+$\log N_{\mathrm{rest}}\le C_1 x^{C_1} L$. Suppose that for every twisted place $w$ over $p$,
+\[
+\eta_J(j,w)\le\eta_J^{\mathrm{cut}}(j,w)
++\Bigl(\sum_{i\in\mathrm{locs}(j,w)}\sum_{\pi\in Z_{\mathrm{good}}(i)}\mathrm{mult}(i,\pi)\Bigr)
+v_p(N_{\mathrm{rest}}),
+\]
+with total multiplicity $\sum_{i\in\mathrm{locs}(j,w)}\sum_{\pi\in Z_{\mathrm{good}}(i)}\mathrm{mult}(i,\pi)\le D_0$.
+If the cut datum satisfies \lean{LinkN_at} with constant $C$, then for $x\ge x_0(\eps)$ (so that
+$x^{C_1}\le b=\exp(x^\eps)$ and $L\ge1$) the uncut datum satisfies \lean{LinkN_at} with constant
+$C+C_1$.
+\end{lemma}
+
+\begin{proof}
+Multiply the pointwise inequality by $\mathrm{lw}(w)e_w$ and sum over all twisted places $w$.
+Grouping by residue prime $p$ via $\sum_{w\mid p}\mathrm{lw}(w)e_w\le\log p$ and using
+$\sum_p v_p(N_{\mathrm{rest}})\log p\le\log N_{\mathrm{rest}}$, the excess over the cut sum
+$\eta_{\mathrm{sum}}^{\mathrm{cut}}(j)$ is at most $D_0\log N_{\mathrm{rest}}$. Since
+$x^{C_1}\le b$, $L\le L^2$, and $f,m\ge1$, we have
+\[
+\log N_{\mathrm{rest}}\le C_1 x^{C_1} L\le C_1 f m b L^2
+\le C_1\bigl(fmbL^2+(\log x)^2 N_c\bigr).
+\]
+Adding this to the cut bound $D_0\bigl(C(fmbL^2+(\log x)^2 N_c)+\sum_\ell\mathrm{vvTerm}(\ell)\bigr)$
+yields \lean{LinkN_at} with constant $C+C_1$.
+\end{proof}
+
+In the formal record \lean{RecNums} (\lean{wordFacts_of}, \lean{htMap_le_of_bound} in
+\lean{RecBridge.lean}), the word height is defined by
 $h(\nu)=h_P+\sum_{j\in J}(\overline{h_K}(j)-h_X(j))$, where $\sum_{j\in J} h_X(j)\le\sum_{j\in J} l_6(j)$.
 Hence Lemma~\ref{lem:heightchain} yields
-$\frac{1}{r_\infty}\sum_v\log\|B_\nu\|_v^2\le h(\nu)-\mathrm{meanLog}(\kappa)$, supplying the
-local-to-global divisibility inputs (D1)--(D4) and the hypotheses of Theorem~10.7 of Part~I.
+$\mathrm{htMap}(B_\nu)=\frac{1}{r_\infty}\sum_v\log\|B_\nu\|_v^2\le h(\nu)-\mathrm{meanLog}(\kappa)$,
+which together with integrality into $R^\vee$ and the \lean{DivClausesR} bound establishes all
+three clauses of \lean{WordFacts} (\lean{LinkDIV_at}) and supplies (D1)--(D4) and the hypotheses of
+Theorem~10.7 of Part~I.
 By Proposition~10.1 and Lemma~10.2 of Part~I, the divisibility inequality (S1) follows once the
 assembled error $\mathrm{err}_B$ is bounded by $c_e m x^\eps(B_0+N_c)$ via
 Lemma~\ref{lem:errBunits}. In the formal assembly (\lean{DivAssembly}, \lean{AbsorbE}), every term
@@ -560,6 +618,30 @@ which is \textup{(S1)}.
 We first establish the explicit row-sum bound for $\nu_{\mathrm{abs}}$ (\lean{NuAbsPlaceFine.lean})
 and the off-$g$ prime decomposition (\lean{WeightDegreeSizes.lean}), which together prove
 \textup{(S2)}.
+
+\begin{lemma}[Fock-degree letter comparison, \texttt{letters\_place}]\label{lem:lettersplace}
+Fix a lift $j=i+1\in\{1,\dots,m\}$ ($0\le i<m$) and a complex embedding $\tau$ with
+$w_j(\tau)\ge0$, $k\ge2$, $m,t\ge1$, $S_c,\eta_{\mathrm{Sz}}\ge0$, and $N=N(m)=k+m(t+1)$. Let
+$\mathrm{fockDeg}_\tau(j)=\sum_{r=0}^{k+i-1}|a^+(r)|+\sum_{r=0}^{m-i-2}|a^-(r)|$ be the Fock
+degree at signature $(k+i,m-i-1)$. Suppose:
+\begin{enumerate}[label=(\alph*)]
+\item $|a^+(r)-w_j(\tau)|\le S_c+2N$ for $0\le r\le k-2$;
+\item $|a^+(k-1+r)|\le\eta_{\mathrm{Sz}}+2N$ for $0\le r\le i$;
+\item $|a^-(r)|\le\eta_{\mathrm{Sz}}+2N$ for $0\le r\le m-i-2$.
+\end{enumerate}
+Then
+\[
+\bigl|\mathrm{fockDeg}_\tau(j)-(k-1)w_j(\tau)\bigr|\le k(S_c+2N)+2m(\eta_{\mathrm{Sz}}+2N).
+\]
+\end{lemma}
+
+\begin{proof}
+Since $w_j(\tau)\ge0$, the reverse triangle inequality gives
+$\bigl||a^+(r)|-w_j(\tau)\bigr|\le|a^+(r)-w_j(\tau)|\le S_c+2N$ for each of the $k-1$ indices
+$0\le r\le k-2$, contributing at most $(k-1)(S_c+2N)\le k(S_c+2N)$. The remaining $i+1$ terms of
+$a^+$ and $m-i-1$ terms of $a^-$ sum in total to $(i+1)+(m-i-1)=m\le 2m$ terms, each bounded by
+$\eta_{\mathrm{Sz}}+2N$. Applying the triangle inequality gives the stated bound.
+\end{proof}
 
 \begin{lemma}[Row-sum and Fock-degree fine bound]\label{lem:nuabsfine}
 Fix a word $\nu\in\mathcal W(u)$ and a lift $j=i+1\in\{1,\dots,m\}$, with $k\ge2$, $m,t\ge1$,
@@ -688,8 +770,11 @@ At every finite place $w\in\mathrm{supp}$, the local lattice inclusion between $
 $N_{\nu,0}$ has index determined by the gain $\mathrm{gain}_j(w)$, fixed part $F_j(w)$, and local
 energy $E(\nu,j,w)$, with total deviation bounded by $O(X'')$ (\lean{NprimeMuR}). Summing
 $\sz(w,\cdot)$ over $w\in\mathrm{supp}$ separates the sum into $\mathcal G(u)+F(u)-E(\nu)$ up to
-the local torsion/ramification correction $\mathrm{Lo}(\nu)$. Feeding these local bounds
-(\lean{Places_at}) into Proposition~9.4 of Part~I immediately yields both halves of \textup{(S6)}:
+the local torsion/ramification correction $\mathrm{Lo}(\nu)$. Specifically, \lean{Places_at}
+(\lean{TopDensityNGeSixteen.lean:1525}) provides \lean{HypLow}, \lean{HypLow2}, and \lean{HypHigh}
+together with $LT\le C n_T m(a/k+b')\log T(\nu)$ and $RX\le C X''$; with $C\ge4$ and
+$\mathrm{IOsum}\ge0$ (so $4\,\mathrm{IOsum}\le C\,\mathrm{IOsum}$), feeding these into
+Proposition~9.4 of Part~I (\lean{slopesN_at_of}) immediately yields both halves of \textup{(S6)}:
 $\mu^+(\nu)\le\mu_0^+(\nu)+\mathcal G(u)+F(u)-E(\nu)+c_1 mB_0$ and
 $\mu_0(\nu)+\mathcal G(u)+F(u)-E(\nu)-\mathrm{Lo}(\nu)\le\mu(\nu)$.
 \end{proof}
@@ -1180,8 +1265,8 @@ Prop.~\ref{prop:ranks}(iii) & \lean{m_pow_five_mul_f_mul_L_le}, \lean{size_windo
 Def.~\ref{def:winpair}, Prop.~\ref{prop:hostB} & \lean{WinPair}, \lean{PageN}, \lean{QH.pairEx}, \lean{count_bad_core}, \lean{ZD.zero_density_box}, \lean{hostThickExists} & \lean{Dev/AA/CharacterBoxes/ExistsPageN.lean} \\
 Section~\ref{sec:glued}, \eqref{eq:sigchain}--\eqref{eq:rowranks} & \lean{IsChiField}, \lean{Ranks}, \lean{nuRow}, \lean{nuAbs} & \lean{ExistsPageN.lean}, \lean{Formalism/LocalRingCardinality/Params.lean} \\
 Theorem~\ref{thm:gluedR} & \lean{prescribedRowLat}, \lean{exists_divStage_of_pk}, \lean{DV.RRDef}, \lean{GoodSideLattices.locMeet} & \lean{Dev/AVT/Proofs/IwasawaDecomposition/ExistsDivStageOfPk.lean:54, 76} \\
-Lemmas~\ref{lem:heightchain}--\ref{lem:errBunits}, Thm.~\ref{thm:S1} & \lean{height_chain_atR}, \lean{divClausesR_of}, \lean{errB_of_units}, \lean{LinkN_at}, \lean{DIVinN_at}, \lean{NData.locs_mem}, \lean{ShapeJumps}, \lean{rank_le_row}, \lean{eL}, \lean{LinkDIV_at} & \lean{ConstantGeTwentyEight.lean:174, 235}, \lean{DivisionHeightBoundStatement.lean:525}, \lean{SR/GlobalTheoremInputs.lean:40, 77} \\
-Lemmas~\ref{lem:nuabsfine}--\ref{lem:C2off}, Prop.~\ref{prop:S2S5} & \lean{nuAbs_place_fine}, \lean{degree_fine}, \lean{C2off_of}, \lean{secondComplement_of_inputs}, \lean{C2atG_of}, \lean{NormDecompositionCond}, \lean{factEtaMean} & \lean{NuAbsPlaceFine.lean:101, 136, 177}, \lean{WeightDegreeSizes.lean:400, 460} \\
+Lemmas~\ref{lem:heightchain}--\ref{lem:linkNgd}, Thm.~\ref{thm:S1} & \lean{height_chain_atR}, \lean{divClausesR_of}, \lean{errB_of_units}, \lean{wordFacts_of}, \lean{rank_le_col}, \lean{rank_le_row}, \lean{etaJ_le}, \lean{linkN_of_gd}, \lean{LinkDIV_at} & \lean{ConstantGeTwentyEight.lean:174}, \lean{RecBridge.lean:180}, \lean{JumpAndLengthOfAdmitted.lean:89, 115}, \lean{IsHeckeGaloisIff.lean:103}, \lean{LinkNOfGd.lean:77} \\
+Lemmas~\ref{lem:lettersplace}--\ref{lem:C2off}, Prop.~\ref{prop:S2S5} & \lean{letters_place}, \lean{nuAbs_place_fine}, \lean{degree_fine}, \lean{C2off_of}, \lean{secondComplement_of_inputs}, \lean{C2atG_of} & \lean{FockDegreeGapBound.lean:204}, \lean{NuAbsPlaceFine.lean:101, 136, 177}, \lean{WeightDegreeSizes.lean:400, 460} \\
 Prop.~\ref{prop:S6} & \lean{NprimeMuR}, \lean{LinkMu}, \lean{Places_at}, \lean{slopesN_at_of} & \lean{SR/GlobalTheoremInputs.lean:69}, \lean{SR/GlobalSchurBounds/TopDensityNGeSixteen.lean:1529} \\
 Lemmas~\ref{lem:kWord}--\ref{lem:orbitsum}, Thm.~\ref{thm:S7} & \lean{LinkG_at}, \lean{key_minor_dvd}, \lean{kW_ord}, \lean{key3Ord}, \lean{caseD_arith}, \lean{caseE_arith}, \lean{St.starAll_of}, \lean{gain_bound_all_of_star} & \lean{KeyMinorDvd.lean:181, 207, 273}, \lean{PartnerCountOfCentral.lean:539, 587, 884}, \lean{NotSingularOfCentral.lean:777} \\
 Lemma~\ref{lem:diagnondeg}, Prop.~\ref{prop:S8S10} & \lean{unfolding_constant_pos_of_diagonal}, \lean{dall_pos}, \lean{matKF_of}, \lean{LinkS_at}, \lean{LinkIRR}, \lean{ChosenProviso}, \lean{theoremS_link_concrete} & \lean{TopDensityNGeSixteen.lean:1343, 1357, 1411}, \lean{SR/GlobalTheoremInputs.lean:64}, \lean{LinkSPos.lean:151} \\
