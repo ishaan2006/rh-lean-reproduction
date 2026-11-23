@@ -423,6 +423,117 @@ $w\neq w_0$ so that $dy\in(S_w)_{\fp_w}$ for every $w$; hence $dy\in R$, giving
 $(S_{w_0})_{\fp_{w_0}}\subseteq R_{\fp_{w_0}}$.
 \end{proof}
 
+\subsection{Unitary theta-lift chain and Hodge--Tate shapes}
+
+We next unpack the upward induction along the $m$-step unitary theta-lift chain
+(\texttt{ThetaChainUpward\allowbreak Induction\allowbreak FixedMetric.lean}), the bidirectional
+archimedean Harish-Chandra parameter step (\texttt{FirstOccurrenceRule\allowbreak ThetaChainStep\allowbreak BothDirections.lean}),
+and the Hodge--Tate shape stripping (\lean{ShapeJumps}, \lean{multW_of_shape}) that feeds the
+Bloch--Kato rank bound of Lemma~\ref{lem:ranklerow}.
+
+\begin{lemma}[Upward induction along the theta-lift chain, \texttt{ip\_unique}, \texttt{chainUp\_of}]\label{lem:thetachain}
+Let $c$ be a chain datum, let $s_0,\dots,s_m$ be cuspidal stages along a reachability chain
+$\Theta_j:s_j.\mathrm{CC}(c)\to s_0.\mathrm{CC}(c)$ ($0\le j\le m$) with $\Theta_0=\mathrm{id}$
+and single-step lifts $\Theta_{j+1}=\Theta_j\circ\theta_j$. Suppose that:
+\begin{enumerate}[label=(\alph*)]
+\item \textup{(Schur metric existence, \lean{MetEx})} Every stage $s_j$ admits a Schur-compatible
+  pair of Hermitian forms $(\mathrm{ip}_{D,j},\mathrm{ip}_j)$ on the local model
+  $\mathrm{SmT}(s_j.M)=\bigotimes_\tau s_j.M.\mathrm{sm}(\tau)$ and on $s_j.\mathrm{CC}(c)$,
+  meaning $\mathrm{ip}_j(x,y)\,\mathrm{ip}_{D,j}(v,v)=\langle x(v),y(v)\rangle$ on pure tensors
+  $v=\bigotimes_\tau v_\tau$, with $\mathrm{ip}_{D,j}(v,v)>0$ for $v\neq 0$;
+\item \textup{(Single-step upward lift, \lean{StepUp} and \lean{ChainLW})} Starting from a nonzero
+  cuspidal eigenform $u\in s_0.\mathrm{CC}(c)$ with Hecke parameter family $B$, the twisted
+  $L$-value at every step $j<m$ is nonzero (\lean{LNe}), and for every Schur-metric pair at stages
+  $j,j+1$ and every eigenform $x_j\in s_j.\mathrm{CC}(c)$ of parameter $\mathrm{chainPar}(c,B,j)$,
+  there exists $x_{j+1}\in s_{j+1}.\mathrm{CC}(c)$ of parameter $\mathrm{chainPar}(c,B,j+1)$
+  satisfying $\mathrm{ip}_{j+1}(y,x_{j+1})=\mathrm{ip}_j(\theta_j(y),x_j)$ for all
+  $y\in s_{j+1}.\mathrm{CC}(c)$.
+\end{enumerate}
+Then:
+\begin{enumerate}[label=(\roman*)]
+\item \textup{(Metric uniqueness, \lean{ip_unique})} If $s_j.\mathrm{CC}(c)\neq\{0\}$, any two
+  Schur-compatible forms $\mathrm{ip},\mathrm{ip}'$ whose local forms agree on pure tensors coincide
+  identically on $s_j.\mathrm{CC}(c)$;
+\item \textup{(Global upward lift, \lean{thetaChain_upward_induction_fixed_metric})} For every
+  $0\le j\le m$ and every Schur-compatible form $\mathrm{ip}_j$ on $s_j.\mathrm{CC}(c)$, there
+  exists a cuspidal eigenform $x_j\in s_j.\mathrm{CC}(c)$ with transferred Hecke parameter
+  $\mathrm{chainPar}(c,B,j)$ such that
+  \[
+  \mathrm{ip}_j(y,x_j)=\mathrm{ip}_0(\Theta_j(y),u)\qquad\text{for all } y\in s_j.\mathrm{CC}(c).
+  \]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+For (i), let $z\in s_j.\mathrm{CC}(c)$ be nonzero. Because pure tensors $\bigotimes_\tau v_\tau$
+span $\mathrm{SmT}(s_j.M)$, if every pure tensor were zero then $z$ would vanish as a linear map on
+$\mathrm{SmT}(s_j.M)$, a contradiction (\lean{exists_tprod_ne_zero_of_cc}). Pick a nonzero pure
+tensor $v$; then $\mathrm{ip}_D(v,v)=\mathrm{ip}'_D(v,v)\neq 0$ by positivity. For all
+$x,y\in s_j.\mathrm{CC}(c)$, the Schur identity gives
+$\mathrm{ip}(x,y)\,\mathrm{ip}_D(v,v)=\langle x(v),y(v)\rangle=\mathrm{ip}'(x,y)\,\mathrm{ip}_D(v,v)$,
+and cancelling $\mathrm{ip}_D(v,v)\neq 0$ gives $\mathrm{ip}(x,y)=\mathrm{ip}'(x,y)$.
+
+For (ii), we induct on $j\in\{0,\dots,m\}$. For $j=0$, take $x_0=u$; since $u\neq 0$, part~(i)
+gives $\mathrm{ip}(y,u)=\mathrm{ip}_0(y,u)$ for any Schur metric $\mathrm{ip}$ on
+$s_0.\mathrm{CC}(c)$. For the inductive step $j\to j+1$ ($j<m$), choose a Schur metric
+$\mathrm{ip}_j$ at stage $j$ via (a), apply the induction hypothesis to obtain
+$x_j\in s_j.\mathrm{CC}(c)$ with $\mathrm{ip}_j(w,x_j)=\mathrm{ip}_0(\Theta_j(w),u)$ and Hecke
+parameter $\mathrm{chainPar}(c,B,j)$, and apply (b) to obtain $x_{j+1}\in s_{j+1}.\mathrm{CC}(c)$
+with parameter $\mathrm{chainPar}(c,B,j+1)$ and
+\[
+\mathrm{ip}_{j+1}(y,x_{j+1})=\mathrm{ip}_j(\theta_j(y),x_j)=\mathrm{ip}_0(\Theta_j(\theta_j(y)),u)
+=\mathrm{ip}_0(\Theta_{j+1}(y),u). \qedhere
+\]
+\end{proof}
+
+\begin{lemma}[Archimedean parameter step and Hodge--Tate shape stripping, \texttt{rulePar\_step}, \texttt{multW\_of\_shape}]\label{lem:steprule}
+Let $k,m,t\in\N$.
+\begin{enumerate}[label=(\roman*)]
+\item \textup{(Bidirectional Harish-Chandra step, \lean{rulePar_step})} At every lift stage
+  $0\le j<m$ and archimedean place $\tau$, suppose every entry $y$ of the stage-$j$ signed
+  Harish-Chandra parameter block $(\alpha,\beta,\gamma,\delta)$ satisfies $|y|\ge(t+3)/2$ relative
+  to the twist shift $a_T$ (\lean{FarFrom}). Then no entry equals $(t+1)/2$, so adjoining or
+  removing the length-$t$ block $\mathrm{block}(t)$ satisfies the Archimedean Rallis first-occurrence
+  rules in both directions between stages $j$ and $j+1$.
+\item \textup{(Hodge--Tate shape stripping, \lean{multW_of_shape})} Let $\mathrm{sgn}\in\{\pm1\}$
+  and let $\mathcal C_{\mathrm{HT}},\mathcal L_{\mathrm{HT}}\subset\Z$ be finite sets satisfying
+  \lean{ShapeJumps}: $\mathcal C_{\mathrm{HT}},\mathcal L_{\mathrm{HT}},[0,t)$ are pairwise
+  disjoint, $|\mathcal C_{\mathrm{HT}}|=k-1$, $|\mathcal L_{\mathrm{HT}}|=m$, there exist
+  $s,S,\eta>0$ with $s\le\mathrm{sgn}\cdot a\le s+S$ for all $a\in\mathcal C_{\mathrm{HT}}$ and
+  $|a|\le\eta$ for all $a\in\mathcal L_{\mathrm{HT}}$, and the ambient twisted multiplicity function
+  is $\mu(a)=\mathbf{1}_{a\in\mathcal C_{\mathrm{HT}}\cup\mathcal L_{\mathrm{HT}}\cup[0,t)}$. If
+  $\mu(a)=\mu_W(a)+\sum_{c=1}^t\mu_c(a)$ with $\mu_c(a)=\mathbf{1}_{a=c-1}$ for $1\le c\le t$, then
+  \[
+  \mu_W(a)=\mathbf{1}_{a\in\mathcal C_{\mathrm{HT}}\cup\mathcal L_{\mathrm{HT}}}\qquad
+  \text{for all }a\in\Z.
+  \]
+  In particular, when $\mathrm{sgn}=+1$, every $a\in\mathcal C_{\mathrm{HT}}$ satisfies $a>0$, so
+  Lemma~\ref{lem:ranklerow} applies directly to the word representation $W_p$
+  (\lean{jump_bound_of_admitted}).
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+For (i), if some block entry satisfied $y=(t+1)/2$, then the shifted entry $y+a_T$ would satisfy
+$|(y+a_T)-a_T|=(t+1)/2<(t+3)/2$, contradicting the \lean{FarFrom} hypothesis. Hence the
+non-vanishing condition for the Archimedean Rallis up/down rules (\lean{ArchimedeanRallisUpDownLine},
+\lean{ArchimedeanRallisFourth}, \lean{ArchimedeanRallisFifth}) holds, and pairing with the lowest
+$K$-type joint-shape matching yields \lean{RulePar} in both directions (\lean{rulePar_of_pairPar}).
+
+For (ii), for each $a\in\Z$ the sum $\sum_{c=1}^t\mathbf{1}_{a=c-1}$ equals $1$ if $a\in[0,t)$
+(attained uniquely at $c=a+1$) and $0$ otherwise. Since $\mathcal C_{\mathrm{HT}}\cup\mathcal L_{\mathrm{HT}}$
+is disjoint from $[0,t)$, subtracting $\mathbf{1}_{a\in[0,t)}$ from
+$\mu(a)=\mathbf{1}_{a\in\mathcal C_{\mathrm{HT}}\cup\mathcal L_{\mathrm{HT}}\cup[0,t)}$ leaves
+$\mu_W(a)=1$ for $a\in\mathcal C_{\mathrm{HT}}\cup\mathcal L_{\mathrm{HT}}$ and $\mu_W(a)=0$
+otherwise. When $\mathrm{sgn}=+1$, $a\ge s>0$ for all $a\in\mathcal C_{\mathrm{HT}}$, which is the
+exact hypothesis of Lemma~\ref{lem:ranklerow}.
+\end{proof}
+
+\noindent In the live Lean closure, the single-step nonvanishing (\lean{StepUp}, \lean{ChainLW})
+in Lemma~\ref{lem:thetachain} is supplied by \ref{C8} through the doubling zeta-integral framework
+(\lean{GlobalTheory.ThK.Dbl}: \lean{SplitModel}, \lean{NormZeta}, \lean{EulerProd}, \lean{LocUnr},
+\lean{BadFactor}, \lean{RealInv}, \lean{DProd} in \lean{HodgeTateFromSandwich.lean}).
+
 % ======================================================================
 \section{The divisibility bound (S1) and energy/height/slope bounds (S2)--(S5)}\label{sec:S1S5}
 % ======================================================================
@@ -1498,6 +1609,7 @@ Prop.~\ref{prop:ranks}(iii) & \lean{m_pow_five_mul_f_mul_L_le}, \lean{size_windo
 Def.~\ref{def:winpair}, Prop.~\ref{prop:hostB} & \lean{WinPair}, \lean{PageN}, \lean{QH.pairEx}, \lean{count_bad_core}, \lean{ZD.zero_density_box}, \lean{hostThickExists} & \lean{Dev/AA/CharacterBoxes/ExistsPageN.lean} \\
 Section~\ref{sec:glued}, \eqref{eq:sigchain}--\eqref{eq:rowranks} & \lean{IsChiField}, \lean{Ranks}, \lean{nuRow}, \lean{nuAbs} & \lean{ExistsPageN.lean}, \lean{Formalism/LocalRingCardinality/Params.lean} \\
 Theorem~\ref{thm:gluedR} & \lean{prescribedRowLat}, \lean{exists_divStage_of_pk}, \lean{DV.RRDef}, \lean{GoodSideLattices.locMeet} & \lean{Dev/AVT/Proofs/IwasawaDecomposition/ExistsDivStageOfPk.lean:54, 76} \\
+Lemmas~\ref{lem:thetachain}--\ref{lem:steprule} & \lean{ip_unique}, \lean{thetaChain_upward_induction_fixed_metric}, \lean{chainUp_of}, \lean{rulePar_of_pairPar}, \lean{rulePar_step}, \lean{ShapeJumps}, \lean{multW_of_shape}, \lean{jump_bound_of_admitted} & \texttt{ThetaChainUpward\allowbreak InductionFixedMetric.lean:65, 81, 111}, \texttt{FirstOccurrenceRule\allowbreak ThetaChainStepBoth\allowbreak Directions.lean:57, 94}, \lean{EmbeddingTypes.lean:139}, \lean{JumpAndLengthOfAdmitted.lean:663, 769}, \lean{HodgeTateFromSandwich.lean:57} \\
 Lemmas~\ref{lem:heightchain}--\ref{lem:linkNgd}, Thm.~\ref{thm:S1} & \lean{height_chain_atR}, \lean{divClausesR_of}, \lean{errB_of_units}, \lean{wordFacts_of}, \lean{rank_le_col}, \lean{rank_le_row}, \lean{etaJ_le}, \lean{linkN_of_gd}, \lean{LinkDIV_at} & \lean{ConstantGeTwentyEight.lean:174}, \lean{RecBridge.lean:180}, \lean{JumpAndLengthOfAdmitted.lean:89, 115}, \lean{IsHeckeGaloisIff.lean:103}, \lean{LinkNOfGd.lean:77} \\
 Lemmas~\ref{lem:lettersplace}--\ref{lem:C2off}, Prop.~\ref{prop:S2S5} & \lean{letters_place}, \lean{nuAbs_place_fine}, \lean{degree_fine}, \lean{C2off_of}, \lean{secondComplement_of_inputs}, \lean{C2atG_of} & \lean{FockDegreeGapBound.lean:204}, \lean{NuAbsPlaceFine.lean:101, 136, 177}, \lean{WeightDegreeSizes.lean:400, 460} \\
 Prop.~\ref{prop:S6} & \lean{NprimeMuR}, \lean{LinkMu}, \lean{Places_at}, \lean{slopesN_at_of} & \lean{SR/GlobalTheoremInputs.lean:69}, \lean{SR/GlobalSchurBounds/TopDensityNGeSixteen.lean:1529} \\
