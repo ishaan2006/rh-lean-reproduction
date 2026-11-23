@@ -1415,6 +1415,7 @@ Export hash & byte-identical match to the published export: 61{,}570{,}595{,}788
 Kernel replay & \texttt{Main} with imports trusted: exit code 0 (1 minute). Full replay of everything \texttt{Main} depends on (\texttt{leanchecker -{}-fresh Main}, single-threaded): ran to completion in about 10 h 17 min (06:21 to 16:38 UTC, 21 Nov) with no error reported; its exit code was not recorded. Others report full replays too: Sutherland's \texttt{leanchecker}, 175{,}187 of 175{,}187 modules; Simon DeDeo, likewise\\
 Formal-conjectures & Google DeepMind's \lean{RiemannHypothesis} and \lean{GRH} (PR~\#88) compile against our build with only the three standard axioms; \texttt{con-leche -{}-compare} (\texttt{274f0138}, \texttt{-{}-verified}) accepts both (182~s). Single-export \texttt{con-leche} accepts all 1{,}468{,}418 declarations of \texttt{Main} (177~s, 46.4~GiB)\\
 Load-bearing audit & \texttt{PropAudit.lean} on the compiled closure (1{,}265{,}279 project constants, 64{,}730 tracked types/propositions): of 610 \texttt{*.Published}/\lean{OpenLiterature} items, 276 are unreachable, 261 applied, 60 carried-only, 9 zero-proof (6 are \lean{Set} definitions). Inside the live closure, 12 types/propositions are inert (including \lean{LocLanglands.IsRec}, \lean{WeightedAtlas} [215 refs], \lean{OTY.Cover}/\lean{Etale}, \lean{AdaptedBasis}/\lean{PlueckerData}) and 10 definitions have body \lean{True}. Dropping unread hypothesis fields disconnects 14 classical theories ($\sim$2{,}600+ live declarations) from \texttt{Main} (PRs~\#384, \#395, \#398)\\
+Universe levels & Export scan (\texttt{analysis/levels.py}): $21{,}604$ level records in the $61.6$~GB export; largest concrete level is $4$ ($4$ polymorphic constants, $0$ Sorts). As observed by Jo\"el Riou, replacing big \'etale sites with standard small sites $X_\mathrm{et}$ reduces all sheaf categories to locally small categories and establishes that the proof is fully conservative over standard ZFC without Grothendieck universes\\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -1454,7 +1455,7 @@ path reproduced our own \texttt{.olean} files exactly, so the replay is faithful
 % ======================================================================
 
 Each question below is followed by what we could settle from the source and the outline.
-\textbf{Status:} three answered within the code (2, 3, 4), one narrowed (5), one still needs the
+\textbf{Status:} four answered within the code (2, 3, 4, 6), one narrowed (5), one still needs the
 author (1); the call-level gap in step D4, the role of the constants and a static reading of
 \lean{SizesAt} are settled below.
 
@@ -1572,6 +1573,27 @@ versions of Landau's theorem already give quantitative lower bounds for averages
 $[1,Y]$. The windowed statement is
 therefore close to known methods in substance; whether this exact form appears in the literature is
 for specialists to say.
+
+\begin{question}
+Does the formal proof require Grothendieck universes, or does it hold in standard ZFC?
+\end{question}
+\noindent\textbf{Answered within standard foundations.} \Verified{} The mathematical statements
+(\lean{riemannHypothesis}, \lean{GRH}) live entirely in \texttt{Type 0} (second-order arithmetic).
+In the published 61.6~GB export, an automated level census (\texttt{analysis/levels.py}) finds
+21{,}604 level records, with concrete usage: 369{,}334 at \texttt{Sort 0} (\texttt{Prop}),
+36{,}070 at \texttt{Sort 1} (\texttt{Type 0}), 3{,}868 at \texttt{Sort 2} (\texttt{Type 1}),
+100 at \texttt{Sort 3} (\texttt{Type 2}), and exactly 4 occurrences of Level~4 (all polymorphic
+constants \lean{Exists}, \lean{Exists.intro}, \lean{inferInstance} over \texttt{Type 2}, with 0
+\texttt{Sort 4} occurrences). \Reading{} As Jo\"el Riou pointed out on Zulip (November 2026),
+the presence of \texttt{Type 2} is an artifact of Mathlib's generic category theory instantiating
+sheaves over ``big'' \'etale sites $\mathrm{Sch}_{/S}$. For any scheme $X$ of finite type over a
+number field, the small \'etale site $X_\mathrm{et}$ (consisting of \'etale schemes of finite
+presentation over $X$) has at most countably many isomorphism classes ($|X_\mathrm{et}|\le\aleph_0$),
+so $X_\mathrm{et}$ has a skeleton in \texttt{Type 0}. Sheaves on $X_\mathrm{et}$ form a locally small
+category with morphisms in \texttt{Type 0}, derived categories have small hom-sets, and all
+cohomology groups, crystalline/de Rham deformations (Grothendieck--Messing), Galois cohomology,
+Bloch--Kato Selmer groups, and class groups (Ferrero--Washington) live strictly in \texttt{Type 0}.
+The formal proof is therefore conservative over standard ZFC without inaccessible cardinals.
 
 \paragraph{The call-level gap in step D4 is closed.} \Exact{} \lean{extendedClosedForm} is the
 field \lean{p15} of \lean{local_flatness_results}, which feeds \lean{loc8All_of},

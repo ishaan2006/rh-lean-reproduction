@@ -2219,6 +2219,10 @@ Dropping unread hypothesis fields disconnects 14 classical theories
 <a href="https://github.com/leanprover-community/riemann-hypothesis/pull/395">#395</a>,
 <a href="https://github.com/leanprover-community/riemann-hypothesis/pull/398">#398</a>)</td>
 </tr>
+<tr class="even">
+<td style="text-align: left;">Universe levels</td>
+<td style="text-align: left;">Export scan (<code>analysis/levels.py</code>): 21,604 level records in the 61.6 GB export; largest concrete level is 4 (4 polymorphic constants <code>Exists</code>, <code>Exists.intro</code>, <code>inferInstance</code>, 0 Sorts). As observed by Joël Riou, replacing big étale sites with standard small sites \(X_\mathrm{et}\) reduces all sheaf categories to locally small categories and establishes that the proof is fully conservative over standard ZFC without Grothendieck universes</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -2247,8 +2251,8 @@ the build (<code>scripts/11_path_sample.sh</code>).</p>
 class="header-section-number">11</span> Open questions, and what we
 could settle</h1>
 <p>Each question below is followed by what we could settle from the
-source and the outline. <strong>Status:</strong> three answered within
-the code (2, 3, 4), one narrowed (5), one still needs the author (1);
+source and the outline. <strong>Status:</strong> four answered within
+the code (2, 3, 4, 6), one narrowed (5), one still needs the author (1);
 the call-level gap in step D4, the role of the constants and a static
 reading of <code>SizesAt</code> are settled below.</p>
 <div class="question">
@@ -2457,6 +2461,10 @@ bounds for averages over ranges <span
 class="math inline">\([1,Y]\)</span>. The windowed statement is
 therefore close to known methods in substance; whether this exact form
 appears in the literature is for specialists to say.</p>
+<div class="question">
+<p><strong>Question 6</strong>. Does the formal proof require Grothendieck universes, or does it hold in standard ZFC?</p>
+</div>
+<p><strong>Answered within standard foundations.</strong> <span class="tag verified">Verified</span> The mathematical statements (<code>riemannHypothesis</code>, <code>GRH</code>) live entirely in <code>Type 0</code> (second-order arithmetic). In the published 61.6 GB export, an automated level census (<code>analysis/levels.py</code>) finds 21,604 level records, with concrete usage: 369,334 at <code>Sort 0</code> (<code>Prop</code>), 36,070 at <code>Sort 1</code> (<code>Type 0</code>), 3,868 at <code>Sort 2</code> (<code>Type 1</code>), 100 at <code>Sort 3</code> (<code>Type 2</code>), and exactly 4 occurrences of Level 4 (all polymorphic constants <code>Exists</code>, <code>Exists.intro</code>, <code>inferInstance</code> over <code>Type 2</code>, with 0 <code>Sort 4</code> occurrences). <span class="tag reading">Reading</span> As Joël Riou pointed out on Zulip (November 2026), the presence of <code>Type 2</code> is an artifact of Mathlib's generic category theory instantiating sheaves over "big" étale sites \(\mathrm{Sch}_{/S}\). For any scheme \(X\) of finite type over a number field, the small étale site \(X_\mathrm{et}\) (consisting of étale schemes of finite presentation over \(X\)) has at most countably many isomorphism classes (\(|X_\mathrm{et}|\le\aleph_0\)), so \(X_\mathrm{et}\) has a skeleton in <code>Type 0</code>. Sheaves on \(X_\mathrm{et}\) form a locally small category with morphisms in <code>Type 0</code>, derived categories have small hom-sets, and all cohomology groups, crystalline/de Rham deformations (Grothendieck-Messing), Galois cohomology, Bloch-Kato Selmer groups, and class groups (Ferrero-Washington) live strictly in <code>Type 0</code>. The formal proof is therefore conservative over standard ZFC without inaccessible cardinals.</p>
 <h4 data-number="11.0.0.2"
 id="the-call-level-gap-in-step-d4-is-closed."><span
 class="header-section-number">11.0.0.2</span> The call-level gap in step

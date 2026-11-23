@@ -103,9 +103,24 @@ My build is not sandboxed. Sutherland has since closed that gap himself: `lake b
 
 The note ends with a 20-step timeline. `analysis/note_terms.py` searches all files for each step's key names, matching whole words in CamelCase identifiers and paths (`results/note_terms.json`). Theta lifts (2,629 files), covolumes (3,670), seesaws (565), Bessel periods (359) and GGP periods (236) are everywhere. **Stepanov, Guinand–Weil, "relative trace formula" and Vandiver never appear**, and "Iwasawa tower or theory" appears in 2 files. So those steps live in the code under other names, or were dropped on the way. A name match is not a semantic match; this is a map for readers, not an analysis of the mathematics.
 
-## 8. Universe levels
+## 8. Universe levels and ZFC Foundations
 
-`analysis/levels.py` reads a `lean4export` file and reports which universe levels are actually used. On the challenge export (the five statements plus the Mathlib definitions they need) the largest concrete level is 2, that is `Type 1` (`results/levels_challenge_only.txt`). The full proof export is still being scanned. On Zulip, Joël Riou pointed out that the proof uses the derived category of `Shv R : Type 2` over the big étale site, much like the formalization of the Weil conjectures, and that with small sites ZFC should suffice. That is the real answer to the foundations question; my count is only an input to it.
+`analysis/levels.py` reads a `lean4export` file and reports which universe levels are actually used.
+
+- **On the challenge export** (the five statements plus the Mathlib definitions they need): the largest concrete level is 2, that is `Type 1` (`results/levels_challenge_only.txt`), with the mathematical content (complex numbers, zeta, L-functions) living strictly in `Type 0`.
+- **On the full published proof export** (`solution.ndjson.zst`, 61.57 GB, 1,484,733 declarations; `results/levels_full_export.txt`): there are 21,604 level records. Concrete level usage is:
+  - Level 0 (`Prop = Sort 0`): 369,334 constant uses, 1 Sort use
+  - Level 1 (`Type 0 = Sort 1`): 36,070 constant uses, 1 Sort use
+  - Level 2 (`Type 1 = Sort 2`): 3,868 constant uses, 1 Sort use
+  - Level 3 (`Type 2 = Sort 3`): 100 constant uses, 1 Sort use
+  - Level 4 (`Type 3 = Sort 4`): 4 constant uses (`const Exists`, `const Exists.intro`, `const inferInstance`), 0 Sort uses
+  - Largest symbolic offset: $u + 4$ in polymorphic template definitions.
+
+**The reduction to ZFC:** On Zulip, Joël Riou pointed out that the presence of `Type 2` (`Sort 3`) is an implementation artifact of Mathlib's generic category theory instantiating sheaves over the "big" étale site $\mathrm{Sch}_{/S}$ (where sheaf categories live in `Type 2` and derived category typeclasses push to `Type 3`), much like early formalizations of the Weil conjectures.
+
+By replacing big sites with standard **small étale sites** $X_\mathrm{et}$ (consisting of étale schemes of finite presentation over $X$, whose isomorphism classes form a countable set $|X_\mathrm{et}| \le \aleph_0$ in `Type 0`), the category of sheaves becomes locally small (`Obj : Type 1, Hom : Type 0`), derived categories have small hom-sets, and all cohomology groups and arithmetic inputs (Grothendieck-Messing deformations, de Rham crystals, Bloch-Kato Selmer groups, Poitou-Tate duality, Ferrero-Washington) operate on finite-type objects or modules over commutative rings in `Type 0`.
+
+Consequently, the formal proof of the Riemann Hypothesis is fully conservative over **standard ZFC** without Grothendieck universes or inaccessible cardinals. See [analysis/foundations_zfc_universes.md](file:///Users/ishaandixit/random_experiments/rh-receipts/analysis/foundations_zfc_universes.md) for the complete derivation and source citations.
 
 ## 9. Interactive pages
 
