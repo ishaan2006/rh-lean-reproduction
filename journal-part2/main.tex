@@ -1105,15 +1105,90 @@ cuspidal parametrisation (\lean{admLq}, \lean{GlobalTheory.GLq.Green}), comparis
 \ref{C8}, Lemma~\ref{lem:linkIRR} closes \lean{LinkIRR} (\lean{closed_linkIRR_of_join_count},
 \lean{LinkIrr.lean:60}).
 
+\begin{lemma}[Gram decorrelation assembly, \texttt{linkS\_concl}, \texttt{eF\_nonneg\_and\_le\_exp\_neg}]\label{lem:linkS}
+Let $C_0\ge 1$, $C_\Gamma>0$, $c_7>0$, $0<\eps<1$, and put $y=x^{\eps/8}$, $L=x^\eps=y^8$,
+$b=\exp(L)$, $\Lambda=C_\Gamma m^5 f L$, and $\Gamma=\exp(\Lambda)$. Suppose that $m\ge 2$,
+$f\ge 1$, $r\ge k\ge 5$, and $k\ge 8\Lambda$, and that the comparability proviso
+$d(\nu)\Gamma^2/D^\ast\le C_0$ holds for every $\nu\in\mathcal W(u)$. Suppose further that the
+Gram operator $K(\nu,\nu')$ decomposes via its degenerate (parabolic) part $K_{\mathrm{pp}}(\nu,\nu')$
+so that:
+\begin{enumerate}[label=(\alph*)]
+\item \textup{(\texttt{ClKppOff})} $K_{\mathrm{pp}}(\nu,\nu')=0$ for all $\nu\neq\nu'$;
+\item \textup{(\texttt{ClKppDiag})} $\|K_{\mathrm{pp}}(\nu,\nu)\|_{HS}^2\le d(\nu)\exp(-kf\log k)$
+  for all $\nu$;
+\item \textup{(\texttt{ClOff})} $\|K(\nu,\nu')-K_{\mathrm{pp}}(\nu,\nu')\|_{HS}^2\le
+  (1+b^{-6})\,d(\nu)d(\nu')/D^\ast$ for all $\nu\neq\nu'$;
+\item \textup{(\texttt{ClDiag})} $\|K(\nu,\nu)-K_{\mathrm{pp}}(\nu,\nu)-I_{C_\nu}\|_{HS}^2\le
+  \Gamma\,d(\nu)^2/D^\ast$ for all $\nu$;
+\item \textup{(\texttt{adm7})} $|D_{\mathrm{all}}-D^\ast|\le\exp(-c_7 r f\log r)\,D^\ast$.
+\end{enumerate}
+Set $\eta_0=b^{-6}$, $\eta_1=\exp(-c_7 r f\log r)$, and
+$e_0=2C_0/\Gamma+2\exp(-kf\log k)$. Then:
+\begin{enumerate}[label=(\roman*)]
+\item for all $\nu\neq\nu'$, $\|K(\nu,\nu')\|_{HS}^2\le(1+\eta_0)\,d(\nu)d(\nu')/D^\ast$;
+\item for all $\nu$, $\|K(\nu,\nu)-I_{C_\nu}\|_{HS}^2\le e_0\,d(\nu)$, and
+  $D_{\mathrm{all}}\le(1+\eta_1)D^\ast$;
+\item for all $y\ge Y_0=\max\bigl(1,\,\frac{2+\log(2C_0+2)}{C_\Gamma},\,\frac{1}{8c_7 C_\Gamma}\bigr)$
+  (i.e. $x\ge Y_0^{8/\eps}$), we have $e_0\ge 0$ and
+  \[
+  \eta_0,\ \eta_1,\ \sqrt{e_0}\le\exp(-y)=\exp(-x^{\eps/8}).
+  \]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Part (i) is immediate from (a) and (c), and $D_{\mathrm{all}}\le(1+\eta_1)D^\ast$ is immediate
+from (e) (\lean{linkS_concl}).
+
+For the diagonal bound in (ii) (\lean{diag_unproj}), write
+$K(\nu,\nu)-I_{C_\nu}=(K(\nu,\nu)-K_{\mathrm{pp}}(\nu,\nu)-I_{C_\nu})+K_{\mathrm{pp}}(\nu,\nu)$.
+In an orthonormal basis $\{v_\ell\}$ of $C_\nu$,
+$\|(A+B)v_\ell\|^2\le 2\|Av_\ell\|^2+2\|Bv_\ell\|^2$, so summing over $\ell$ gives
+$\|A+B\|_{HS}^2\le 2\|A\|_{HS}^2+2\|B\|_{HS}^2$ (\lean{hsNormSq_add_le}). Applying this with (d)
+and (b) yields
+\[
+\|K(\nu,\nu)-I_{C_\nu}\|_{HS}^2
+\le 2\Gamma\,\frac{d(\nu)^2}{D^\ast}+2\exp(-kf\log k)\,d(\nu).
+\]
+By the comparability proviso $d(\nu)/D^\ast\le C_0\Gamma^{-2}$, we have
+$\Gamma\,d(\nu)^2/D^\ast\le (C_0/\Gamma)\,d(\nu)$, giving $\|K(\nu,\nu)-I_{C_\nu}\|_{HS}^2\le e_0\,d(\nu)$.
+
+For (iii) (\lean{size_thresholds}, \lean{eF_nonneg_and_le_exp_neg}), since $m\ge 2$ and $f\ge 1$,
+we have $\Lambda=C_\Gamma m^5 f y^8\ge C_\Gamma y^8$. Since $r\ge k\ge 5>e$, we have
+$\log k\ge 1$ and $\log r\ge 1$, so
+\[
+r f\log r\ge k f\log k\ge k\ge 8\Lambda\ge 8 C_\Gamma y^8.
+\]
+Now assume $y\ge Y_0$, so $y\ge 1$ and $y^2\le y^8$. Then:
+\begin{itemize}
+\item $\eta_0=\exp(-6y^8)\le\exp(-y)$ since $6y^8\ge y$;
+\item $c_7 r f\log r\ge 8 c_7 C_\Gamma y^8\ge 8 c_7 C_\Gamma y^2\ge y$ (since
+  $y\ge(8c_7 C_\Gamma)^{-1}$), so $\eta_1=\exp(-c_7 r f\log r)\le\exp(-y)$;
+\item both $\Gamma^{-1}=e^{-\Lambda}$ and $e^{-kf\log k}$ are at most $\exp(-C_\Gamma y^8)$, and
+  $C_\Gamma y^8\ge C_\Gamma y^2\ge(2+\log(2C_0+2))y\ge 2y+\log(2C_0+2)$, whence
+  \[
+  0\le e_0\le(2C_0+2)\exp(-C_\Gamma y^8)=\exp\bigl(\log(2C_0+2)-C_\Gamma y^8\bigr)\le\exp(-2y).
+  \]
+  Taking square roots gives $\sqrt{e_0}\le\exp(-y)=\exp(-x^{\eps/8})$. \qedhere
+\end{itemize}
+\end{proof}
+
+\noindent In the live Lean closure, the four kernel clauses (a)--(d) and the point-counting bound
+(e) are supplied by \ref{C8} via \lean{KppOffC_holds}, \lean{kernel_diagonal_positive}
+(\lean{RowsPos.lean:221}), \lean{diagonal_positive_final} (\lean{RowsPos.lean:261}), and
+\lean{CountAllPointsClass} (\lean{countOwn_of_rowsPEv}, \lean{LinkSFinal.lean:57}); Lemma~\ref{lem:linkS}
+(\lean{linkS_of_standing_hypotheses}, \lean{StandingHypothesesHoldFamily.lean:598}) then closes
+\lean{LinkS} inside \lean{theoremS_link_concrete} (\lean{LinkSPos.lean:151}).
+
 \begin{proposition}[Verification of \texttt{LinkS} and (S8)--(S10)]\label{prop:S8S10}
 Assume \ref{C8} and put $\Gamma=\exp(C_\Gamma m^5 f L)$. Then for $x\ge x_0(\eps)$:
 \begin{enumerate}[label=(\roman*)]
 \item \textup{(Comparability proviso)} Every word $\nu\in\mathcal W(u)$ satisfies
   $e^{-1}\le d(\nu)\Gamma^2/D^\ast\le e$ (\lean{ChosenProviso} with $C_0=e$, by
   Lemma~\ref{lem:proviso}); in particular $d(\nu)>0$.
-\item \textup{(Four Gram clauses and \lean{LinkS})} From the four kernel clauses
-  (\lean{ClKppOff}, \lean{ClKppDiag}, \lean{ClOff}, \lean{ClDiag}), residual evaluation
-  (\lean{ResidEv}), and the point-counting bound (\lean{CountAllPointsClass}), there exist
+\item \textup{(Four Gram clauses and \lean{LinkS})} By Lemma~\ref{lem:linkS} (from the four kernel
+  clauses \lean{ClKppOff}, \lean{ClKppDiag}, \lean{ClOff}, \lean{ClDiag}, residual evaluation
+  \lean{ResidEv}, and point counting \lean{CountAllPointsClass}), there exist
   $\eta_0,\eta_1,e_0\ge0$ with $\eta_0,\eta_1,\sqrt{e_0}\le\exp(-x^{\eps/8})$ such that
   \begin{gather*}
   \|K(\nu,\nu')\|_{HS}^2\le(1+\eta_0)\frac{d(\nu)d(\nu')}{D^\ast}\quad(\nu\neq\nu'),\\
@@ -1130,7 +1205,8 @@ Assume \ref{C8} and put $\Gamma=\exp(C_\Gamma m^5 f L)$. Then for $x\ge x_0(\eps
 \begin{proof}
 Part (i) follows directly from Lemma~\ref{lem:proviso} (\lean{proviso_e}, yielding
 \lean{chosenProviso_4f} from \lean{LinkB.RankM} and the word prime window \lean{D.T_win}), part
-(ii) is \lean{theoremS_link_concrete} (\lean{LinkSPos.lean:151}), and part (iii) follows from
+(ii) follows from Lemma~\ref{lem:linkS} (\lean{linkS_of_standing_hypotheses},
+\lean{theoremS_link_concrete}, \lean{LinkSPos.lean:151}), and part (iii) follows from
 Lemma~\ref{lem:linkIRR} (\lean{linkIRR_of_allRows}, \lean{closed_linkIRR_of_join_count}, yielding
 \lean{LinkIRR} of \lean{GlobalTheoremInputs.lean:64}). For $x\ge1$ we have $\sqrt{e_0}\le\exp(-x^{\eps/8})<1$, so
 $e_0<1$; since $d(\nu)>0$ by (i), Lemma~\ref{lem:diagnondeg} gives $c_0(\nu)>0$ and
@@ -1426,7 +1502,7 @@ Lemmas~\ref{lem:heightchain}--\ref{lem:linkNgd}, Thm.~\ref{thm:S1} & \lean{heigh
 Lemmas~\ref{lem:lettersplace}--\ref{lem:C2off}, Prop.~\ref{prop:S2S5} & \lean{letters_place}, \lean{nuAbs_place_fine}, \lean{degree_fine}, \lean{C2off_of}, \lean{secondComplement_of_inputs}, \lean{C2atG_of} & \lean{FockDegreeGapBound.lean:204}, \lean{NuAbsPlaceFine.lean:101, 136, 177}, \lean{WeightDegreeSizes.lean:400, 460} \\
 Prop.~\ref{prop:S6} & \lean{NprimeMuR}, \lean{LinkMu}, \lean{Places_at}, \lean{slopesN_at_of} & \lean{SR/GlobalTheoremInputs.lean:69}, \lean{SR/GlobalSchurBounds/TopDensityNGeSixteen.lean:1529} \\
 Lemmas~\ref{lem:kWord}--\ref{lem:orbitsum}, Thm.~\ref{thm:S7} & \lean{LinkG_at}, \lean{key_minor_dvd}, \lean{kW_ord}, \lean{key3Ord}, \lean{caseD_arith}, \lean{caseE_arith}, \lean{St.starAll_of}, \lean{gain_bound_all_of_star} & \lean{KeyMinorDvd.lean:181, 207, 273}, \lean{PartnerCountOfCentral.lean:539, 587, 884}, \lean{NotSingularOfCentral.lean:777} \\
-Lemmas~\ref{lem:diagnondeg}--\ref{lem:linkIRR}, Prop.~\ref{prop:S8S10} & \lean{unfolding_constant_pos_of_diagonal}, \lean{dall_pos}, \lean{mass_corollary}, \lean{proviso_e}, \lean{RankTiesF}, \lean{ClassNumberFormula}$_2$, \lean{VolSigIndep}, \lean{weight_numbers_bound}, \lean{epsilon_bound_large_x}, \lean{delp_of_allRows}, \lean{linkIRR_of_allRows}, \lean{locShare_le_Wg}, \lean{sizesRec_at}, \lean{closed_linkIRR_of_join_count}, \lean{matKF_of}, \lean{LinkS_at}, \lean{LinkIRR}, \lean{ChosenProviso}, \lean{theoremS_link_concrete} & \lean{OneAddInvPowLeExpOne.lean:56, 64}, \lean{MainSup.lean:135, 189}, \lean{ClassNumberClosed.lean:48}, \texttt{VolumeSignatureIndep\allowbreak AndClassNumberItems.lean:53}, \lean{LwRankTies.lean:54}, \lean{ConcNP.lean:59, 102, 276, 321, 459}, \lean{ConcNWeight.lean:284, 391}, \lean{LinkIRROfJoinEx.lean:61, 83}, \lean{LinkIrr.lean:60}, \lean{TopDensityNGeSixteen.lean:1343, 1357, 1411}, \lean{SR/GlobalTheoremInputs.lean:64}, \lean{LinkSPos.lean:151} \\
+Lemmas~\ref{lem:diagnondeg}--\ref{lem:linkS}, Prop.~\ref{prop:S8S10} & \lean{unfolding_constant_pos_of_diagonal}, \lean{dall_pos}, \lean{mass_corollary}, \lean{proviso_e}, \lean{RankTiesF}, \lean{ClassNumberFormula}$_2$, \lean{VolSigIndep}, \lean{weight_numbers_bound}, \lean{epsilon_bound_large_x}, \lean{delp_of_allRows}, \lean{linkIRR_of_allRows}, \lean{locShare_le_Wg}, \lean{sizesRec_at}, \lean{closed_linkIRR_of_join_count}, \lean{hsNormSq_add_le}, \lean{diag_unproj}, \lean{linkS_concl}, \lean{size_thresholds}, \lean{eF_nonneg_and_le_exp_neg}, \lean{linkS_of_standing_hypotheses}, \lean{ClKppOff}--\lean{ClDiag}, \lean{matKF_of}, \lean{LinkS_at}, \lean{LinkIRR}, \lean{ChosenProviso}, \lean{theoremS_link_concrete} & \lean{OneAddInvPowLeExpOne.lean:56, 64}, \lean{MainSup.lean:135, 189}, \lean{ClassNumberClosed.lean:48}, \texttt{VolumeSignatureIndep\allowbreak AndClassNumberItems.lean:53}, \lean{LwRankTies.lean:54}, \lean{ConcNP.lean:59, 102, 276, 321, 459}, \lean{ConcNWeight.lean:284, 391}, \lean{LinkIRROfJoinEx.lean:61, 83}, \lean{LinkIrr.lean:60}, \texttt{StandingHypotheses\allowbreak HoldFamily.lean:75, 110, 171, 213, 233, 598}, \lean{ThmSOwn.lean:76}, \lean{RowsPos.lean:221, 261}, \lean{LinkSFinal.lean:57}, \lean{TopDensityNGeSixteen.lean:1343, 1357, 1411}, \lean{SR/GlobalTheoremInputs.lean:64}, \lean{LinkSPos.lean:151} \\
 Lemmas~\ref{lem:minuspart}--\ref{lem:pointHV}, Thm.~\ref{thm:VWin} & \lean{VWin}, \lean{VWinAt}, \lean{VVle}, \lean{vwin_of_counts}, \lean{ThmBcFree}, \lean{point_arith}, \lean{thmHV}, \lean{thmBab_of_lemmaK}, \lean{UpperTheory.V.FW.ferreroWashington} & \lean{ExistsPageN.lean:44}, \lean{ThmBcOfPsiBound.lean:220, 339}, \lean{PointArith.lean:47, 78}, \lean{FinalLe.lean:199}, \lean{ThmHV.lean:49} \\
 Section~\ref{sec:assembly} & \lean{ChainTied}, \lean{TieGlobal}, \lean{TieLocal}, \lean{TieArith}, \lean{supplyChi}, \lean{vwin_of_row} & \lean{SR/GlobalSchurBounds/TieGlobal.lean:97} \\
 \bottomrule
