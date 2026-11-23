@@ -1246,27 +1246,49 @@ weight window we have $|w_{u,j}(\rho)|\le 2b$ and $|\log\Omega|\le 3L=3x^\eps$. 
 lifts and $f$ complex embeddings gives at most
 $m\cdot f\cdot m\cdot 2b\cdot 3x^\eps=6f m^2 b x^\eps=6mB_0$.
 
-For (ii), fix a lift $j\in\{1,\dots,m\}$. By \lean{NData.locs_mem}, the local pieces over a small
-prime $\ell$ and place $w\mid\ell$ are partitioned disjointly across the $m$ lifts, so lift $j$ is
-charged only on its own block $F.L(j,t)$ without compounding across lifts $1,\dots,j-1$. By
-\ref{C8} (\lean{ShapeJumps}), the twisted lifted representation $r_{\mathrm{Tw}}$ at every
-embedding $\tau$ has Hodge--Tate weights $\mathcal C_{\mathrm{HT}}\cup\mathcal L_{\mathrm{HT}}\cup[0,t)$
-with multiplicity $1$, where $|\mathcal C_{\mathrm{HT}}|=k-1$ lies in the far cloud and
-$|\mathcal L_{\mathrm{HT}}|=m$ lies near $0$ (matching the indefinite part $m$ of the starting
-signature $(k-1,m)$). By local Bloch--Kato duality \ref{C6} (\lean{rank_le_row}), with
+For (ii), fix a lift $j\in\{1,\dots,m\}$. Define for each prime $\ell$ the bad-level multiplicity
+$s_N(\ell)=v_\ell(N_{\mathrm{lev}})+\mathbf{1}_{\ell\in\mathcal P_{\mathrm{bad}}}$ (where
+$N_{\mathrm{lev}}$ is the finite level conductor of the lift chain, satisfying
+$\log N_{\mathrm{lev}}\le C_{\mathrm{lev}}L$, and $\mathcal P_{\mathrm{bad}}$ is the finite set
+of bad/ramified primes dividing $2 q d g_0 g_1$ or bounded by $O(L)$), and define the
+Tate--Shafarevich contribution at $\ell$ by
+\[
+\mathrm{vvTerm}(\ell)=\log\ell\sum_{1\le e'<t}\len\Sha_\ell(e').
+\]
+By Chebyshev's bound and $\log N_{\mathrm{lev}}\le C_{\mathrm{lev}}L$, the weighted sum of
+$s_N(\ell)$ satisfies
+\[
+\sum_{\ell\text{ prime}}s_N(\ell)\log\ell
+\le \log N_{\mathrm{lev}}+\sum_{\ell\in\mathcal P_{\mathrm{bad}}}\log\ell
+\ll L+\log(2qd g_0 g_1)\ll L^2
+\]
+(since $\log(g_0 g_1)\ll L$ and $\log(qd)\ll x^{\eps/5}(\log x)^2\ll L$).
+
+By \lean{NData.locs_mem}, the local pieces over a small prime $\ell$ and place $w\mid\ell$ are
+partitioned disjointly across the $m$ lifts, so lift $j$ is charged only on its own block
+$F.L(j,t)$ without compounding across lifts $1,\dots,j-1$. At every place $w\mid\ell$
+($\ell\notin\{g_0,g_1\}$), the twisted lifted representation $r_{\mathrm{Tw}}$ is crystalline
+with $H^0(K_w,V)=0$ (as the Hodge--Tate weights are nonzero/distinct under residual
+irreducibility), and by Lemma~\ref{lem:steprule}(ii) (\lean{ShapeJumps}, \lean{multW_of_shape})
+the word representation $W_p$ has multiplicity-$1$ Hodge--Tate weights on
+$\mathcal C_{\mathrm{HT}}\cup\mathcal L_{\mathrm{HT}}$ with $\mathcal C_{\mathrm{HT}}>0$ and
+$|\mathcal L_{\mathrm{HT}}|=m$. Checking all hypotheses of the local Bloch--Kato dimension formula
+(Bloch--Kato~\cite[Prop.~3.8, Cor.~3.8.4]{bloch-kato}) via Lemma~\ref{lem:ranklerow} gives, with
 $V=T\otimes_{\Z_\ell}\Q_\ell$,
 \[
 \rk_{\Z_\ell} H^1_f(K_w,T)=\dim_{\Q_\ell} H^1_f(K_w,V)
 \le \operatorname{locDeg}(w)\cdot |\mathcal L_{\mathrm{HT}}|=\operatorname{locDeg}(w)\cdot m.
 \]
-By \ref{C6}--\ref{C7}, the lifting exponent at $\ell$ is bounded linearly in the Hodge--Tate height
-$h_B=b+S_c+\eta_{\mathrm{Sz}}+t+2\in[b,6b]$:
+By the Fontaine--Laffaille / Wach-module lifting bound
+(Fontaine--Laffaille~\cite[Thm.~4.3, \S8]{fontaine-laffaille}, together with Grothendieck's
+divided-power deformation bound~\cite[Ch.~V \S4]{grothendieck1974}), the lifting exponent at $\ell$
+is linear in the Hodge--Tate height $h_B=b+S_c+\eta_{\mathrm{Sz}}+t+2\in[b,6b]$:
 \[
 e'=e_L(\ell,N,\lfloor h_B\rfloor)\le 64\,h_B\,s_N(\ell)+O(\log(h_B N)).
 \]
 Summing $\operatorname{locDeg}(w)\cdot m\cdot e'$ over places $w\mid\ell$ uses
-$\sum_{w\mid\ell}\operatorname{locDeg}(w)=f$, giving per-prime colength $O(f m b s_N(\ell))$.
-Weighting by $\log\ell$ and summing over the small primes $\ell$ (with
+$\sum_{w\mid\ell}\operatorname{locDeg}(w)=f$, giving per-prime colength $O(f m b\,s_N(\ell))$.
+Weighting by $\log\ell$ and summing over the small primes $\ell$ (using
 $\sum_\ell s_N(\ell)\log\ell\ll L^2$) contributes $O(fmbL^2)=O(x^\eps B_0)$ (since $B_0=fmbL$ with
 $L=x^\eps$), while $(\log x)^2 N_c\le x^\eps N_c$ for large $x$, and the $\Sha$-window
 contribution $\sum_\ell \mathrm{vvTerm}(\ell)\le\sqrt{b}=\exp(x^\eps/2)\ll\exp(x^\eps)=b\le B_0$
@@ -1378,6 +1400,46 @@ Since $\sum_{p\in P}\log p\cdot v_p(D_\Gamma)\le\log D_\Gamma$, applying (b)--(d
 $S_1$ bound proves the lemma.
 \end{proof}
 
+\begin{lemma}[Existence of completely split word primes $T(\nu)$ for (S4)]\label{lem:wordprimes}
+Assume \ref{N1} and \ref{N5}. Let $M_0=2^{e+2}=4n\le 8x^{2+8\eps}$, $f=2n$, $k\le x^5$, and let
+$Y\ge b^3=\exp(3x^\eps)$. Then for all $x\ge x_0(\eps)$, the interval
+$\bigl[Y,\,Y\bigl(1+\frac{1}{fk}\bigr)\bigr]$ contains a rational prime $T(\nu)$ satisfying
+$T(\nu)\equiv 1\pmod{M_0}$; in particular, $T(\nu)$ splits completely in
+$F^+=\Q(\zeta_{2^{e+2}})^+$, and if $Y\in[T_0,k^{c_C-1}T_0]$ with
+$\log T_0\in[\Lambda(u),c_C mL]$, then \textup{(S4)} holds.
+\end{lemma}
+
+\begin{proof}
+Because $F^+=\Q(\zeta_{2^{e+2}})^+$ is the real subfield of the $2^{e+2}$-th cyclotomic field,
+a rational prime $p$ splits completely in $F^+$ if and only if $p\equiv\pm 1\pmod{M_0}$; in
+particular $p\equiv 1\pmod{M_0}$ suffices. Put $Y_1=Y\bigl(1+\frac{1}{fk}\bigr)$. Since
+$\log Y\ge 3x^\eps$ and $\log M_0\le 3\log x$ (for large $x$), we have
+$\log Y\ge C_0\log M_0\log\log M_0$ for $x\ge x_0(\eps)$, so \ref{N5} applies to both $Y$ and
+$Y_1$ in the progression $1\pmod{M_0}$.
+
+Because $M_0=2^{e+2}$ is a power of $2$, every real primitive Dirichlet character $\chi_1$
+modulo $M_0$ has conductor $r\in\{4,8\}$. By \ref{N1}, every real zero $\beta_1$ of
+$L(s,\chi_1)$ satisfies $1-\beta_1\ge c_0/(\sqrt{8}\log^2 8)=c_{\mathrm{abs}}>0$, an absolute
+constant. Hence for all $t\ge Y$, $t^{\beta_1-1}\le Y^{-c_{\mathrm{abs}}}\le\frac12$ for large
+$x$, so the main-term difference in \ref{N5} satisfies
+\[
+\mathrm{main}(Y_1;M_0,1)-\mathrm{main}(Y;M_0,1)
+\ge\frac{1}{\varphi(M_0)}\int_Y^{Y_1}\frac{1-t^{\beta_1-1}}{\log t}\,dt
+\ge\frac{Y}{2fk\,\varphi(M_0)\log Y_1}.
+\]
+Meanwhile, since $\log Y/\log M_0\ge x^\eps/\log x$ and $\sqrt{\log Y}\ge x^{\eps/2}$, the
+relative error factor in \ref{N5} is
+$A_0\bigl(e^{-c_3\log Y/\log M_0}+e^{-\sqrt{c_3\log Y}}\bigr)\ll\exp(-c' x^{\eps/2})=o(1/(fk))$
+(as $fk\le 4x^{7+8\eps}$ is polynomial in $x$). Thus the total error from \ref{N5} at $Y$ and
+$Y_1$ is at most $\frac{Y}{4fk\,\varphi(M_0)\log Y_1}$ for $x\ge x_0(\eps)$, yielding
+\[
+\pi(Y_1;M_0,1)-\pi(Y;M_0,1)\ge\frac{Y}{4fk\,\varphi(M_0)\log Y_1}\ge 1.
+\]
+Therefore there exists a prime $T(\nu)\in[Y,Y_1]$ with $T(\nu)\equiv 1\pmod{M_0}$. Since
+$Y_1/Y=1+1/(fk)\le 2\le k$, all word primes lie in $[T_0,k^{c_C}T_0]$, giving both
+$\Lambda(u)\le\log T(\nu)\le c_C mL$ and $|\log T(\nu)-\log T(\nu')|\le c_C\log k$.
+\end{proof}
+
 \begin{proposition}[Verification of (S2)--(S5)]\label{prop:S2S5}
 Under the construction of Section~\ref{sec:glued} and \ref{C8}, the tied slope datum satisfies
 \textup{(S2)}, \textup{(S3)}, \textup{(S4)}, and \textup{(S5)}.
@@ -1408,10 +1470,10 @@ gives $|E_j(\nu)-S_A\lambda|\le c_E B_0$ for every lift $j$, and summing over $j
 For \textup{(S3)} (\emph{Heights}), the archimedean height $h(\nu)$ is built from the
 word-independent base height plus the $m$-step chain heights and $-\sum_t a_t\log T(\nu)$; hence
 the combination $h(\nu)+\sum_t a_t\log T(\nu)$ varies across $\nu,\nu'\in\mathcal W(u)$ by at most
-the per-lift error budget $c_H(n_TaL_a+mB_0)$ (\lean{LinkDIV_at}, final clause). For \textup{(S4)}
-(\emph{Counting}), each word's auxiliary prime $T(\nu)$ is chosen in a narrow dyadic interval
-$[T_0, k^{c_C} T_0]$ with $\log T_0\in[\Lambda(u), c_C mL]$, which immediately yields both
-$\Lambda(u)\le\log T(\nu)\le c_C mL$ and $|\log T(\nu)-\log T(\nu')|\le c_C\log k$. For
+the per-lift error budget $c_H(n_TaL_a+mB_0)$ (\lean{LinkDIV_at}, final clause). For \textup{(S4)} (\emph{Counting}), Lemma~\ref{lem:wordprimes} (using only \ref{N1} and \ref{N5})
+constructs each word's auxiliary prime $T(\nu)\in[Y,Y(1+1/(fk))]\subseteq[T_0, k^{c_C} T_0]$
+splitting completely in $F^+$, which yields both $\Lambda(u)\le\log T(\nu)\le c_C mL$ and
+$|\log T(\nu)-\log T(\nu')|\le c_C\log k$. For
 \textup{(S5)} (\emph{Reference slopes}), the initial lattice $N_{\nu,0}$ at level zero has its
 minimal and maximal slopes controlled by the level-zero Hecke/volume bounds
 (\lean{linkGLOBAL7_min}), giving $-c_S n_TaL_a(1+m/k)\le\mu_0(\nu)$ and
@@ -1424,38 +1486,141 @@ $\mu_0^+(\nu)\le c_S n_TaL_a$.
 
 \subsection{Local index decomposition and (S6)}
 
+\begin{lemma}[Arakelov slope shift, maximal-slope bound, and floor-rounding error, \texttt{mu\_index\_sum}, \texttt{mu\_eq}, \texttt{muMax\_le}]\label{lem:muindex}
+Let $K=LL$ be a number field with ring of integers $\Oc_K$ and finite-place weights
+$\mathrm{lw}(w)=\frac{\log N(\fp_w)}{[K:\Q]}$ and $\mathrm{lE}(w)=\mathrm{lw}(w)e_w$, where $e_w$
+is the ramification index of $w$ over $\Q$. Let $(V,X)$ be a Hermitian $K$-vector space, let
+$N\subseteq M$ be full $\Oc_K$-lattices in $V$ of equal rank $r=\rk(N)=\rk(M)>0$, and let
+$S=\mathrm{supp}$ be a finite set of finite places of $K$ containing all places where
+$N_w\neq M_w$ (specifically, all places above primes $p\le X''$).
+\begin{enumerate}[label=(\roman*)]
+\item \textup{(Index formula, \lean{mu_index_sum})} Putting
+  $\ell_w=\operatorname{len}_{\Oc_{K,w}}(M_w/N_w)<\infty$, we have
+  \[
+  \mu(N)=\mu(M)-\frac{1}{r}\sum_{w\in S}2\,\mathrm{lw}(w)\,\ell_w.
+  \]
+\item \textup{(Fractional-ideal scaling and sublattice inclusion, \lean{mu_eq}, \lean{muMax_le})}
+  Suppose $N_\nu=I_\nu\cdot N_{\nu,\mathrm{lat}}$ where
+  $I_\nu=\prod_{w\in S}\fp_w^{-\lfloor e_w\operatorname{sg}(\nu,w)\rfloor}$ and
+  $N_{\nu,\mathrm{lat}}\subseteq M_{\mathrm{ram}}(\nu)$ has local lengths
+  $\ell_w=e_w\,\mathrm{len}_{MN}(\nu,w)$ for $w\in S$ and $\ell_w=0$ for $w\notin S$. Then
+  \begin{equation}\label{eq:mueq}
+  \mu(N_\nu)=\mu(M_{\mathrm{ram}}(\nu))+\sum_{w\in S}2\,\mathrm{lw}(w)\lfloor e_w\operatorname{sg}(\nu,w)\rfloor
+  -\frac{1}{\rk(N_\nu)}\sum_{w\in S}2\,\mathrm{lE}(w)\,\mathrm{len}_{MN}(\nu,w).
+  \end{equation}
+  Moreover, if $(N_{\nu,\mathrm{lat}})_w\subseteq\fp_w^{k_w}(M_{\mathrm{ram}}(\nu))_w$ for
+  integers $k_w\ge 0$ (with $k_w=0$ for $w\notin S$), then
+  \begin{equation}\label{eq:muMaxle}
+  \mu_{\max}(N_\nu)\le\mu_{\max}(M_{\mathrm{ram}}(\nu))
+  +\sum_{w\in S}2\,\mathrm{lw}(w)\bigl(\lfloor e_w\operatorname{sg}(\nu,w)\rfloor-k_w\bigr).
+  \end{equation}
+\item \textup{(Floor-rounding error, \lean{NprimeMuR})} The floor-rounding discrepancy
+  \[
+  \mathrm{RX}=\sum_{w\in S}2\,\mathrm{lE}(w)\bigl(\operatorname{sg}(\nu,w)-\lfloor e_w\operatorname{sg}(\nu,w)\rfloor/e_w\bigr)
+  \]
+  satisfies $0\le\mathrm{RX}\le 2\sum_{p\le X''}\log p\le 4 X''$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+For (i), since $N\subseteq M$ have equal rank, $M/N$ is a finite torsion $\Oc_K$-module and
+decomposes locally as $M/N\cong\bigoplus_{w\in S}M_w/N_w$, so the global index is
+$[M:N]=\prod_{w\in S}N(\fp_w)^{\ell_w}$. Taking logarithms gives
+$\log[M:N]=\sum_{w\in S}\ell_w\log N(\fp_w)$. Since the Arakelov degree shifts by
+$\widehat\deg(N)=\widehat\deg(M)-\frac{2}{[K:\Q]}\log[M:N]$, dividing by $r=\rk(M)$ yields (i).
+
+For (ii), scaling any lattice by a fractional ideal $\mathfrak a$ shifts every sublattice slope by
+$-\frac{2}{[K:\Q]}\log N(\mathfrak a)$. Applying this to $\mathfrak a=I_\nu$ (where
+$-\log N(I_\nu)=\sum_{w\in S}\lfloor e_w\operatorname{sg}(\nu,w)\rfloor\log N(\fp_w)$) and adding
+(i) for $N_{\nu,\mathrm{lat}}\subseteq M_{\mathrm{ram}}(\nu)$ gives \eqref{eq:mueq}. For
+\eqref{eq:muMaxle}, the local inclusions $(N_{\nu,\mathrm{lat}})_w\subseteq\fp_w^{k_w}(M_{\mathrm{ram}}(\nu))_w$
+imply the global inclusion $N_{\nu,\mathrm{lat}}\subseteq J_d\cdot M_{\mathrm{ram}}(\nu)$ with
+$J_d=\prod_{w\in S}\fp_w^{k_w}$, whence $N_\nu=I_\nu N_{\nu,\mathrm{lat}}\subseteq(I_\nu J_d)M_{\mathrm{ram}}(\nu)$.
+By monotonicity of $\mu_{\max}$ under sublattice inclusion and the fractional-ideal scaling rule
+for $I_\nu J_d$, we obtain \eqref{eq:muMaxle}.
+
+For (iii), for every $w\in S$ we have $0\le e_w\operatorname{sg}(\nu,w)-\lfloor e_w\operatorname{sg}(\nu,w)\rfloor<1$,
+so multiplying by $2\,\mathrm{lw}(w)$ yields
+$0\le 2\,\mathrm{lE}(w)\bigl(\operatorname{sg}(\nu,w)-\lfloor e_w\operatorname{sg}(\nu,w)\rfloor/e_w\bigr)<2\,\mathrm{lw}(w)$.
+For each rational prime $p$, the fundamental identity $\sum_{w\mid p}e_w f_w=[K:\Q]$ and $e_w\ge 1$
+imply $\sum_{w\mid p}\mathrm{lw}(w)=\frac{\log p}{[K:\Q]}\sum_{w\mid p}f_w\le\log p$. Summing over
+all primes $p\le X''$ gives $0\le\mathrm{RX}\le 2\sum_{p\le X''}\log p=2\vartheta(X'')\le 4X''$ by
+Chebyshev's bound $\vartheta(X)\le(\log 4)X\le 2X$.
+\end{proof}
+
 \begin{proposition}[Verification of \texttt{Places\_at} and (S6)]\label{prop:S6}
-Under the local-to-global slope decomposition \lean{NprimeMuR}, the lattice $N_\nu$ and reference
-lattice $N_{\nu,0}$ satisfy
-\begin{equation}\label{eq:NprimeMuR}
-\Bigl|\mu(N_\nu)-\mu(N_{\nu,0})-\sum_{w\in\mathrm{supp}}\sz\bigl(w,\operatorname{sg}(\nu,w)\bigr)\Bigr|
-\le C X'',
-\end{equation}
-where $\operatorname{sg}(\nu,w)=\sum_{j=1}^m(\mathrm{gain}_j(w)+F_j(w)-E(\nu,j,w))$. Consequently,
-both inequalities of \textup{(S6)} hold.
+Suppose that for every word $\nu$ of rank $\rk(N_\nu)=d(\nu)(1-1/(T(\nu)-1))^f$ with
+$T(\nu)\ge b^3$, $b\ge\max(4,16f)$, the local lattice inclusions of Lemma~\ref{lem:muindex}(ii)
+hold with $k_w=e_w\tau_w\in\N$ and $\mathrm{len}_{MN}(\nu,w)\le d(\nu)(\tau_w+\mathrm{io}(w))$ for
+$w\nmid T(\nu)$, $k_w=0$ and $\tau_w=0$ for $w\mid T(\nu)$, and total $T(\nu)$-index
+$\mathrm{LT}=\frac{1}{\rk(N_\nu)}\sum_{w\mid T(\nu)}2\,\mathrm{lE}(w)\,\mathrm{len}_{MN}(\nu,w)
+\le C n_T m(a/k+b')\log T(\nu)$. Then for $x\ge x_0(\eps)$, both inequalities of \textup{(S6)}
+hold:
+\[
+\mu^+(\nu)\le\mu_0^+(\nu)+\mathcal G(u)+F(u)-E(\nu)+c_1 m B_0,\qquad
+\mu_0(\nu)+\mathcal G(u)+F(u)-E(\nu)-\mathrm{Lo}(\nu)\le\mu(\nu).
+\]
 \end{proposition}
 
 \begin{proof}
-At every finite place $w\in\mathrm{supp}$, the local lattice inclusion between $N_\nu$ and
-$N_{\nu,0}$ has index determined by the gain $\mathrm{gain}_j(w)$, fixed part $F_j(w)$, and local
-energy $E(\nu,j,w)$, with total deviation bounded by $O(X'')$ (\lean{NprimeMuR}). Summing
-$\sz(w,\cdot)$ over $w\in\mathrm{supp}$ separates the sum into $\mathcal G(u)+F(u)-E(\nu)$ up to
-the local torsion/ramification correction $\mathrm{Lo}(\nu)$. Specifically, \lean{Places_at}
-(\lean{TopDensityNGeSixteen.lean:1525}) provides \lean{HypLow}, \lean{HypLow2}, and \lean{HypHigh}
-together with $LT\le C n_T m(a/k+b')\log T(\nu)$ and $RX\le C X''$; with $C\ge4$ and
-$\mathrm{IOsum}\ge0$ (so $4\,\mathrm{IOsum}\le C\,\mathrm{IOsum}$), feeding these into
-Proposition~9.4 of Part~I (\lean{slopesN_at_of}) immediately yields both halves of \textup{(S6)}:
-$\mu^+(\nu)\le\mu_0^+(\nu)+\mathcal G(u)+F(u)-E(\nu)+c_1 mB_0$ and
-$\mu_0(\nu)+\mathcal G(u)+F(u)-E(\nu)-\mathrm{Lo}(\nu)\le\mu(\nu)$.
+First we check the three elementary numerical inequalities of \lean{size_alt} from $b\ge 16f$,
+$b\ge 4$, and $T=T(\nu)\ge b^3$: we have $T\ge 64>2$, $2f/T\le (b/8)/b^3=1/(8b^2)\le 1/2$, and
+(using $\log(T-1)\le T^{1/3}$ for $T\ge 64$ and $T-2\ge T/2$)
+\[
+\frac{4f}{T}\,b^2+\frac{f\log(T-1)}{T-2}\le\frac{b/4}{b^3}\,b^2+\frac{2f\,T^{1/3}}{T}
+=\frac14+\frac{2f}{T^{2/3}}\le\frac14+\frac{b/8}{b^2}\le\frac14+\frac{1}{32}<1.
+\]
+Second, by Mertens' bound $\sum_{p\le X'}\frac{\log p}{p}\le\log X'+O(1)$ and the parameter bounds
+$m,n_T\le 2x^3$, $\log X'=x^{\eps/3}\le x$, and $b\ge x^9$, the $\tau$-sum satisfies
+$\sum_{w\in\mathrm{supp}}\sz(w,\tau_w)\le C_T m n_T a\log X'+b^{\delta(x)}\le (4|C_T|x^8+1)b\le b^2$
+(\lean{ta_le}). Third, Lemma~\ref{lem:muindex}(ii)--(iii) gives the exact slope identity
+\eqref{eq:mueq}, the maximal-slope bound \eqref{eq:muMaxle} with $k_w=e_w\tau_w$, and the
+floor-rounding bound $0\le\mathrm{RX}\le 4X''$. Since $\sum_{w\in\mathrm{supp}}2\,\mathrm{lE}(w)\operatorname{sg}(\nu,w)
+=\mathcal G(u)+F(u)-E(\nu)$ and $\mathrm{IOsum}\ge 0$, all hypotheses \lean{HypLow}, \lean{HypLow2},
+and \lean{HypHigh} of \lean{Places_at} hold with $C\ge 4$. Applying Proposition~9.4 of Part~I
+(\lean{slopesN_at_of}) immediately yields both inequalities of \textup{(S6)}.
 \end{proof}
 
 \subsection{Per-place gain inequality (\texttt{LinkG}) and (S7)}
 
-We expand the two core steps behind \lean{LinkG}: extracting half-unit Witt-vector valuations from
-Lemma~9.6 of Part~I (\lean{kW_ord}), and summing the orbitwise inequalities into the global
-gain-versus-ask bound (\lean{gain_bound_all_of_star}).
+We prove the two Witt-vector divisibility lemmas (\lean{kS_ord} and \lean{kW_ord}, which together
+give \lean{key3Ord}), the orbitwise arithmetic bounds for cases D and E (\lean{caseD_arith},
+\lean{caseE_arith}), and the orbitwise-to-global summation (\lean{gain_bound_all_of_star}),
+completing the verification of \textup{(S7)} without any unproved automorphic input.
 
-\begin{lemma}[Witt-vector order extraction, \texttt{kW\_ord}]\label{lem:kWord}
+\begin{lemma}[Witt-vector contraction divisibility, \texttt{key\_pow\_dvd}, \texttt{kS\_ord}]\label{lem:kSord}
+Let $A$ be a commutative ring, $p$ a prime, $w\in A$ with $w^2=p$, $m,d\ge 0$, vectors
+$u,v\in A^{m+1}$ with $w\mid u_b$ for all $b\neq 0$ and $w\mid v_0$, and matrices
+$M,N',N\in M_{m+1}(A)$ satisfying $M_{b,a}^{p^d}\equiv N'_{b,a}\pmod{pA}$ for all $a,b$ and
+$\sum_{a=0}^m N'_{b,a}N_{a,b'}=\delta_{b,b'}$ for all $b,b'$. Then
+\[
+w\ \Big|\ \sum_{a=0}^m\Bigl(\sum_{b=0}^m u_b M_{b,a}\Bigr)^{p^d}\Bigl(\sum_{b'=0}^m v_{b'}N_{a,b'}\Bigr).
+\]
+In particular, for a discrete valuation ring $O$ over $W(\mathbb F_{p^{n'}})$ with uniformizer
+$w_p$ satisfying $w_p^2=p$, $g\in\mathrm{GL}_{m+1}(W(\mathbb F_{p^{n'}}))$,
+$M_{b,a}=\sigma^{s_0}(g^{-1})_{b,a}$, $N'_{b,a}=\sigma^{s_1}(g^{-1})_{b,a}$,
+$N_{a,b'}=\sigma^{s_1}(g)_{a,b'}$ with $s_1\equiv s_0+d\pmod{n'}$, and scaled lift coordinates
+$u,v\in O[X]^{m+1}$ with $w_p\mid u_b$ ($b\neq 0$) and $w_p\mid v_0$, the contracted polynomial is
+divisible by $w_p$ in $O[X]$ (\lean{kS_ord}).
+\end{lemma}
+
+\begin{proof}
+Let $\varphi:A\to A/wA$ be the canonical quotient map. Since $w^2=p$, we have $\varphi(p)=\varphi(w)^2=0$.
+Because $w\mid u_b$ for $b\neq 0$, $\varphi\bigl(\sum_{b=0}^m u_b M_{b,a}\bigr)=\varphi(u_0)\varphi(M_{0,a})$.
+From $M_{0,a}^{p^d}\equiv N'_{0,a}\pmod{pA}$ and $\varphi(p)=0$ we obtain
+$\varphi(M_{0,a})^{p^d}=\varphi(N'_{0,a})$. Applying $\varphi$ to the contraction and interchanging
+the finite sums over $a$ and $b'$ gives
+\begin{align*}
+\varphi\biggl(\sum_{a=0}^m\Bigl(\sum_{b=0}^m u_b M_{b,a}\Bigr)^{p^d}\Bigl(\sum_{b'=0}^m v_{b'}N_{a,b'}\Bigr)\biggr)
+&=\varphi(u_0)^{p^d}\sum_{b'=0}^m\varphi(v_{b'})\sum_{a=0}^m\varphi(N'_{0,a})\varphi(N_{a,b'})\\
+&=\varphi(u_0)^{p^d}\sum_{b'=0}^m\varphi(v_{b'})\delta_{0,b'}=\varphi(u_0)^{p^d}\varphi(v_0)=0,
+\end{align*}
+since $w\mid v_0$. For the specialization to $O[X]$, the Witt-vector Frobenius congruence gives
+$M_{b,a}^{p^d}\equiv N'_{b,a}\pmod p$ because $s_1\equiv s_0+d\pmod{n'}$ and $\sigma^{n'}=\mathrm{id}$,
+while $g^{-1}g=I_{m+1}$ gives $\sum_a N'_{b,a}N_{a,b'}=\delta_{b,b'}$.
+\end{proof}
+
+\begin{lemma}[Witt-vector minor divisibility, \texttt{kW\_ord}]\label{lem:kWord}
 Let $p$ be a prime, $n'\ge1$, and $O$ be a discrete valuation ring over $W(\mathbb F_{p^{n'}})$
 with uniformizer $w_p$ satisfying $w_p^2=p$. Let $g\in\mathrm{GL}_{m+1}(W(\mathbb F_{p^{n'}}))$,
 let $s_0,s_1\in\Z$ with $s_1\equiv s_0+d\pmod{n'}$ ($d\ge0$), and put
@@ -1563,9 +1728,9 @@ Rearranging gives \eqref{eq:orbitsum}.
 \end{proof}
 
 \begin{theorem}[Per-place gain inequality and verification of (S7)]\label{thm:S7}
-Assume \ref{C8}. For every inert or signal place $w\mid p\le X''$, the gain clause
-\eqref{eq:orbitsum} of \lean{LinkG_at} holds. Weighting \eqref{eq:orbitsum} by $\sz(w,\cdot)$ and
-summing over $w\mid p\le X''$ via the product formula $\sum_{w\mid p}\mathrm{lw}(w)e_w=\log p$ gives
+For every inert or signal place $w\mid p\le X''$, the gain clause \eqref{eq:orbitsum} of
+\lean{LinkG_at} holds. Weighting \eqref{eq:orbitsum} by $\sz(w,\cdot)$ and summing over
+$w\mid p\le X''$ via the product formula $\sum_{w\mid p}\mathrm{lw}(w)e_w=\log p$ gives
 \[
 A(u)-\mathcal G(u)\le L_P=c_L n_T m b\,x^{e_L\eps},\qquad I(u)\le L_P,
 \]
@@ -1573,27 +1738,40 @@ establishing \textup{(S7)}.
 \end{theorem}
 
 \begin{proof}
-Lemma~\ref{lem:kWord} (\lean{kW_ord}) together with \lean{kS_ord} establishes
-\lean{CoarseMultiplicityOrderBound} (\lean{key3Ord}), supplying a half-unit of $p$-adic valuation
-at every odd exponent $p^e$ in the prime-power sum
+Lemmas~\ref{lem:kSord} and~\ref{lem:kWord} (\lean{kS_ord} and \lean{kW_ord}) together prove the
+coarse multiplicity order bound (\lean{key3Ord}): at every inert prime $p\le X''$, every odd
+exponent $p^e$, and every orbit segment of length $d$, both the contracted column-system
+polynomial and every twisted $2\times 2$ minor are divisible by the ramified uniformizer $w_p$
+(with $w_p^2=p$), supplying a half-unit of $p$-adic valuation at each step of the prime-power sum
 \[
 \mathrm{vonMangoldtClassSum}_{j,t}(p)=\sum_{i\text{ odd}}\max\bigl(0,\,a_t/p^i-w_{\mathrm{part}}(j,t,p,i)\bigr).
 \]
-Splitting at $p_0(k)$ (cases D and E via Lemma~\ref{lem:caseDE} in \lean{St.starAll_of})
-establishes the orbitwise bound (a) of Lemma~\ref{lem:orbitsum}, and Lemma~\ref{lem:orbitsum}
-produces \eqref{eq:orbitsum}.
+For each candidate inert prime $p\le X'$ and good orbit representative $t_0$, we split at
+$p_0(k)$: for $p<p_0(k)$ (Case~D) and $p\ge p_0(k)$ (Case~E), substituting the orbit cardinality
+$n=\mathrm{ord}_H(h_p)\le N G$ and the deficit bound $n_d\le N C_{31}\log x$ into
+Lemma~\ref{lem:caseDE} yields the orbitwise bound (a) of Lemma~\ref{lem:orbitsum} (\lean{starAt_D},
+\lean{starAt_E}, \lean{St.starAll_of}). Applying Lemma~\ref{lem:orbitsum} then establishes
+\eqref{eq:orbitsum} at every inert or signal prime $p\le X''$.
 
 Recall from Part~I that
 $\ASK=\sum_{j,t}\bigl(\sum_{p\text{ inert}}2\log p\cdot\mathrm{vonMangoldtClassSum}_{j,t}(p)
 +\log d\cdot\mathrm{ask}_D\bigr)$.
 Multiplying \eqref{eq:orbitsum} by $2\mathrm{lw}(w)e_w$ and summing over all places $w\mid p$
-uses $\sum_{w\mid p}\mathrm{lw}(w)e_w=\log p$. The error terms $\mathrm{lo}_G(p)$ and
-$\mathrm{fl}_G(p)$ (recorded in \lean{GlobalTheoremInputs.lean}) sum over $p\le X''$ to at most
-$c_L n_T m b\,x^{e_L\eps}=L_P$: in particular, the additive term $b_o=b^{\delta(x)}$ inside
-$\mathrm{lo}_G(p)$ satisfies $b^{\delta(x)}\le b^{1/2}\le b$ once $\delta(x)\le\frac12$ (since
-$\delta(x)\to0$ as $x\to\infty$), so its sum over $j,t,p$ is absorbed into the factor $b$ of
-$L_P=c_L n_T m b\,x^{e_L\eps}$. Similarly, the local inclusion length satisfies $I(u)\le L_P$
-(\lean{Loss.loss_bound_at}), proving \textup{(S7)}.
+uses $\sum_{w\mid p}\mathrm{lw}(w)e_w=\log p$. For the summed error budget over $p\le X''$
+(\lean{losses_of_small_share_weight}):
+\begin{itemize}
+\item For $p\le X'$ in the served set, the main error in $\mathrm{lo}_G(p)$ has $1/p^2$ and
+  $1/(pk)$ decay plus the small-prime additive term $b_o=b^{\delta(x)}$; since
+  $\sum_{p\le X'}\frac{\log p}{p^2}=O(1)$, $\sum_{p\le X'}\frac{\log p}{p}=\log X'+O(1)$
+  (Mertens' bound), and $b^{\delta(x)}\le b^{1/2}\le b$ once $\delta(x)\le\frac12$, weighting by
+  $2\log p$ and summing over $j,t,p$ contributes at most $O(n_T m b)$.
+\item For unserved primes $p\le X'$ and tail primes $X'<p\le X''$, the bad-prime log-weighted
+  count $\sum_{p\text{ bad}}|\mathrm{badTops}(p)|\log p$ and the thin-scale / small-share bounds
+  of Proposition~\ref{prop:hostB} bound the total unserved contribution and the floor budget
+  $m\sum_{p\le X''}2\log p\cdot\mathrm{fl}_G(p)$ by $O(n_T m b)$.
+\end{itemize}
+Combining these bounds yields $A(u)-\mathcal G(u)\le (3C+13)n_T m b\le c_L n_T m b\,x^{e_L\eps}=L_P$
+and identically $I(u)\le L_P$, establishing \textup{(S7)}.
 \end{proof}
 
 % ======================================================================
@@ -1893,8 +2071,62 @@ Applying Theorem~9.2 of Part~I (as noted in Remark~9.3 of Part~I) immediately gi
 
 The only remaining ingredient of Theorem~C2 is the existence of arbitrarily large scale windows
 $[Y,Y^2]$ (which contain $[Y,Y^{3/2}]$ for Theorem~A of Part~I) on which the cyclotomic
-Tate--Shafarevich loss is at most $\sqrt{b}=\exp(x^\eps/2)$. We isolate the explicit minus-part
-calculation (\lean{ThmBcOfPsiBound.lean:220--340}) as a standalone lemma.
+Tate--Shafarevich loss is at most $\sqrt{b}=\exp(x^\eps/2)$. We first prove the two arithmetic
+bounds \lean{PrimeBound} and \lean{StickBound} (\lean{ThmBcOfPsiBound.lean:59--189}) from the
+Iwasawa Main Conjecture, Poitou--Tate duality, and Stickelberger annihilators, and then isolate
+the explicit minus-part summation (\lean{ThmBcOfPsiBound.lean:220--340}).
+
+\begin{lemma}[Proof of \texttt{PrimeBound} and \texttt{StickBound}, \texttt{prime\_of}, \texttt{stick\_of}]\label{lem:primeStick}
+Let $E/\Q$ be an abelian CM number field of degree $d_E=[E:\Q]$ and conductor $F\ge 1$, and let
+$t\ge 2$.
+\begin{enumerate}[label=(\roman*)]
+\item \textup{(\texttt{PrimeBound})} For every $1\le e'<t$ and every finite set $S'$ of odd primes
+  not dividing $d_E$,
+  \[
+  \sum_{\ell\in S'}\log\ell\cdot\len\Sha_\ell^-(e')\le d_E(2t+5)\log(tF).
+  \]
+\item \textup{(\texttt{StickBound})} There is an absolute constant $C>0$ such that for every odd
+  prime $\ell\mid d_E$ and $1\le e'<t$,
+  \[
+  \len\Sha_\ell^-(e')\log\ell\le C\ell\,d_E^2(e'+1)\log(e'\ell F)^2.
+  \]
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+For (i) (\lean{prime_of}, \lean{log_bnd_le_mul_log}), fix $1\le e'<t$ and an odd prime
+$\ell\nmid d_E$. Because $\ell\nmid[E:\Q]$, $\Sha_\ell^-(e')$ decomposes under the idempotents of
+$\Z_\ell[\mathrm{Gal}(E/\Q)]$ into $\chi$-eigenspaces over the odd Dirichlet characters $\chi$ of
+$E$ (there are at most $d_E$ such characters). By the Iwasawa Main Conjecture over $\Q$
+(Mazur--Wiles~\cite[Ch.~1, \S10, Main Theorem]{mazur-wiles}) and Poitou--Tate duality
+(Milne~\cite[Ch.~I, Thm.~4.10]{milne}), the $\ell$-adic valuation of each $\chi$-eigenspace order
+is bounded by the $\ell$-adic valuation of the generalized Bernoulli number $B_{e'+1,\chi}$:
+\[
+\len\Sha_\ell^-(e')\log\ell\le\sum_{\chi}-\log\|B_{e'+1,\chi}\|_\ell.
+\]
+By the classical bound on generalized Bernoulli numbers and their denominators
+(Washington~\cite[Ch.~4, Prop.~4.1]{washington}), each $B_{e'+1,\chi}$ has numerator norm bounded
+by $\mathrm{bnd}(F,e'+1)=16\,F^{e'+2}(e'+1)!$. Summing over $\ell\in S'$ and applying the product
+formula over $\ell$ for each of the at most $d_E$ characters $\chi$ yields
+$\sum_{\ell\in S'}\log\ell\cdot\len\Sha_\ell^-(e')\le d_E\log\bigl(16\,F^{e'+2}(e'+1)!\bigr)$.
+Since $t\ge 2$ and $e'+1\le t$, we have $tF\ge 2$, $16=2^4\le(tF)^4$, $F^{e'+2}\le(tF)^{t+1}$, and
+$(e'+1)!\le t^t\le(tF)^t$, hence $16\,F^{e'+2}(e'+1)!\le(tF)^{2t+5}$. Taking logarithms gives (i).
+
+For (ii) (\lean{stick_of}), let $\ell\mid d_E$ be an odd prime and $1\le e'<t$. By the
+Stickelberger / Coates--Sinnott annihilator theorem
+(Coates--Sinnott~\cite[Thm.~1.3]{coates-sinnott}; Washington~\cite[Ch.~6, Thm.~6.10]{washington}),
+$\Sha_\ell^-(e')$ is annihilated by $\ell^r$ for an integer $r\ge 0$ satisfying
+$r\log\ell\le C_0 d_E(e'+1)\log(e'\ell F)$. For any $\Z_\ell$-module $P$ annihilated by $\ell^r$,
+induction on $r$ via the exact sequence $0\to P[\ell]\to P\xrightarrow{\cdot\ell}\ell P\to 0$
+gives $\len_{\Z_\ell}(P)\le r\cdot\len_{\Z_\ell}(P[\ell])$. By Kummer theory and Dirichlet's unit
+rank bound (Neukirch--Schmidt--Wingberg~\cite[Ch.~VIII, Thm.~8.7.4]{nsw}), the $\ell$-torsion
+length of $H^1(G_{E,S},\Q_\ell/\Z_\ell(e'+1))$ is at most $8\ell\,d_E\log(\ell F)$. Multiplying
+these two bounds and using $\log(\ell F)\le\log(e'\ell F)$ yields
+\[
+\len\Sha_\ell^-(e')\log\ell\le (r\log\ell)\cdot 8\ell\,d_E\log(\ell F)
+\le 8C_0\,\ell\,d_E^2(e'+1)\log(e'\ell F)^2. \qedhere
+\]
+\end{proof}
 
 \begin{lemma}[Explicit minus-part bound, \texttt{ThmBcFree}]\label{lem:minuspart}
 Let $E$ be an abelian number field of degree $d_E=[E:\Q]$ and conductor $F\ge1$, and let $t\ge2$.
@@ -2119,6 +2351,8 @@ were checked by the author, who takes full responsibility for the content.
   333--400.
 \bibitem{chowla-selberg} S.~Chowla and A.~Selberg, \emph{On Epstein's zeta-function}, J. reine
   angew. Math. \textbf{227} (1967), 86--110.
+\bibitem{coates-sinnott} J.~Coates and W.~Sinnott, \emph{Integrality properties of the values of
+  partial zeta functions}, Proc. London Math. Soc. (3) \textbf{34} (1977), 365--384.
 \bibitem{davenport} H.~Davenport, \emph{Multiplicative Number Theory}, 3rd ed., revised by
 H.~L.~Montgomery, Graduate Texts in Mathematics~74, Springer, New York, 2000.
 
@@ -2132,6 +2366,8 @@ H.~L.~Montgomery, Graduate Texts in Mathematics~74, Springer, New York, 2000.
   \url{https://github.com/ishaan2006/rh-lean-reproduction}.
 \bibitem{ferrero-washington} B.~Ferrero and L.~C.~Washington, \emph{The Iwasawa invariant $\mu_p$
   vanishes for abelian number fields}, Ann. of Math. (2) \textbf{109} (1979), 377--395.
+\bibitem{fontaine-laffaille} J.-M.~Fontaine and G.~Laffaille, \emph{Construction de
+  repr\'esentations $p$-adiques}, Ann. Sci. \'Ecole Norm. Sup. (4) \textbf{15} (1982), 547--608.
 \bibitem{gallagher} P.~X.~Gallagher, \emph{A large sieve density estimate near $\sigma=1$},
 Invent. Math. \textbf{11} (1970), 329--339.
 
@@ -2140,6 +2376,8 @@ Invent. Math. \textbf{11} (1970), 329--339.
   de Montr\'eal, 1974.
 \bibitem{iwaniec-kowalski} H.~Iwaniec and E.~Kowalski, \emph{Analytic Number Theory}, AMS
   Colloquium Publications \textbf{53}, American Mathematical Society, Providence, RI, 2004.
+\bibitem{mazur-wiles} B.~Mazur and A.~Wiles, \emph{Class fields of abelian extensions of $\Q$},
+  Invent. Math. \textbf{76} (1984), 179--330.
 \bibitem{messing} W.~Messing, \emph{The Crystals Associated to Barsotti--Tate Groups: With
   Applications to Abelian Schemes}, Lecture Notes in Mathematics \textbf{264}, Springer, 1972.
 \bibitem{milne} J.~S.~Milne, \emph{Arithmetic Duality Theorems}, 2nd ed., BookSurge, Charleston,
@@ -2151,6 +2389,8 @@ Lecture Notes in Mathematics~227, Springer, Berlin, 1971.
   Grundlehren der mathematischen Wissenschaften \textbf{323}, Springer, Berlin, 2008.
 \bibitem{sutherland} A.~V.~Sutherland, build and verification page for the Lean development,
   \url{https://math.mit.edu/~drew/grh/}, November 2026.
+\bibitem{washington} L.~C.~Washington, \emph{Introduction to Cyclotomic Fields}, 2nd ed.,
+  Graduate Texts in Mathematics \textbf{83}, Springer, New York, 1997.
 \end{thebibliography}
 
 \appendix
