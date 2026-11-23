@@ -9,8 +9,9 @@ This repository is my independent look at the release. It does **not** claim to 
 ## Start here
 
 - **[The readable account](https://ishaan2006.github.io/rh-lean-reproduction/)** (also as a [PDF](https://ishaan2006.github.io/rh-lean-reproduction/paper/), LaTeX source in `writeup/main.tex`): the whole proof top down, in six steps, with 15 figures. Every claim is labelled Exact, Verified, Reading or Ours.
-- **[`mechanism/TRACE.md`](mechanism/TRACE.md)**: the evidence, 26 sections, every declaration with file and line.
-- **[`scripts/`](scripts/)**: rebuild and re-check everything yourself.
+- **[`mechanism/TRACE.md`](mechanism/TRACE.md)**: the evidence, 28 sections, every declaration with file and line.
+- **[`results/audit/verdict_table.md`](results/audit/verdict_table.md)** and **[`published_now.tsv`](results/audit/published_now.tsv)**: `PropAudit.lean` load-bearing map of all 610 `*.Published` / `OpenLiterature` items and the 12 inert types/propositions inside the live closure.
+- **[`scripts/`](scripts/)**: rebuild, audit and re-check everything yourself.
 
 ## Summary of findings
 
@@ -27,6 +28,7 @@ This repository is my independent look at the release. It does **not** claim to 
 | 9 | The outline's 2/3 is reproduced exactly by charging each lift for the whole chain below it (x/m + m²). The code avoids it by charging every local piece to exactly one lift; no 2/3 route survives in the archive. | Reconstruction from the code's own quantities |
 | 10 | The last analytic step is a windowed Landau theorem, and the Ш window rests on Lean proofs of Ferrero–Washington, Poitou–Tate and CM theory, all proved in the project, none assumed. | Checked against the used-declaration list |
 | 11 | The proof also establishes Google DeepMind's own statements of RH and GRH (formal-conjectures), not just this project's: the bridge in community PR #88 compiles against my build with only the three standard axioms, and `con-leche --compare` accepts both theorems against the formal-conjectures challenge (`results/formal_conjectures_result.txt`). | Compiled and compared on the full build |
+| 12 | `PropAudit.lean` classifies all 610 `*.Published` / `OpenLiterature` items at `40e56bab`: 276 unreachable, 261 applied, 60 carried-only (including `UnusedSlot72 := True`), 9 zero-proof (6 are `Set` definitions). Inside the live closure, 12 types/propositions are inert (`LocLanglands.IsRec`, `L2DbarEstimates.Y.WeightedAtlas` [215 refs], `OTY.Cover`/`Etale`, `AdaptedBasis`/`PlueckerData`, etc.). Dropping the single unread field `PublishedHodgeBundleTheorems.q8` / `HSCore.Quoted.l2` disconnects the ~1,645-declaration Ohsawa-Takegoshi / $L^2$ $\bar\partial$-estimate subtree from `Main` (upstream PR #384). | Compiled `.olean` closure + source-checked `--why` traces (`results/audit/`) |
 
 ## 1. Source and provenance
 
@@ -131,6 +133,17 @@ One small numerical note from building plate 1: the simple form |ψ(x) − x| < 
 
 The balance x/m + m was stated independently, from other sources, in Jonas Whidden's Zulip reading and in Bartosz Naskręcki's proof guide (section 12). What the trace adds is the exact location of each step in the code, the fact that the sizes are chosen rather than forced, where the m cost is charged, and why it stops at √X rather than 2/3.
 
+## 10a. Load-bearing audit (`PropAudit`)
+
+Dependency reachability tells you which names occur in the closure, not whether the proof actually constructs or applies them. `scripts/PropAudit.lean` runs on the compiled `.olean` closure of the five headline theorems at `40e56bab` (1,265,279 project constants, 64,730 tracked types and propositions):
+
+- **610 `*.Published` and `OpenLiterature` items ([`results/audit/published_now.tsv`](results/audit/published_now.tsv)):** 276 are unreachable from the five theorems (including `LocalLanglandsExists` and `CaraianiLocalGlobal`), 261 are applied, 60 are carried-only (`applied=0, carried>0`, including `GlobalTheory.Published.UnusedSlot72 := True`), and 9 have zero proof occurrences (source-checked: 6 are `Set` definitions rather than theorems).
+- **Source-checked `--why` derivations ([`results/audit/verdict_table.md`](results/audit/verdict_table.md), 83 targets):** `GrothendieckDeformation` / `GrothendieckMessing` (`abelianScheme_hom_lifting_nilpotent_dividedPowers`), `BlochKato.RationalDuality` / `IntegralDuality` / `DimFormula` (`bkAL`, `bkBL`), `PoitouTate.ShaDual`, `HoweDualityReal`, and `DeRhamVectorExtension.Family.Natural` are all genuinely proved and applied. `OpenLiteratureStatements` (carried 316x, applied 3x) is established via weak `IsRecT` (`recTExists`) and `galoisLocalGlobalStrong_recParameter`, bypassing full `IsRec`.
+- **12 inert types/propositions inside the live closure ([`results/audit/audit_now.tsv`](results/audit/audit_now.tsv)):** never constructed in the closure, appearing only as undischarged hypotheses. The largest clusters are `ReciprocityTheory.L2DbarEstimates.Y.WeightedAtlas` (215 refs) + `GlobalTheory.OTY.Cover`/`Etale` (40/38 refs), `GlobalTheory.LocLanglands.IsRec`/`Laws`/`IsDeligneEps` (2/14/1 refs), and `AdaptedBasis`/`PlueckerData` (17/12 refs). There are also 27 trivial (`:= True` or nullary `Prop`) predicates in the closure, including `anyGeometry`, `IsSmoothBlowupSeq`, `IsBlowupSeq`, `IsSncBlowupSeq`, `UnusedSlot72`, and `UnusedSlot55`.
+- **Live-closure field-level pruning (upstream PR [#384](https://github.com/leanprover-community/riemann-hypothesis/pull/384)):** `L2DbarEstimates` (1,502 decls), `OTY` (125 decls), and `AeHoloGlue`/`CutEnergy`/`EtaleMeasure` (18 decls) enter the live closure solely through `GlobalTheory.Published.L2ExtensionLogCanonical`, carried as `PublishedHodgeBundleTheorems.q8` into `GlobalTheory.HSCore.Quoted.l2`, which is never projected in `used_decls.txt.gz` (only `.kv`, `.nef`, `.chowInt` appear). Dropping `q8`/`l2` (4 files, +1/-9 lines) disconnects ~1,645 declarations of Ohsawa-Takegoshi / $L^2$ $\bar\partial$-estimates from `Main`.
+
+Caveats: the fixpoint rules are statement-level and err toward "established" (never toward "inert"), and `applied=0` can miss unfolded applications, so carried-only rows require source inspection before removing anything.
+
 ## 11. What this does not show
 
 - Nothing here checks the logic of the proof. That is done by the independent kernels and by `lake comparator --paranoid`.
@@ -179,9 +192,9 @@ python3 more.py ~/rh/lean/src && python3 cyclo.py ~/rh/lean/src
 
 ## Layout
 
-- `scripts/`: the build pipeline (steps 1 to 6), `7_compare.sh`, `8_export_hash.sh`, `11_path_sample.sh` and `12_formal_conjectures.sh`.
+- `scripts/`: the build pipeline (steps 1 to 6), `7_compare.sh`, `8_export_hash.sh`, `11_path_sample.sh`, `12_formal_conjectures.sh`, `13_comparator_original.sh`, `PropAudit.lean`, and `StatementCone.lean`.
 - `analysis/`: `reach.py`, `census.py`, `levels.py`, `note_terms.py`, and `kernel-computations/`.
-- `results/`: every output quoted above, with the date it was taken, and `used_decls.txt.gz`, the names of the 1,484,733 declarations in the export of `Main` (one `kind name` per line), so anyone can check "used / not used" with `zgrep -w`.
+- `results/`: every output quoted above, with the date it was taken, `audit/` (`PropAudit` tables and `verdict_table.md`), `reading/` (`StatementCone` reading lists), and `used_decls.txt.gz`, the names of the 1,484,733 declarations in the export of `Main` (one `kind name` per line), so anyone can check "used / not used" with `zgrep -w`.
 - `mechanism/TRACE.md`: the mechanism trace of section 10.
 - `analysis/dead_code/`: the exact dead-code count, to be run on the finished build.
 - `visuals/`: the two interactive pages and the script for their data.
