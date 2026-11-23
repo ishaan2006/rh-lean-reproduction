@@ -290,7 +290,9 @@ at $(\eps,Y)$ such that for every $x\in[Y,Y^J]$:
 \item for any polylogarithmic relation-length cutoff $L_{\mathrm{rel}}\ll(\log x)^A$, there is a
   thick set $T_2\subseteq H$ with no short 3-term linear relations for $L_{\mathrm{rel}}$ and
   density $\delta_2=|T_2|/n\ge x^{-\eps}$;
-\item all host axioms \textup{(B0)--(B7)} of Part~I (with $C_E=C_L$, $K_0=\max_{\xi\in F_\psi\setminus\{\mathbf 1\}}|L'/L(1,\xi)|$) and domain conditions \textup{(S0)} hold.
+\item all host axioms \textup{(B0)--(B7)} of Part~I (with $C_E=C_L$,
+  $K_0=\max_{\xi\in\langle\psi\rangle\setminus\{1\}}|L'/L(1,\xi^\ast)|$) and domain conditions
+  \textup{(S0)} hold.
 \end{enumerate}
 \end{proposition}
 
@@ -305,10 +307,12 @@ $p\le Y^{\eps/5}$ form a single primitive residue class modulo
 $M=16q\prod_{3\le p\le Y^{\eps/5}}p$. By Chebyshev's bound and $\frac12 Y^{\eps/5}<\log q\le Y^{\eps/5}$,
 we have $\log M=\log(16q)+(1+o(1))Y^{\eps/5}\in\bigl((\frac32+o(1))Y^{\eps/5},(2+o(1))Y^{\eps/5}\bigr)$,
 so $Q_d=\exp(Y^{\eps/5}(\log Y)^2)=M^{\Theta((\log Y)^2)}$ lies far above any fixed Linnik power
-$M^{L_{\mathrm{Lin}}}$. Applying Linnik's lower bound for primes in arithmetic progressions
-\cite[Theorem~18.7]{iwaniec-kowalski} together with \ref{C1} yields a good prime $d$ in the range
-(b) of Definition~\ref{def:winpair}. Summing the box bounds over the non-target characters in
-$E_0\times\langle\psi\rangle$ gives $\Sigma_{\mathrm{rest}}(x)\le 4o\,x^{1/2+\eps}$, proving (i).
+$M^{L_{\mathrm{Lin}}}$ and satisfies $M=Q_d^{o(1)}$. By Linnik's lower bound for primes in
+arithmetic progressions~\cite[Theorem~18.7]{iwaniec-kowalski}, the number of primes
+$d\in(Q_d^{1/2},Q_d]$ in this residue class is $\ge Q_d^{1-o(1)}\gg Q_d^{1/4}$, so by \ref{C1} we
+choose a good prime $d$ in the range (b) of Definition~\ref{def:winpair}. Summing the box bounds
+over the $3o$ non-target characters in $E_0\times\langle\psi\rangle$ gives
+$\Sigma_{\mathrm{rest}}(x)\le 3o\,x^{1/2+\eps}\le 4o\,x^{1/2+\eps}$, proving (i).
 
 Choosing $e=\lceil(2+8\eps)\log_2 x\rceil$ gives $n=2^e\in[x^{2+8\eps},2x^{2+8\eps}]$
 (\lean{PageN}). The Artin reciprocity map on $(\Z/N\Z)^\times$ factors through $E_0\times H$ with
@@ -348,8 +352,9 @@ $2^{e+2},\mathrm{cond}(\psi),q,d\mid N$):
 \end{itemize}
 
 By \ref{C8}, attached to each word $\nu\in\mathcal W(u)$ (encoded injectively into $k-3$ bits, so
-$\log|\mathcal W(u)|\le(k-3)\log2$, matching $k\ge m^5 f L$) is a chain of $m$ theta lifts along a
-tower of unitary groups of signatures
+$\log|\mathcal W(u)|\le(k-3)\log2$, matching $k\ge m^5 f L$ up to a fixed constant absorbed by the
+$x^\eps$ slack in \eqref{eq:hostwins}) is a chain of $m$ theta lifts along a tower of unitary
+groups of signatures
 \begin{equation}\label{eq:sigchain}
 \operatorname{sig}_W(j)=(k+j-1,\,m-j),\qquad j=0,1,\dots,m,
 \end{equation}
@@ -374,9 +379,9 @@ from the local $m$-step chain images $\iota_{\mu_w}(\Lambda_{\mu_w})$ of the cha
 $\mu_w$.
 
 \begin{theorem}[Existence and local characterization of the glued lattice $R$]\label{thm:gluedR}
-Let $K=LL$ be a number field with ring of integers $\Oc_K$, let $V=K^m$ be equipped with a
-$K$-linear map $j_E:V\to \mathcal E$ into a $K$-vector space $\mathcal E$, and for each finite
-place $w$ of $K$ (corresponding to a nonzero prime ideal $\fp_w\subset\Oc_K$) let
+Let $K=LL$ be a number field with ring of integers $\Oc_K$, let $D_0\ge1$ and $V=K^{D_0}$ be
+equipped with a $K$-linear map $j_E:V\to \mathcal E$ into a $K$-vector space $\mathcal E$, and for
+each finite place $w$ of $K$ (corresponding to a nonzero prime ideal $\fp_w\subset\Oc_K$) let
 $S_w=\Oc_K\text{-}\mathrm{span}\{y\in V : j_E(y)\in \mathrm{RRset}(\mu_w)\}\subseteq V$. Define
 \begin{equation}\label{eq:prescribedR}
 R=\bigl\{x\in V : \forall w,\ \exists d\in\Oc_K\setminus\fp_w\text{ such that } d\cdot x\in S_w\bigr\}.
@@ -534,11 +539,12 @@ e'=e_L(\ell,N,\lfloor h_B\rfloor)\le 64\,h_B\,s_N(\ell)+O(\log(h_B N)).
 Summing $\operatorname{locDeg}(w)\cdot m\cdot e'$ over places $w\mid\ell$ uses
 $\sum_{w\mid\ell}\operatorname{locDeg}(w)=f$, giving per-prime colength $O(f m b s_N(\ell))$.
 Weighting by $\log\ell$ and summing over the small primes $\ell$ (with
-$\sum_\ell s_N(\ell)\log\ell\ll L^2$) contributes $O(fmbL^2)$, plus the $\Sha$-window contribution
-$\sum_\ell \mathrm{vvTerm}(\ell)\le\sqrt{b}$ (which is negligible against $B_0=fmbx^\eps$ since
-$\sqrt{b}=\exp(x^\eps/2)\ll\exp(x^\eps)=b$). Multiplying by $D_0$ gives the stated bound for
-$\eta_{\mathrm{sum}}(j)$, and dividing by $D_0$ (as in the normalized slope bound) and summing over
-$j=1,\dots,m$ yields $E_b\le C'' m x^\eps(B_0+N_c)$.
+$\sum_\ell s_N(\ell)\log\ell\ll L^2$) contributes $O(fmbL^2)=O(x^\eps B_0)$ (since $B_0=fmbL$ with
+$L=x^\eps$), while $(\log x)^2 N_c\le x^\eps N_c$ for large $x$, and the $\Sha$-window
+contribution $\sum_\ell \mathrm{vvTerm}(\ell)\le\sqrt{b}=\exp(x^\eps/2)\ll\exp(x^\eps)=b\le B_0$
+is negligible against $B_0$. Multiplying by $D_0$ gives the stated bound for $\eta_{\mathrm{sum}}(j)$,
+and dividing by $D_0$ (as in the normalized slope bound) and summing over $j=1,\dots,m$ yields
+$E_b\le C'' m x^\eps(B_0+N_c)$.
 
 For (iii), substituting (i), (ii), and the Chowla--Selberg main-term identification \ref{C3} into
 Theorem~10.7 and Proposition~10.1 of Part~I gives
@@ -556,7 +562,7 @@ and the off-$g$ prime decomposition (\lean{WeightDegreeSizes.lean}), which toget
 \textup{(S2)}.
 
 \begin{lemma}[Row-sum and Fock-degree fine bound]\label{lem:nuabsfine}
-Fix a word $\nu\in\mathcal W(u)$ and a lift $j=i+1\in\{1,\dots,m\}$, with $k,m,t\ge1$,
+Fix a word $\nu\in\mathcal W(u)$ and a lift $j=i+1\in\{1,\dots,m\}$, with $k\ge2$, $m,t\ge1$,
 $S_c,\eta_{\mathrm{Sz}}\ge0$, and $N=N(m)=k+m(t+1)$. Suppose that for every complex embedding
 $\tau$ (there are $f=2n$ complex embeddings of $LL$), the row parameters \eqref{eq:nurow} satisfy:
 \begin{enumerate}[label=(\alph*)]
@@ -719,7 +725,7 @@ twisted $2\times2$ minor in $O[X]$, which means every coefficient lies in $w_p O
 \end{proof}
 
 \begin{lemma}[Orbitwise arithmetic bounds for cases D and E, \texttt{caseD\_arith}, \texttt{caseE\_arith}]\label{lem:caseDE}
-Let $N\ge1$, $C_{31}\ge0$, $\ell_x\ge1$, $n\le NG$, and $n_d\le N C_{31}\ell_x$.
+Let $N\ge1$, $n\ge0$, $C_{31}\ge0$, $\ell_x\ge1$, $n\le NG$, and $n_d\le N C_{31}\ell_x$.
 \begin{enumerate}[label=(\roman*)]
 \item \textup{(Case D: $p<p_0(k)$)} Let $r\ge1$, $b'\ge1$, $0\le c\le u$, $Gu\le b'$,
   $0\le c_0\le 3b'$, $k_Q\le b'$, $0\le D_w\le b'$, $S_1,\mathrm{Pr}_2,t_c\ge0$, and suppose
@@ -845,16 +851,18 @@ We first record the elementary non-degeneracy consequence of the diagonal Hilber
 (\lean{unfolding_constant_pos_of_diagonal}, \lean{dall_pos} in \lean{TopDensityNGeSixteen.lean}).
 
 \begin{lemma}[Non-degeneracy from the diagonal Gram bound]\label{lem:diagnondeg}
-Let $C_u$ and $\mathcal H$ be finite-dimensional complex inner product spaces of dimensions
-$d_u=\dim C_u>0$ and $D_{\mathrm{all}}=\dim\mathcal H$, let $P_u:C_u\to\mathcal H$ be linear,
-let $c_0(u)\ge0$, and put $K(u,u)=c_0(u)^{1/2}P_u^\ast P_u$. If
-$\|K(u,u)-I_{C_u}\|_{HS}^2\le e_0 d_u$ with $e_0<1$, then $c_0(u)>0$ and $D_{\mathrm{all}}>0$.
+Let $C_\nu$ and $\mathcal H$ be finite-dimensional complex inner product spaces of dimensions
+$d(\nu)=\dim C_\nu>0$ and $D_{\mathrm{all}}=\dim\mathcal H$, let $P_\nu:C_\nu\to\mathcal H$ be
+linear, let $c_0(\nu)\ge0$, and put $K(\nu,\nu)=c_0(\nu)^{1/2}P_\nu^\ast P_\nu$. If
+$\|K(\nu,\nu)-I_{C_\nu}\|_{HS}^2\le e_0 d(\nu)$ with $e_0<1$, then $c_0(\nu)>0$ and
+$D_{\mathrm{all}}>0$.
 \end{lemma}
 
 \begin{proof}
-In an orthonormal basis of $C_u$, $\|0-I_{C_u}\|_{HS}^2=\sum_{\ell=1}^{d_u}1=d_u$. If either
-$c_0(u)=0$ or $D_{\mathrm{all}}=0$ (so $\mathcal H=\{0\}$ and $P_u=0$), then $K(u,u)=0$, giving
-$d_u=\|K(u,u)-I_{C_u}\|_{HS}^2\le e_0 d_u<d_u$, a contradiction.
+In an orthonormal basis of $C_\nu$, $\|0-I_{C_\nu}\|_{HS}^2=\sum_{\ell=1}^{d(\nu)}1=d(\nu)$. If
+either $c_0(\nu)=0$ or $D_{\mathrm{all}}=0$ (so $\mathcal H=\{0\}$ and $P_\nu=0$), then
+$K(\nu,\nu)=0$, giving $d(\nu)=\|K(\nu,\nu)-I_{C_\nu}\|_{HS}^2\le e_0 d(\nu)<d(\nu)$, a
+contradiction.
 \end{proof}
 
 \begin{proposition}[Verification of \texttt{LinkS} and (S8)--(S10)]\label{prop:S8S10}
@@ -1011,10 +1019,10 @@ Fix $X\ge X_0$ and a window pair $(q,d)$ at $(\eps,X^{1/J})$, and partition $[X^
 $\lfloor\log_2 J\rfloor$ interior-disjoint dyadic-exponent windows $[Y_r,Y_r^2]$ with
 $Y_{r+1}=Y_r^2$. Combining \lean{ThmBab} and \lean{ThmHV} (\lean{jointWin_of_counts}) bounds the
 number of exceptional scales where the plus-part (and $\ell=2$) sum exceeds
-$(F\cdot t)^{C_1}+C_1\exp(x^{4\eps/5})$ by a constant independent of $X$. For $J\ge2$ sufficiently
-large, the pigeonhole principle yields a window $[Y,Y^2]$ avoiding all exceptional scales, on which
+$(F\cdot t)^{C_1}+C_1\exp(x^{4\eps/5})$ by a constant independent of $X$. For $J\ge2$ sufficiently large, the pigeonhole principle yields a window $[Y,Y^2]$ avoiding all
+exceptional scales, on which
 \[
-\sum_{\ell}\log\ell\sum_{1\le e'<t}\len\Sha_\ell^+(e')\le
+\log 2\sum_{1\le e'<t}\len\Sha_2(e')+\sum_{\ell\text{ odd}}\log\ell\sum_{1\le e'<t}\len\Sha_\ell^+(e')\le
 (F\cdot t)^{C_1}+C_1\exp(x^{4\eps/5}).
 \]
 Since $\log F\ll x^{\eps/5}(\log x)^2$ and $t\le x^{401}$, both $(F\cdot t)^{C_1}$ and
@@ -1072,7 +1080,7 @@ records the 1-to-1 correspondence and fidelity notes from our \lean{PropAudit} s
 
 \begin{small}
 \begin{longtable}{@{}p{11mm}p{45mm}p{46mm}p{44mm}@{}}
-\caption{Literature-fidelity audit of classical inputs \ref{C1}--\ref{C8}.}\label{tab:litfidelity}\\
+\caption{Literature-fidelity audit of classical inputs \ref{C1}--\ref{C7} and automorphic package \ref{C8}.}\label{tab:litfidelity}\\
 \toprule
 Input & Lean declaration(s) & Published reference & Fidelity / scope note \\
 \midrule
@@ -1176,7 +1184,7 @@ Lemmas~\ref{lem:heightchain}--\ref{lem:errBunits}, Thm.~\ref{thm:S1} & \lean{hei
 Lemmas~\ref{lem:nuabsfine}--\ref{lem:C2off}, Prop.~\ref{prop:S2S5} & \lean{nuAbs_place_fine}, \lean{degree_fine}, \lean{C2off_of}, \lean{secondComplement_of_inputs}, \lean{C2atG_of}, \lean{NormDecompositionCond}, \lean{factEtaMean} & \lean{NuAbsPlaceFine.lean:101, 136, 177}, \lean{WeightDegreeSizes.lean:400, 460} \\
 Prop.~\ref{prop:S6} & \lean{NprimeMuR}, \lean{LinkMu}, \lean{Places_at}, \lean{slopesN_at_of} & \lean{SR/GlobalTheoremInputs.lean:69}, \lean{SR/GlobalSchurBounds/TopDensityNGeSixteen.lean:1529} \\
 Lemmas~\ref{lem:kWord}--\ref{lem:orbitsum}, Thm.~\ref{thm:S7} & \lean{LinkG_at}, \lean{key_minor_dvd}, \lean{kW_ord}, \lean{key3Ord}, \lean{caseD_arith}, \lean{caseE_arith}, \lean{St.starAll_of}, \lean{gain_bound_all_of_star} & \lean{KeyMinorDvd.lean:181, 207, 273}, \lean{PartnerCountOfCentral.lean:539, 587, 884}, \lean{NotSingularOfCentral.lean:777} \\
-Lemma~\ref{lem:diagnondeg}, Prop.~\ref{prop:S8S10} & \lean{unfolding_constant_pos_of_diagonal}, \lean{dall_pos}, \lean{matKF_of}, \lean{LinkS_at}, \lean{ChosenProviso}, \lean{theoremS_link_concrete} & \lean{TopDensityNGeSixteen.lean:1343, 1357, 1411}, \lean{LinkSPos.lean:151} \\
+Lemma~\ref{lem:diagnondeg}, Prop.~\ref{prop:S8S10} & \lean{unfolding_constant_pos_of_diagonal}, \lean{dall_pos}, \lean{matKF_of}, \lean{LinkS_at}, \lean{LinkIRR}, \lean{ChosenProviso}, \lean{theoremS_link_concrete} & \lean{TopDensityNGeSixteen.lean:1343, 1357, 1411}, \lean{SR/GlobalTheoremInputs.lean:64}, \lean{LinkSPos.lean:151} \\
 Lemmas~\ref{lem:minuspart}--\ref{lem:pointHV}, Thm.~\ref{thm:VWin} & \lean{VWin}, \lean{VWinAt}, \lean{VVle}, \lean{vwin_of_counts}, \lean{ThmBcFree}, \lean{point_arith}, \lean{thmHV}, \lean{thmBab_of_lemmaK}, \lean{UpperTheory.V.FW.ferreroWashington} & \lean{ExistsPageN.lean:44}, \lean{ThmBcOfPsiBound.lean:220, 339}, \lean{PointArith.lean:47, 78}, \lean{FinalLe.lean:199}, \lean{ThmHV.lean:49} \\
 Section~\ref{sec:assembly} & \lean{ChainTied}, \lean{TieGlobal}, \lean{TieLocal}, \lean{TieArith}, \lean{supplyChi}, \lean{vwin_of_row} & \lean{SR/GlobalSchurBounds/TieGlobal.lean:97} \\
 \bottomrule
