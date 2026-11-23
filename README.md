@@ -186,6 +186,7 @@ Caveats: the fixpoint rules are statement-level and err toward "established" (ne
 - [nasqret/riemann-rev book](https://nasqret.github.io/riemann-rev/book/): Bartosz Naskręcki's book on the architecture; it also covers the localized Landau step, the auxiliary primes and the Ferrero–Washington and Poitou–Tate premises.
 - [JoseClaudioSJr's reader's map](https://github.com/leanprover-community/riemann-hypothesis/issues/5) (community issue #5): independently traces the windowed Landau route and the gain chain.
 - [keithadler/rh-trim](https://github.com/keithadler/rh-trim), [jae-63/rh-alpoge-blueprint](https://github.com/jae-63/rh-alpoge-blueprint), [cadamcat/riemann-hypothesis-exposition](https://github.com/cadamcat/riemann-hypothesis-exposition): trimming, a blueprint and an exposition.
+- [Nondual-Observer/riemann-lean4-blueprint](https://github.com/Nondual-Observer/riemann-lean4-blueprint): blueprint, 240-entry kernel declaration index, and standalone Lean 4 companion theorems.
 - Also: the dead-code counts by Sonoda, patunz's report on path-dependent `.olean` hashes, and the full kernel replays and rebuilds by Simon DeDeo and Elliot Arledge.
 
 ## 13. Reproduce
