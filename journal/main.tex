@@ -1,0 +1,1472 @@
+% ======================================================================
+%  The analytic reduction in Alpoge's formal proof of the
+%  Generalized Riemann Hypothesis
+%  Ishaan Dixit
+%  Single file; compiles with two runs of pdflatex (TeX Live 2023 or later).
+%  License: CC BY 4.0.
+% ======================================================================
+\documentclass[11pt]{amsart}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{booktabs,longtable,array}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\usepackage[hidelinks]{hyperref}
+\usepackage{url}
+\setlength{\emergencystretch}{3em}
+
+% Lean identifiers (used only in remarks and the appendix)
+\urlstyle{tt}
+\DeclareUrlCommand\lean{\urlstyle{tt}}
+
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\eps}{\varepsilon}
+\newcommand{\re}{\operatorname{Re}}
+\newcommand{\im}{\operatorname{Im}}
+\newcommand{\gE}{\gamma_{E}}
+\newcommand{\ASK}{\mathrm{ASK}}
+\newcommand{\MAIN}{\mathrm{MAIN}}
+\newcommand{\De}{\mathrm{De}}
+\newcommand{\Th}{\mathrm{Th}}
+\newcommand{\Gh}{\widehat{G}}
+\newcommand{\pa}{\pi}
+\newcommand{\pos}[1]{\left(#1\right)_{+}}
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\Ga}{\Gamma}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem*{theoremA}{Theorem A}
+\newtheorem*{theoremB}{Theorem B}
+\newtheorem*{theoremC}{Theorem C}
+\newtheorem*{maincor}{Corollary (GRH for Dirichlet $L$-functions)}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{example}[theorem]{Example}
+
+\numberwithin{equation}{section}
+\setlist{itemsep=2pt,topsep=4pt}
+
+\begin{document}
+
+\title[The analytic reduction in Alp\"oge's proof of GRH]{The analytic reduction in Alp\"oge's formal proof\\ of the Generalized Riemann Hypothesis}
+
+\author{Ishaan Dixit}
+\address{Arizona State University, Tempe, AZ 85281, USA}
+\email{idixit@asu.edu}
+
+\date{23 November 2026}
+
+\subjclass[2020]{Primary 11M26; Secondary 11N05, 11R23, 68V15}
+\keywords{Generalized Riemann Hypothesis, Dirichlet $L$-functions, Landau's theorem, formal proof, Lean}
+
+\begin{abstract}
+In November 2026 L.~Alp\"oge released a Lean~4 development, accepted by the Lean kernel and by
+several independent proof checkers, whose final theorem asserts that no Dirichlet $L$-function
+vanishes in the half-plane $\re s>1/2$. No human-readable proof accompanies it. We give complete
+and self-contained proofs of the analytic part of the argument, and a precise statement of the
+arithmetic part.
+
+The analytic part consists of two theorems. The first is a windowed form of Landau's theorem: a
+one-sided bound $G(y)\le Cy^{\theta}$ for a positive combination of Chebyshev remainders of
+Dirichlet characters, required only on windows $[Y,Y^{1+\delta}]$ with $Y$ arbitrarily large,
+excludes zeros with $\re s>\theta$. No positivity of Dirichlet coefficients is needed; what is
+used is that the residues of the relevant Laplace transform at real poles are positive. The
+second theorem reduces such a bound to an averaged inequality between an explicit weighted count
+of prime powers and an explicit main term, formulated on a finite abelian group equipped with
+Frobenius elements and inertia subgroups. Relative to the main term, the admissible error has
+size $x/m+m$ for a free integer parameter $m$, and its optimisation at $m\approx\sqrt{x}$ is the
+source of the exponent $1/2$. If the second term grew like $m^{2}$, the same argument would give
+the exponent $2/3$ mentioned in the author's outline.
+
+The arithmetic part asserts that groups and weights satisfying the averaged inequality exist at
+all large scales in suitable windows. Its formal proof uses theta lifts, Bloch--Kato Selmer ranks
+and Iwasawa theory. It is certified by the Lean kernel and is stated here precisely, but it is
+not reproved.
+\end{abstract}
+
+\maketitle
+
+\setcounter{tocdepth}{1}
+\tableofcontents
+% ======================================================================
+\section{Introduction}\label{sec:intro}
+% ======================================================================
+
+\subsection{The result}
+
+For a Dirichlet character $\chi$ let $L(s,\chi)$ be its $L$-function, and let $\zeta(s)$ be the
+Riemann zeta function. On 20 November 2026 Levent Alp\"oge released a formal development in the
+Lean~4 proof assistant~\cite{lean4}, built on Mathlib~\cite{mathlib}, together with a four-page
+outline~\cite{alpoge-remark}. Its final theorems state the following.
+
+\begin{maincor}
+For every Dirichlet character $\chi$ and every $s\in\CC$ with $\re s>1/2$, $L(s,\chi)\neq 0$
+unless $\chi$ is principal and $s=1$. In particular the Riemann Hypothesis holds, in the form of
+Mathlib's definition: every zero of $\zeta$ other than $-2,-4,-6,\dots$ has real part $1/2$.
+\end{maincor}
+
+The development has $175{,}187$ files and about $17.4$ million lines. It has been accepted by the
+Lean kernel, by the independent checkers \texttt{nanoda}, \texttt{con-leche} and
+\texttt{lean4lean}, and by others listed on A.~Sutherland's verification page~\cite{sutherland}.
+It uses only the three standard axioms \texttt{propext}, \texttt{Quot.sound} and
+\texttt{Classical.choice}. The author of the present paper rebuilt it independently and
+re-exported the kernel declarations of the final theorem. The export agrees byte for byte with the
+published one~\cite{dixit-repo}.
+
+What the formal proof does not provide is a proof a mathematician can read. The outline is four
+pages long, and the formal statements are spread over about a million declarations whose names
+often bear no relation to their content. The purpose of this paper is to supply a complete,
+conventional proof of one half of the argument, and an exact statement of the other half.
+
+\subsection{The three theorems}
+
+Throughout, $\Lambda$ is the von Mangoldt function, $\gE$ is Euler's constant and
+$(u)_+=\max(u,0)$. For a Dirichlet character $\chi$ which is either nonprincipal or the trivial
+character of modulus $1$ we put
+\begin{equation}\label{eq:Gchi}
+G_\chi(y)=
+\begin{cases}
+\displaystyle\sum_{n\le y}\Lambda(n)\Bigl(\frac yn-1\Bigr)-y\log y+(1+\gE)\,y, & \chi=1 \text{ of modulus } 1,\\[10pt]
+\displaystyle\sum_{n\le y}\Lambda(n)\chi(n)\Bigl(\frac yn-1\Bigr)+y\,\frac{L'(1,\chi)}{L(1,\chi)}, & \chi \text{ nonprincipal}.
+\end{cases}
+\end{equation}
+The sum $\sum_{n\le y}\Lambda(n)\chi(n)(y/n-1)=\int_1^y\psi(t,\chi)\,dt/t$ is a logarithmic
+Riesz mean of the Chebyshev function, and $G_\chi$ is what is left after its main term is removed.
+For $\chi=1$ we write $G_\zeta=G_1$. The Riemann Hypothesis is equivalent to
+$G_\zeta(y)=O(y^{1/2+\eps})$ for every $\eps>0$.
+
+A \emph{character family} $F$ is a finite collection of such characters $\chi_i$ with weights
+$a_i>0$, and we put $G_F(y)=\sum_i a_i\re G_{\chi_i}(y)$.
+
+\begin{theoremA}[Windowed Landau theorem; Theorem~\ref{thm:A}]
+Let $F$ be a character family, $0<\theta<1$, $\delta>0$ and $C\in\R$. Suppose that for every $Y_0$
+there is $Y\ge Y_0$ such that
+\[
+G_F(y)\le C\,y^{\theta}\qquad\text{for all } y\in[Y,Y^{1+\delta}].
+\]
+Then $L(s,\chi_i)\neq 0$ for every $i$ and every $s$ with $\re s>\theta$.
+\end{theoremA}
+
+Landau's classical theorem gives the same conclusion from a bound valid for all large $y$, and
+its usual proof uses that the Dirichlet coefficients of the combined series are nonnegative. In
+Theorem~A the bound is needed only on a sequence of windows whose logarithmic length tends to
+infinity, and the coefficients $\Lambda(n)\sum_ia_i\re\chi_i(n)$ may have either sign. The
+positivity that the proof uses is that of the residues at real poles; see
+Remark~\ref{rem:nopositivity}.
+
+Theorem~B produces the hypothesis of Theorem~A. It is formulated on a finite abelian group
+$G=(\Z/2\Z)^2\times H$ equipped with data that imitate the Frobenius elements and inertia groups of
+an abelian extension of $\Q$ (Definition~\ref{def:datum}). These data turn every character $\psi$
+of $G$ into an arithmetic function $\psi_D$ and hence into a function $G_\psi$ of the shape
+\eqref{eq:Gchi}. Out of them we build two explicit quantities attached to a scale $a>0$, a point
+$t\in H$ and positive weights $w$ (Definition~\ref{def:ask}). The first, $\ASK(a,t,w)$, is a
+weighted count of prime powers $p^i<a/w$ at primes inert in a quadratic subextension. The
+second, $\MAIN(a,w)$, has the shape of a Stirling main term plus a logarithmic derivative at $s=1$.
+
+\begin{theoremB}[Isolation and balance; Theorem~\ref{thm:B}]
+Suppose that at a scale $x$ an abstract host carries $m$ systems of weights, indexed by
+$j=1,\dots,m$. Suppose the weights satisfy size conditions, auxiliary characters satisfy
+standard bounds, and the averaged inequality
+\[
+\sum_{t\in T}\sum_{j=1}^{m}\Bigl(\ASK(a_t,t,w_{u,j})-\re\MAIN(a_t,w_{u,j})\Bigr)\ \le\
+x^{C\eps}\Bigl(n_T\,a_E\Bigl(1+\frac{m^2}{k}\Bigr)+m\Bigl(2nmb\,x^{\eps}+\frac{n_{T_2}\,k\,b\,x^{2\eps}}{n^{2}}\Bigr)\Bigr)
+\]
+holds for every translate $u$ in a subgroup $A_0\le H$. Then a weighted sum of the $G_\psi(x)$ over a
+prescribed set of characters is at most $x^{1/2+(C+3)\eps}$, plus the absolute values of the
+remaining $G_\psi(x)$.
+\end{theoremB}
+
+The precise hypotheses are (B0) to (B8) in Section~\ref{sec:B}. They involve only finite
+Fourier analysis, Mertens' estimate and Chebyshev's bound, and so does the proof. Relative to the
+main term $n_T\,m\,b$, the error bracket is about $x/m+m$ (Section~\ref{sec:balance}). With
+$m\approx\sqrt x$ both terms are $\sqrt x$, and this is the only place in the argument where the
+exponent $1/2$ is produced.
+
+\begin{theoremC}[Existence of hosts; Theorem~\ref{thm:C}]
+For every primitive Dirichlet character $\psi$ there are constants such that, for every
+sufficiently small $\eps>0$ and every large $x$ in a set containing windows $[Y,Y^{3/2}]$ with $Y$
+arbitrarily large, there is a host satisfying the hypotheses of Theorem~B whose kept characters
+are the characters of the cyclic group generated by $\psi$.
+\end{theoremC}
+
+Theorem~C is the arithmetic heart of the development. Its formal proof constructs the weights
+from a family of Hermitian lattices carried along a chain of $m$ theta lifts between unitary
+groups. It proves the averaged inequality by computing the Arakelov degree of a common lattice
+in two ways, and it controls the losses by Bloch--Kato Selmer ranks and by a Tate--Shafarevich
+bound resting on formal proofs of the Ferrero--Washington theorem and Poitou--Tate duality. We do
+not reprove Theorem~C. We state it exactly (Section~\ref{sec:C}), we explain which formal
+statements it is assembled from, and we describe the structure of its formal proof without
+claiming to prove it.
+
+Theorems~A, B and~C together imply the Corollary (Section~\ref{sec:GRH}).
+
+\subsection{What is proved here, and how it relates to the formal proof}
+
+Theorems~A and~B, the exact identity of Proposition~\ref{prop:balance}, and the propositions of
+Section~\ref{sec:balance} are proved completely in this paper. The only external inputs are
+standard facts about Dirichlet $L$-functions, collected as (F1) to (F5) in
+Section~\ref{sec:prelim}. Theorem~C is used as a black box, and we say so wherever it is used.
+
+The proofs follow the strategy of the formal proofs but are written independently, in
+conventional language and in a different order. We have compared every statement with its formal
+counterpart at the commit of the published archive (\texttt{40e56bab}). The correspondence is
+listed in Appendix~\ref{app:lean}. Where our formulation differs from the formal one, the
+difference is a simplification and is pointed out. For example, we remove a truncation parameter
+that does not change the quantities involved.
+
+\subsection{What is new}
+
+The mathematics is Alp\"oge's. We believe the following are new as written statements.
+\begin{enumerate}
+\item The windowed Landau theorem with arbitrary positive weights and no positivity of
+  coefficients (Theorem~A), with a short proof by Taylor coefficients at a far real point and a
+  vertical shift that isolates a nearest pole.
+\item A self-contained formulation of the interface between the analytic and the arithmetic parts
+  (Definition~\ref{def:host} and Theorem~B), in which the arithmetic content is a single averaged
+  inequality between elementary sums.
+\item An analysis of the error bracket (Section~\ref{sec:balance}). The exponent $1/2$ is the
+  optimum of $x/m+m$, the remaining size windows are bookkeeping, and a per-lift cost growing
+  linearly along the chain would give exactly the exponent $2/3$ of the outline.
+\end{enumerate}
+An informal account of the whole development, including the arithmetic part, written by the
+present author with evidence labels for every step, is~\cite{dixit-account}. Other expositions
+include Naskr\k{e}cki's guide and book~\cite{naskrecki} and Jaswal's reader's guide~\cite{jaswal}.
+
+\subsection{Organization}
+
+Section~\ref{sec:prelim} collects classical facts and the Mellin transform of $G_\chi$.
+Section~\ref{sec:A} proves Theorem~A. Section~\ref{sec:hosts} introduces abstract hosts and
+proves the exact identity $\ASK-\MAIN=\De$. Section~\ref{sec:B} states and proves Theorem~B.
+Section~\ref{sec:balance} analyses the error bracket. Section~\ref{sec:C} states Theorem~C and
+describes its formal proof. Section~\ref{sec:GRH} deduces the Corollary.
+Section~\ref{sec:remarks} lists what a complete human proof would still require.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[
+  box/.style={draw, rounded corners=3pt, align=center, font=\small, inner sep=5pt, text width=50mm},
+  bbox/.style={box, draw=black, very thick},
+  gbox/.style={box, dashed},
+  arr/.style={-{Stealth[length=2.2mm]}, thick}]
+\node[gbox] (C) {\textbf{Theorem C} (certified)\\ hosts exist on windows $[Y,Y^{3/2}]$};
+\node[bbox, below=7mm of C] (B) {\textbf{Theorem B} (proved here)\\ averaged $\ASK\le\MAIN+\text{error}$\\ $\Longrightarrow G_F(x)\le x^{1/2+O(\eps)}$};
+\node[bbox, below=7mm of B] (A) {\textbf{Theorem A} (proved here)\\ bound on windows $\Longrightarrow$ no zeros with $\re s>\theta$};
+\node[box, below=7mm of A] (G) {\textbf{Corollary}\\ GRH for Dirichlet $L$-functions};
+\draw[arr] (C) -- (B); \draw[arr] (B) -- (A); \draw[arr] (A) -- (G);
+\end{tikzpicture}
+\caption{Logical structure. Solid boxes are proved in this paper; the dashed box is a statement
+certified by the Lean kernel and not proved here.}\label{fig:structure}
+\end{figure}
+% ======================================================================
+\section{Preliminaries}\label{sec:prelim}
+% ======================================================================
+
+\subsection{Characters and classical facts}
+
+A Dirichlet character is \emph{admissible} if it is nonprincipal, or if it is the trivial
+character of modulus $1$. For admissible $\chi$ the function $G_\chi$ is defined by
+\eqref{eq:Gchi}, and $\bar\chi$ denotes the complex conjugate character, which is again
+admissible. We write
+\[
+R_\chi(y)=\sum_{n\le y}\Lambda(n)\chi(n)\Bigl(\frac yn-1\Bigr)=\sum_{n\ge1}\Lambda(n)\chi(n)\Bigl(\frac yn-1\Bigr)_{+}
+\qquad(y\ge0),
+\]
+so that $G_\zeta(y)=R_1(y)-y\log y+(1+\gE)y$ and $G_\chi(y)=R_\chi(y)+y\,L'(1,\chi)/L(1,\chi)$ for
+nonprincipal $\chi$. We use the following standard facts.
+
+\begin{enumerate}[label=\textbf{(F\arabic*)}, leftmargin=3.2em]
+\item\label{F1} (Mertens) There is an absolute constant $C_M\ge1$ such that
+  $\bigl|\sum_{n\le y}\Lambda(n)/n-\log y\bigr|\le C_M$ for all $y\ge1$; see
+  \cite[Section~2.2]{montgomery-vaughan}.
+\item\label{F2} (Chebyshev) $\sum_{n\le y}\Lambda(n)\le 2y$ for all $y>0$. This follows from
+  $\psi(y)<1.04\,y$ \cite[Theorem~12]{rosser-schoenfeld}.
+\item\label{F3} For nonprincipal $\chi$, $L(s,\chi)$ extends to an entire function; $(s-1)\zeta(s)$
+  extends to an entire function, and $\zeta(s)=\frac1{s-1}+\gE+O(s-1)$ near $s=1$. For
+  $\re s>1$, $-\frac{L'}{L}(s,\chi)=\sum_{n\ge1}\Lambda(n)\chi(n)n^{-s}$, with absolute convergence.
+  Moreover $\overline{L(\bar s,\chi)}=L(s,\bar\chi)$. See \cite[Chapter~10]{montgomery-vaughan} and
+  \cite{davenport}.
+\item\label{F4} $L(s,\chi)\neq0$ for $\re s\ge1$ and nonprincipal $\chi$, and $\zeta(s)\neq0$ for
+  $\re s\ge1$; see \cite[Chapters~6 and~11]{montgomery-vaughan} and \cite{davenport}.
+\item\label{F5} The zeros of an entire function that is not identically zero are isolated and of
+  finite order.
+\end{enumerate}
+
+By \ref{F3} the constant $L'(1,\chi)/L(1,\chi)$ in \eqref{eq:Gchi} is well defined, since
+$L(1,\chi)\neq0$ by \ref{F4}. Complex conjugation gives
+\begin{equation}\label{eq:conj}
+\overline{G_\chi(y)}=G_{\bar\chi}(y),\qquad \re G_\chi(y)=\tfrac12\bigl(G_\chi(y)+G_{\bar\chi}(y)\bigr).
+\end{equation}
+
+\begin{lemma}\label{lem:growth}
+For every admissible $\chi$ there is $C_\chi$ with $|G_\chi(y)|\le C_\chi\,y^{2}$ for all $y\ge1$.
+\end{lemma}
+
+\begin{proof}
+By \ref{F1}, $|R_\chi(y)|\le y\sum_{n\le y}\Lambda(n)/n\le y(\log y+C_M)$. Also $y\log y\le y^2$,
+and the remaining terms are $O(y)$.
+\end{proof}
+
+\subsection{The Mellin transform of \texorpdfstring{$G_\chi$}{G chi}}
+
+\begin{lemma}\label{lem:mellin}
+Let $\chi$ be admissible. For $\re s>1$ the integral $\int_1^\infty G_\chi(y)\,y^{-s-1}\,dy$
+converges absolutely and equals $\Phi_\chi(s)$, where
+\begin{align*}
+\Phi_\chi(s)&=-\frac{1}{s(s-1)}\,\frac{L'}{L}(s,\chi)+\frac{1}{s-1}\,\frac{L'}{L}(1,\chi)
+  &&(\chi\text{ nonprincipal}),\\
+\Phi_\zeta(s)&=-\frac{1}{s(s-1)}\,\frac{\zeta'}{\zeta}(s)-\frac{1}{(s-1)^2}+\frac{1+\gE}{s-1}
+  &&(\chi=1\text{ of modulus }1).
+\end{align*}
+The function $\Phi_\chi$ is meromorphic on $\CC$. In the half-plane $\re s>0$ its poles are exactly
+the zeros $\rho$ of $L(s,\chi)$ (of $\zeta(s)$ if $\chi=1$). Each is simple, with residue
+$-m_\rho/(\rho(\rho-1))$, where $m_\rho\ge1$ is the multiplicity of the zero.
+\end{lemma}
+
+\begin{proof}
+For $n\ge1$ and $\re s>1$,
+\[
+\int_1^\infty\Bigl(\frac yn-1\Bigr)_{+}y^{-s-1}\,dy=\int_n^\infty\Bigl(\frac{y^{-s}}{n}-y^{-s-1}\Bigr)dy
+=\frac{n^{-s}}{s-1}-\frac{n^{-s}}{s}=\frac{n^{-s}}{s(s-1)}.
+\]
+With $\sigma=\re s$, the integrand $\sum_n\Lambda(n)(y/n-1)_+y^{-\sigma-1}$ is nonnegative with
+integral $\sum_n\Lambda(n)n^{-\sigma}/(\sigma(\sigma-1))<\infty$. Fubini's theorem therefore gives
+$\int_1^\infty R_\chi(y)y^{-s-1}dy=\frac{1}{s(s-1)}\sum_n\Lambda(n)\chi(n)n^{-s}
+=-\frac{1}{s(s-1)}\frac{L'}{L}(s,\chi)$ by \ref{F3}. Together with
+$\int_1^\infty y\cdot y^{-s-1}dy=\frac1{s-1}$ and $\int_1^\infty y\log y\cdot y^{-s-1}dy=\frac1{(s-1)^2}$
+this gives the formulas and the absolute convergence.
+
+By \ref{F3}, $L'/L$ is meromorphic on $\CC$, hence so is $\Phi_\chi$. In $\re s>0$, the factor
+$1/(s(s-1))$ is holomorphic away from $s=1$, so the possible poles are $s=1$ and the zeros of
+$L(s,\chi)$ (resp.\ $\zeta$). None of these zeros is at $s=1$, by \ref{F4}.
+
+The point $s=1$ is not a pole. For nonprincipal $\chi$ we have
+$\Phi_\chi(s)=\frac1{s-1}\bigl(\frac{L'}{L}(1,\chi)-\frac1s\frac{L'}{L}(s,\chi)\bigr)$, and the
+bracket is holomorphic near $1$ and vanishes at $s=1$. For $\chi=1$, \ref{F3} gives
+$\frac{\zeta'}{\zeta}(s)=-\frac1{s-1}+\gE+O(s-1)$, and $\frac1s=1-(s-1)+O((s-1)^2)$, so
+\[
+-\frac{1}{s(s-1)}\frac{\zeta'}{\zeta}(s)=\frac{1}{s-1}\Bigl(\frac1{s-1}-\gE+O(s-1)\Bigr)\bigl(1-(s-1)+O((s-1)^2)\bigr)
+=\frac{1}{(s-1)^2}-\frac{1+\gE}{s-1}+O(1),
+\]
+and the two correction terms in $\Phi_\zeta$ cancel the principal part.
+
+At a zero $\rho\neq1$ of multiplicity $m_\rho$ with $\re\rho>0$, we have
+$\frac{L'}{L}(s,\chi)=\frac{m_\rho}{s-\rho}+(\text{holomorphic})$ near $\rho$. Since $1/(s(s-1))$
+is holomorphic and nonzero at $\rho$, the residue of $\Phi_\chi$ at $\rho$ is
+$-m_\rho/(\rho(\rho-1))\neq0$.
+\end{proof}
+% ======================================================================
+\section{The windowed Landau theorem}\label{sec:A}
+% ======================================================================
+
+\begin{definition}\label{def:family}
+A \emph{character family} $F$ is a finite family $(\chi_i,a_i)_{i\in I}$ of admissible Dirichlet
+characters $\chi_i$ with real weights $a_i>0$. Its \emph{Chebyshev remainder} is
+$G_F(y)=\sum_{i\in I}a_i\re G_{\chi_i}(y)$.
+\end{definition}
+
+\begin{theorem}[Theorem A]\label{thm:A}
+Let $F=(\chi_i,a_i)_{i\in I}$ be a character family, $0<\theta<1$, $\delta>0$ and $C\in\R$.
+Suppose that for every $Y_0$ there is $Y\ge Y_0$ such that $G_F(y)\le C\,y^{\theta}$ for all
+$y\in[Y,Y^{1+\delta}]$. Then $L(s,\chi_i)\neq0$ for every $i\in I$ and every $s$ with $\re s>\theta$.
+\end{theorem}
+
+The rest of this section proves Theorem~\ref{thm:A}. Fix $F$, and write $\bar F$ for the family of
+conjugate characters $\bar\chi_i$ with the same weights.
+
+\subsection{The Laplace transform and its poles}
+
+Put $g(u)=G_F(e^{u})$ for $u\ge0$, and
+\[
+\Phi(s)=\sum_{i\in I}\frac{a_i}{2}\bigl(\Phi_{\chi_i}(s)+\Phi_{\bar\chi_i}(s)\bigr),\qquad
+Z=\bigl\{\rho\in\CC:\ \re\rho>0,\ L(\rho,\chi_i)L(\rho,\bar\chi_i)=0\ \text{for some } i\bigr\},
+\]
+with $\Phi_\chi$ as in Lemma~\ref{lem:mellin}. Here, and below, $L(s,1)$ for the trivial
+character of modulus $1$ means $\zeta(s)$.
+
+\begin{lemma}\label{lem:poledata}
+\begin{enumerate}[label=(\alph*)]
+\item There is $C_0\ge0$ with $|g(u)|\le C_0e^{2u}$ for all $u\ge0$.
+\item $\Phi(s)=\int_0^\infty g(u)e^{-su}\,du$ for $\re s>2$.
+\item $\Phi$ is holomorphic on $\{\re s>0\}\setminus Z$. The set $Z$ has no accumulation point in
+  $\{\re s>0\}$, and $\re\rho<1$ for every $\rho\in Z$.
+\item Every $\rho\in Z$ is a simple pole of $\Phi$: there are $c_\rho\neq0$ and a function $h$
+  holomorphic near $\rho$ with $\Phi(s)=c_\rho/(s-\rho)+h(s)$ near $\rho$. If $\rho$ is real, then
+  $c_\rho>0$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+(a) follows from Lemma~\ref{lem:growth}. For (b), substitute $y=e^u$: for $\re s>1$,
+$\int_0^\infty g(u)e^{-su}du=\int_1^\infty G_F(y)y^{-s-1}dy$, and by \eqref{eq:conj} and
+Lemma~\ref{lem:mellin} this equals $\Phi(s)$.
+
+For (c), the set $Z$ is the intersection with $\{\re s>0\}$ of the zero set of finitely many
+entire functions that are not identically zero: $L(s,\chi_i)$ and $L(s,\bar\chi_i)$ for
+nonprincipal $\chi_i$, and $(s-1)\zeta(s)$. By \ref{F5} it has no accumulation point, and by
+\ref{F4} it lies in $\re s<1$. By Lemma~\ref{lem:mellin}, $\Phi$ is holomorphic in $\re s>0$ off $Z$.
+
+For (d), let $m_\rho(\chi)\ge0$ be the order of vanishing of $L(s,\chi)$ at $\rho$, and put
+$M_\rho=\sum_i\frac{a_i}{2}\bigl(m_\rho(\chi_i)+m_\rho(\bar\chi_i)\bigr)$. By
+Lemma~\ref{lem:mellin}, $\Phi$ has a simple pole at $\rho$ with residue
+$c_\rho=-M_\rho/(\rho(\rho-1))$, or is holomorphic there if $M_\rho=0$. For $\rho\in Z$ some
+$m_\rho(\chi_i)$ or $m_\rho(\bar\chi_i)$ is positive, and all $a_i>0$, so $M_\rho>0$ and $c_\rho\neq0$.
+If $\rho$ is real then $0<\rho<1$ by (c), so $\rho(\rho-1)<0$ and $c_\rho=M_\rho/(\rho(1-\rho))>0$.
+\end{proof}
+
+\subsection{Taylor coefficients and a positivity inequality}
+
+For $\re s>2$ and $k\ge0$ put
+\[
+A_k(s)=\frac{(-1)^k\,\Phi^{(k)}(s)}{k!}.
+\]
+
+\begin{lemma}\label{lem:taylor}
+For $\re s>2$ and $k\ge0$, $A_k(s)=\dfrac1{k!}\displaystyle\int_0^\infty g(u)\,u^k e^{-su}\,du$.
+\end{lemma}
+
+\begin{proof}
+On $\re s\ge\sigma_0>2$ the integrands $g(u)u^ke^{-su}$ are dominated by $C_0u^ke^{-(\sigma_0-2)u}$,
+which is integrable. So we may differentiate under the integral sign in Lemma~\ref{lem:poledata}(b)
+any number of times.
+\end{proof}
+
+\begin{lemma}\label{lem:positivity}
+Let $\sigma>2$, $\tau\in\R$, $0\le U<V$, $\theta<\sigma$ and $B\ge0$, and suppose $g(u)\le Be^{\theta u}$
+for $u\in[U,V]$. Then for every $k\ge0$,
+\[
+\bigl|A_k(\sigma+i\tau)\bigr|+\re A_k(\sigma)\ \le\ 2B(V-U)(\sigma-\theta)^{-k}+2C_0\,T_k(U,V),
+\]
+where $T_k(U,V)=\frac1{k!}\int_{[0,\infty)\setminus[U,V]}u^ke^{-(\sigma-2)u}\,du$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:taylor}, $|A_k(\sigma+i\tau)|\le\frac1{k!}\int_0^\infty|g(u)|u^ke^{-\sigma u}du$, and,
+since $g$ is real, $\re A_k(\sigma)=\frac1{k!}\int_0^\infty g(u)u^ke^{-\sigma u}du$. Adding, and
+using $|g|+g=2g^+$ with $g^+=\max(g,0)$,
+\[
+|A_k(\sigma+i\tau)|+\re A_k(\sigma)\le\frac{2}{k!}\int_0^\infty g^+(u)\,u^ke^{-\sigma u}\,du.
+\]
+On $[U,V]$ we have $0\le g^+(u)\le Be^{\theta u}$, because $B\ge0$. Also
+$u^ke^{-(\sigma-\theta)u}/k!\le(\sigma-\theta)^{-k}$, because $e^{v}\ge v^k/k!$ for $v\ge0$. So the
+contribution of $[U,V]$ is at most $2B(V-U)(\sigma-\theta)^{-k}$. Off $[U,V]$ we use
+$g^+\le|g|\le C_0e^{2u}$.
+\end{proof}
+
+\subsection{A tail estimate}
+
+The weight $u^ke^{-\alpha u}/k!$ is a multiple of a Gamma density. Its mass concentrates near
+$u=k/\alpha$, and the next lemma chooses $k$ so that this point lies well inside a window
+$[U,(1+\delta)U]$.
+
+\begin{lemma}\label{lem:tails}
+For every $\delta>0$ there are $\sigma\ge3$ and $C_1>0$ with the following property. For every
+$U\ge1$ there is an integer $k\ge U$ with $T_k\bigl(U,(1+\delta)U\bigr)\le C_1\sigma^{-k}$.
+\end{lemma}
+
+\begin{proof}
+Put $\lambda=1+\delta/2$ and $\tau_0=\delta/(2(2+\delta))\in(0,\tfrac12)$, so that
+$(1+\delta)/\lambda=1+2\tau_0$ and $1/\lambda=1-2\tau_0$. Using $\log(1-v)\ge-v-v^2$ and
+$\log(1+v)\ge v-v^2/2$ for $0\le v\le\frac12$, we get
+\begin{equation}\label{eq:tau0}
+(1-\tau_0)\,e^{\tau_0(1+\delta)/\lambda}\ge e^{-\tau_0-\tau_0^2+\tau_0+2\tau_0^2}=e^{\tau_0^2},\qquad
+(1+\tau_0)\,e^{-\tau_0/\lambda}\ge e^{\tau_0-\tau_0^2/2-\tau_0+2\tau_0^2}\ge e^{\tau_0^2}.
+\end{equation}
+Choose $\sigma\ge3$ with $\sigma/(\sigma-2)\le e^{\tau_0^2}$, and put $\alpha=\sigma-2\ge1$, so that
+$\alpha e^{\tau_0^2}\ge\sigma$. Given $U\ge1$, let $k=\lceil\lambda\alpha U\rceil$. Then $k\ge U$ and
+$(k-1)/\lambda<\alpha U\le k/\lambda$. We use $\int_0^\infty u^ke^{-\beta u}du/k!=\beta^{-k-1}$.
+
+\emph{Upper tail.} For $u\ge V=(1+\delta)U$ we have $1\le e^{\tau_0\alpha(u-V)}$, so
+\[
+\int_V^\infty\frac{u^ke^{-\alpha u}}{k!}du\le e^{-\tau_0\alpha V}\bigl((1-\tau_0)\alpha\bigr)^{-k-1}
+\le\frac{e^{\tau_0(1+\delta)/\lambda}}{(1-\tau_0)\alpha}\Bigl((1-\tau_0)\alpha\,e^{\tau_0(1+\delta)/\lambda}\Bigr)^{-k}
+\le\frac{e^{\tau_0(1+\delta)/\lambda}}{(1-\tau_0)\alpha}\,\sigma^{-k},
+\]
+where we used $\tau_0\alpha V=\tau_0(1+\delta)\alpha U\ge\tau_0(1+\delta)(k-1)/\lambda$, then
+\eqref{eq:tau0} and $\alpha e^{\tau_0^2}\ge\sigma$.
+
+\emph{Lower tail.} For $0\le u\le U$ we have $1\le e^{\tau_0\alpha(U-u)}$, so
+\[
+\int_0^U\frac{u^ke^{-\alpha u}}{k!}du\le e^{\tau_0\alpha U}\bigl((1+\tau_0)\alpha\bigr)^{-k-1}
+\le\frac{1}{(1+\tau_0)\alpha}\Bigl((1+\tau_0)\alpha\,e^{-\tau_0/\lambda}\Bigr)^{-k}
+\le\frac{1}{(1+\tau_0)\alpha}\,\sigma^{-k},
+\]
+using $\alpha U\le k/\lambda$ and \eqref{eq:tau0}. The lemma holds with
+$C_1=e^{\tau_0(1+\delta)/\lambda}/((1-\tau_0)\alpha)+1/((1+\tau_0)\alpha)$.
+\end{proof}
+
+\subsection{Coefficients near a pole}
+
+\begin{lemma}\label{lem:cauchy}
+Let $z\in\CC$, $r>0$, and let $f$ be holomorphic on $B(z,r)\setminus\{\rho\}$, where $\rho\in B(z,r)$,
+$\rho\neq z$, and $f(s)-c/(s-\rho)$ extends holomorphically to a neighbourhood of $\rho$. Then for
+every $0<r'<r$ there is $M$ such that for all $k\ge0$
+\[
+\Bigl|\frac{(-1)^kf^{(k)}(z)}{k!}-\frac{c}{(z-\rho)^{k+1}}\Bigr|\le M\,r'^{-k}.
+\]
+If $f$ is holomorphic on all of $B(z,r)$, the same holds with $c=0$.
+\end{lemma}
+
+\begin{proof}
+The function $h(s)=f(s)-c/(s-\rho)$ extends holomorphically to $B(z,r)$, so Cauchy's estimate gives
+$|h^{(k)}(z)|/k!\le r'^{-k}\max_{|s-z|=r'}|h(s)|$. Since
+$\frac{d^k}{ds^k}(s-\rho)^{-1}=(-1)^kk!\,(s-\rho)^{-k-1}$, the $k$-th coefficient of $c/(s-\rho)$
+in the normalisation of the lemma is $c/(z-\rho)^{k+1}$.
+\end{proof}
+
+\subsection{Isolating a nearest pole}
+
+Discs $B(z,r)$ are open and $\bar B(z,r)$ are closed.
+
+\begin{lemma}\label{lem:nearest}
+Let $Z\subset\{\re s>0\}$ have no accumulation point in $\{\re s>0\}$, let $0<\theta<\sigma$,
+suppose $\re\rho<\sigma$ for every $\rho\in Z$, and suppose some $\rho_0\in Z$ has
+$\re\rho_0>\theta$. Then one of the following holds.
+\begin{enumerate}[label=(\Roman*)]
+\item There are a real $\beta\in Z$ with $\theta<\beta<\sigma$ and $r$ with $\sigma-\beta<r\le\sigma-\theta$
+  such that $Z\cap B(\sigma,r)=\{\beta\}$.
+\item There are $D\in(0,\sigma-\theta]$, $\tau\in\R$, $\rho\in Z$ and $r\in(0,D]$ such that
+  $Z\cap B(\sigma,D)=\emptyset$, $|\sigma+i\tau-\rho|<r$ and $Z\cap B(\sigma+i\tau,r)=\{\rho\}$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+The disc $\bar B(\sigma,\sigma-\theta)$ is compact and contained in $\{\re s\ge\theta\}$, so
+$F=Z\cap\bar B(\sigma,\sigma-\theta)$ is finite.
+
+\emph{Step 1.} We find $D\in(0,\sigma-\theta]$ and $\rho_1\in Z$ with $Z\cap B(\sigma,D)=\emptyset$
+and $\sigma-\re\rho_1<D$, unless (I) holds. If $F=\emptyset$, take $D=\sigma-\theta$ and
+$\rho_1=\rho_0$. Otherwise let $d_0=\min_{\rho\in F}|\sigma-\rho|$. This is positive because
+$\sigma\notin Z$, and $Z\cap B(\sigma,d_0)=\emptyset$. If some $\rho_1\in Z$ has
+$\sigma-\re\rho_1<d_0$, take $D=d_0$.
+
+If no such $\rho_1$ exists, then $\sigma-\re\rho\ge d_0$ for all $\rho\in Z$. Applied to $\rho_0$
+this gives $d_0\le\sigma-\re\rho_0<\sigma-\theta$. If $\beta\in F$ has $|\sigma-\beta|=d_0$, then
+$d_0=|\sigma-\beta|\ge\sigma-\re\beta\ge d_0$, which forces $\im\beta=0$ and $\beta=\sigma-d_0$.
+So $\beta$ is real, $\theta<\beta<\sigma$, and $\beta$ is the only point of $F$ at distance $d_0$
+from $\sigma$. Since $F$ is finite,
+$r=\min\bigl(\sigma-\theta,\ \min\{|\sigma-\rho|:\rho\in F\setminus\{\beta\}\}\bigr)$ exceeds
+$d_0$, with the inner minimum read as $+\infty$ if $F=\{\beta\}$. Every point of $Z\cap B(\sigma,r)$
+lies in $F$, hence equals $\beta$, and (I) holds.
+
+\emph{Step 2: a vertical shift.} Assume $D$ and $\rho_1$ as in Step 1. Let
+$\eta=\frac12\min\bigl(D-(\sigma-\re\rho_1),\ \sigma-D\bigr)>0$ and $c_0=\sigma+i\im\rho_1$. Since
+$D+\eta<\sigma$, the set $F'=Z\cap\bar B(c_0,D+\eta)$ is finite. For distinct $a,b\in F'$ there is
+at most one $\tau\in\R$ with $|\sigma+i\tau-a|=|\sigma+i\tau-b|$. Indeed, this equation reads
+$(\sigma-\re a)^2+(\tau-\im a)^2=(\sigma-\re b)^2+(\tau-\im b)^2$. If $\im a\neq\im b$ it is a
+nontrivial linear equation in $\tau$. If $\im a=\im b$ it gives
+$(\sigma-\re a)^2=(\sigma-\re b)^2$, and since both bases are positive, $a=b$. We may therefore
+choose $\tau$ with $|\tau-\im\rho_1|<\eta$ such that $z=\sigma+i\tau$ is not equidistant from two
+distinct points of $F'$. Then
+\[
+|z-\rho_1|\le|\tau-\im\rho_1|+(\sigma-\re\rho_1)<\eta+\sigma-\re\rho_1\le D .
+\]
+Also $\rho_1\in F'$. Let $\rho$ be the point of $F'$ nearest to $z$, which is unique. Then
+$|z-\rho|\le|z-\rho_1|<D$. Put
+$r=\min\bigl(D,\ \min\{|z-\rho'|:\rho'\in F'\setminus\{\rho\}\}\bigr)>|z-\rho|$. If
+$w\in Z\cap B(z,r)$, then $|w-c_0|\le|w-z|+|z-c_0|<r+\eta\le D+\eta$, so $w\in F'$, and therefore
+$w=\rho$. This is (II).
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:A}}
+
+Suppose, for a contradiction, that $L(s_0,\chi_{i_0})=0$ for some $i_0$ and some $s_0$ with
+$\re s_0>\theta$. By \ref{F4}, $\re s_0<1$, so $s_0\in Z$. Let $\sigma\ge3$ and $C_1$ be as in
+Lemma~\ref{lem:tails} for our $\delta$. Then $\re\rho<1<\sigma$ for all $\rho\in Z$, and
+$\theta<\sigma$. Put $B=\max(C,0)$ and $C_2=2B\delta+2C_0C_1$.
+
+\emph{Claim.} The set $\mathcal K$ of integers $k\ge1$ such that
+\begin{equation}\label{eq:star}
+|A_k(\sigma+i\tau)|+\re A_k(\sigma)\le C_2\,k\,(\sigma-\theta)^{-k}\qquad\text{for all }\tau\in\R
+\end{equation}
+is infinite. Indeed, given $k_0\ge1$, the hypothesis with $Y_0=e^{k_0}$ yields $Y\ge Y_0$ with
+$G_F(y)\le Cy^\theta$ on $[Y,Y^{1+\delta}]$. With $U=\log Y\ge k_0$ this says
+$g(u)\le Be^{\theta u}$ for $u\in[U,(1+\delta)U]$. Lemma~\ref{lem:tails} gives an integer $k\ge U$
+with $T_k(U,(1+\delta)U)\le C_1\sigma^{-k}$. By Lemma~\ref{lem:positivity}, and since $U\le k$
+and $\sigma^{-k}\le(\sigma-\theta)^{-k}$, the left side of \eqref{eq:star} is at most
+$2B\delta U(\sigma-\theta)^{-k}+2C_0C_1\sigma^{-k}\le C_2k(\sigma-\theta)^{-k}$. Since $k\ge k_0$
+and $k_0$ was arbitrary, $\mathcal K$ is infinite.
+
+Apply Lemma~\ref{lem:nearest} to $Z$, $\theta$, $\sigma$ and $\rho_0=s_0$. All discs below lie in
+$\{\re s>\theta\}$, and by Lemma~\ref{lem:poledata}(c) $\Phi$ is holomorphic on them away from the
+points of $Z$ they contain.
+
+\emph{Case (I).} Put $e=\frac12(\sigma-\beta+r)$, so that $\sigma-\beta<e<r$. By
+Lemma~\ref{lem:poledata}(d), $\Phi(s)=c_\beta/(s-\beta)+h(s)$ near $\beta$ with $c_\beta>0$. By
+Lemma~\ref{lem:cauchy} with $z=\sigma$ and $r'=e$, there is $M$ with
+$\re A_k(\sigma)\ge c_\beta(\sigma-\beta)^{-k-1}-Me^{-k}$ for all $k$. On the other hand
+\eqref{eq:star} with $\tau=0$ gives
+$2\re A_k(\sigma)\le|A_k(\sigma)|+\re A_k(\sigma)\le C_2k(\sigma-\theta)^{-k}$. Multiplying by
+$(\sigma-\beta)^k$, we get for $k\in\mathcal K$
+\[
+\frac{c_\beta}{\sigma-\beta}\le\frac{C_2}{2}\,k\Bigl(\frac{\sigma-\beta}{\sigma-\theta}\Bigr)^{k}+M\Bigl(\frac{\sigma-\beta}{e}\Bigr)^{k}.
+\]
+Since $\sigma-\beta<\sigma-\theta$ and $\sigma-\beta<e$, the right side tends to $0$ along
+$\mathcal K$, which contradicts $c_\beta>0$.
+
+\emph{Case (II).} Put $z=\sigma+i\tau$ and $d=|z-\rho|\in(0,r)$, and let $e=\frac12(d+r)$, so that
+$d<e<r\le D\le\sigma-\theta$. By Lemma~\ref{lem:cauchy} on $B(z,r)$, there is $M$ with
+$|A_k(z)|\ge|c_\rho|d^{-k-1}-Me^{-k}$. Lemma~\ref{lem:cauchy} on $B(\sigma,D)$, where $\Phi$ is
+holomorphic because $Z\cap B(\sigma,D)=\emptyset$, gives $M'$ with $|A_k(\sigma)|\le M'e^{-k}$. By
+\eqref{eq:star},
+\[
+|A_k(z)|\le C_2k(\sigma-\theta)^{-k}-\re A_k(\sigma)\le C_2k(\sigma-\theta)^{-k}+M'e^{-k}.
+\]
+Multiplying by $d^{k}$, for $k\in\mathcal K$,
+\[
+\frac{|c_\rho|}{d}\le C_2\,k\Bigl(\frac{d}{\sigma-\theta}\Bigr)^k+(M+M')\Bigl(\frac de\Bigr)^k\longrightarrow0,
+\]
+which contradicts $c_\rho\neq0$. This proves Theorem~\ref{thm:A}.\qed
+
+\subsection{Remarks}
+
+\begin{remark}[No positivity of coefficients]\label{rem:nopositivity}
+The Dirichlet series behind $\Phi$ is $-\sum_i\frac{a_i}{2}\bigl(\frac{L'}{L}(s,\chi_i)+\frac{L'}{L}(s,\bar\chi_i)\bigr)$,
+with coefficients $\Lambda(n)\sum_ia_i\re\chi_i(n)$. These may be negative. For instance, if $F$
+consists of a single real nonprincipal character, Theorem~\ref{thm:A} says that an upper bound for
+$G_\chi$ on far windows already excludes zeros. The classical proof of Landau's theorem uses
+nonnegative coefficients to locate a singularity on the real axis. Here the real axis enters only
+through case~(I), and what is used there is the sign of the residue at a real pole. That sign is
+automatic for transforms of the form $-(L'/L)(s)/(s(s-1))$, because $\rho(\rho-1)<0$ for
+$0<\rho<1$. The nonreal poles are handled in case~(II) by the inequality
+$|A_k(\sigma+i\tau)|\le C_2k(\sigma-\theta)^{-k}-\re A_k(\sigma)$, which uses only the one-sided
+bound.
+\end{remark}
+
+\begin{remark}[The formal statement]\label{rem:Aformal}
+The formal development proves Theorem~\ref{thm:A} in a slightly stronger form, with the pointwise
+hypothesis replaced by a majorant $R\ge\max(G_F,0)$ on each window satisfying
+$\int_Y^{Y^{1+\delta}}R(y)y^{-\theta-1}dy\le Y^{\eta}$ for every $\eta>0$. The proof above adapts
+with one change: the factor $U$ in \eqref{eq:star} becomes $e^{\eta U}$, and $\eta$ is taken small
+compared with $\log\bigl((\sigma-\theta)/d\bigr)$. The final theorem applies it with $\delta=1/2$ (Section~\ref{sec:GRH}). Deducing
+zero-free regions from one-sided or localised information on prime sums is a classical theme going
+back to Landau~\cite{landau} and developed by Pintz; see the survey~\cite{johnston-trudgian}. We do
+not know whether the windowed formulation above appears in the literature.
+\end{remark}
+% ======================================================================
+\section{Abstract hosts and the exact balance}\label{sec:hosts}
+% ======================================================================
+
+\subsection{The group and its data}
+
+Let $H$ be a finite abelian group, written additively, and put $E_0=(\Z/2\Z)^2$ and
+$G=E_0\times H$. We write elements of $G$ as $(\epsilon_1,\epsilon_2;h)$. Let
+\[
+\Phi=\{(0,\epsilon_2;h)\}\le G,
+\]
+a subgroup of index $2$, and put $n=|H|$ and $f=|\Phi|=2n$. We use the following elements:
+\[
+\kappa=(1,1;0),\qquad \varsigma=(1,0;0),\qquad \iota(h)=(0,0;h),\qquad \iota'(h)=(0,1;h),\qquad e(h)=(1,0;h)=\varsigma+\iota(h).
+\]
+Let $\Gh$ be the group of characters $\psi:G\to\CC^\times$, with trivial character $\mathbf 1$. Put
+$\chi_C(\epsilon_1,\epsilon_2;h)=(-1)^{\epsilon_1}$. This is the character with kernel $\Phi$.
+For $t\in H$ the map
+\[
+\pa_t:G\setminus\Phi\to\Phi,\qquad \pa_t(g)=\kappa+g+\iota(t),
+\]
+is a bijection, because $\kappa\notin\Phi$ and $\iota(t)\in\Phi$.
+
+\begin{definition}\label{def:datum}
+An \emph{arithmetic datum} on $G$ is a tuple $D=(q,d,(I_p)_p,(F_p)_p)$, where $q,d\in\N$ and, for
+every prime $p$, $I_p\le G$ is a subgroup and $F_p\in G$. For a finite set $S\subset\N$ we say that
+$D$ satisfies the \emph{host conditions relative to $S$} if
+\begin{enumerate}[label=\textup{(H\arabic*)}]
+\item $d$ is prime, $2\in S$, $q\in S$ and $d\notin S$;
+\item $I_p=0$ for every prime $p\notin S\cup\{d\}$;
+\item $I_p\subseteq\Phi$ and $F_p\in\Phi$ for every prime $p\in S$;
+\item $I_d=\{0,\varsigma\}$.
+\end{enumerate}
+A prime $p$ is \emph{inert} if $p\notin\{2,q,d\}$ and $F_p\notin\Phi$.
+\end{definition}
+
+\begin{remark}\label{rem:interpretation}
+The intended picture is that $G$ is the Galois group of an abelian number field, $F_p$ is a
+Frobenius element, $I_p$ is an inertia group, and $\Phi$ is the subgroup fixing a quadratic
+subfield. Conditions (H2) to (H4) then say that the field is unramified outside $S\cup\{d\}$, that
+the primes of $S$ split in the quadratic subfield, and that $d$ ramifies in it with inertia of
+order $2$. In the formal proof, $H$ comes from a $2$-power cyclotomic layer and $q,d$ are auxiliary
+primes with $q\equiv3\pmod 8$ and $d\equiv7\pmod{16}$ (Section~\ref{sec:C}). None of this is used in
+the proofs below.
+\end{remark}
+
+Under (H3), a prime $p\in S$ has $F_p\in\Phi$, so a prime is inert if and only if
+$p\notin S\cup\{d\}$ and $F_p\notin\Phi$. If $p$ is inert, then $iF_p\notin\Phi$ exactly for odd
+$i$, since $\Phi$ has index $2$.
+
+\begin{definition}\label{def:Gpsi}
+Let $D$ be an arithmetic datum and $\ell:\Gh\to\CC$ any function. For $\psi\in\Gh$ and $n\ge1$ put
+\[
+\psi_D(n)=\prod_{p\mid n}\frac{1}{|I_p|}\sum_{x\in I_p}\psi\bigl(v_p(n)F_p+x\bigr),
+\]
+with $\psi_D(1)=1$, so that $|\psi_D(n)|\le1$ and $\mathbf 1_D\equiv1$. Let
+$R_\psi(y)=\sum_{n\le y}\Lambda(n)\psi_D(n)(y/n-1)$ and
+\[
+G_\psi(y)=
+\begin{cases}
+G_\zeta(y), & \psi=\mathbf 1,\\
+R_\psi(y)+y\,\ell(\psi), & \psi\neq\mathbf 1.
+\end{cases}
+\]
+\end{definition}
+
+If $\psi_D(n)=\xi(n)$ for all $n\ge1$ and $\ell(\psi)=L'(1,\xi)/L(1,\xi)$ for a nonprincipal
+Dirichlet character $\xi$, then $G_\psi=G_\xi$. This is how genuine Dirichlet characters enter
+(Theorem~\ref{thm:C}).
+
+\subsection{The counted quantity and the main term}
+
+\begin{definition}\label{def:ask}
+Let $D$ and $\ell$ be as above. For $a>0$, $t\in H$ and $w:\Phi\to(0,\infty)$ put
+\begin{align*}
+\ASK(a,t,w)&=\sum_{p\text{ inert}}2\log p\sum_{\substack{i\ge1\\ iF_p\notin\Phi}}\Bigl(\frac{a}{p^i}-w\bigl(\pa_t(iF_p)\bigr)\Bigr)_{+}
++\log d\sum_{i\ge1}\ \sum_{\substack{g\in iF_d+I_d\\ g\notin\Phi}}\Bigl(\frac{a}{d^i}-w\bigl(\pa_t(g)\bigr)\Bigr)_{+},\\
+\MAIN(a,w)&=a\Bigl(\log a-1-\gE+\ell(\chi_C)-\frac1f\sum_{\rho\in\Phi}\log w(\rho)\Bigr),\\
+\De(a,t,w)&=\frac1f\sum_{g\notin\Phi}\ \sum_{\psi\in\Gh}\overline{\psi(g)}\;w\bigl(\pa_t(g)\bigr)\,G_\psi\Bigl(\frac{a}{w(\pa_t(g))}\Bigr).
+\end{align*}
+\end{definition}
+
+The sums defining $\ASK$ are finite, because a term vanishes once $p^i\ge a/\min w$. The first sum is
+a weighted Legendre count: compare $v_p(a!)=\sum_i\lfloor a/p^i\rfloor$, here restricted to odd
+$i$ and with the weight $w$ removed from each term. The main term $\MAIN$ is real when $\ell(\chi_C)$
+is real. In general only $\re\MAIN$ enters.
+
+\begin{proposition}[Exact balance]\label{prop:balance}
+Suppose $D$ satisfies the host conditions relative to some $S$. Then for all $a>0$, $t\in H$ and
+$w:\Phi\to(0,\infty)$,
+\[
+\ASK(a,t,w)-\MAIN(a,w)=\De(a,t,w).
+\]
+\end{proposition}
+
+The proof uses three lemmas.
+
+\begin{lemma}\label{lem:orth}
+For every prime $p$, $i\ge1$ and $g\in G$,
+$\displaystyle\frac1f\sum_{\psi\in\Gh}\overline{\psi(g)}\,\psi_D(p^i)=\frac{2}{|I_p|}\,\mathbf 1[g-iF_p\in I_p]$.
+\end{lemma}
+
+\begin{proof}
+We have $\psi_D(p^i)=|I_p|^{-1}\sum_{x\in I_p}\psi(iF_p+x)$, and
+$|G|^{-1}\sum_\psi\overline{\psi(g)}\psi(h)=\mathbf 1[g=h]$. Moreover $|G|=2f$.
+\end{proof}
+
+\begin{lemma}\label{lem:colour}
+$\displaystyle\sum_{g\notin\Phi}\overline{\psi(g)}=f$ if $\psi=\mathbf 1$, $=-f$ if $\psi=\chi_C$,
+and $=0$ otherwise.
+\end{lemma}
+
+\begin{proof}
+The complement of $\Phi$ is the coset $\varsigma+\Phi$, so the sum is
+$\overline{\psi(\varsigma)}\sum_{\rho\in\Phi}\overline{\psi(\rho)}$. The inner sum is $f$ if $\psi$
+is trivial on $\Phi$ and $0$ otherwise. The characters trivial on $\Phi$ are $\mathbf 1$ and
+$\chi_C$, and $\chi_C(\varsigma)=-1$.
+\end{proof}
+
+\begin{lemma}\label{lem:askexp}
+Under the hypotheses of Proposition~\ref{prop:balance}, writing $W_g=w(\pa_t(g))$,
+\[
+\ASK(a,t,w)=\frac1f\sum_{g\notin\Phi}\ \sum_{\psi\in\Gh}\overline{\psi(g)}\sum_{n\ge1}\Lambda(n)\,\psi_D(n)\Bigl(\frac an-W_g\Bigr)_{+}.
+\]
+\end{lemma}
+
+\begin{proof}
+All sums are finite. Exchanging them, the right side is
+$\sum_{g\notin\Phi}\sum_{n}\Lambda(n)(a/n-W_g)_+K(n,g)$ with
+$K(n,g)=f^{-1}\sum_\psi\overline{\psi(g)}\psi_D(n)$. Only $n=p^i$ contributes, and then
+$K(p^i,g)=2|I_p|^{-1}\mathbf 1[g\in iF_p+I_p]$ by Lemma~\ref{lem:orth}. We sort the primes.
+\begin{itemize}
+\item $p\in S$. By (H3), $iF_p+I_p\subseteq\Phi$, so no $g\notin\Phi$ contributes.
+\item $p\notin S\cup\{d\}$. By (H2), $I_p=0$ and $K(p^i,g)=2\cdot\mathbf 1[g=iF_p]$. The
+  contribution is $2\log p\sum_{i:\,iF_p\notin\Phi}(a/p^i-w(\pa_t(iF_p)))_+$. If $F_p\in\Phi$ this is
+  empty. Otherwise $p$ is inert, and we obtain the term of $\ASK$ at $p$. Every inert prime arises
+  in this way.
+\item $p=d$. By (H4), $|I_d|=2$ and $K(d^i,g)=\mathbf 1[g\in iF_d+I_d]$, which gives the last term of
+  $\ASK$.\qedhere
+\end{itemize}
+\end{proof}
+
+\begin{lemma}\label{lem:cut}
+For $a,W>0$ and $\psi\in\Gh$,
+\[
+\sum_{n\ge1}\Lambda(n)\psi_D(n)\Bigl(\frac an-W\Bigr)_{+}=W\,G_\psi\Bigl(\frac aW\Bigr)+
+\begin{cases}a\log a-a\log W-(1+\gE)a,&\psi=\mathbf 1,\\ -a\,\ell(\psi),&\psi\neq\mathbf 1.\end{cases}
+\]
+\end{lemma}
+
+\begin{proof}
+With $y=a/W$ we have $(a/n-W)_+=W(y/n-1)_+$, so the left side is $W R_\psi(y)$. For
+$\psi=\mathbf 1$, $WG_\zeta(y)=WR_{\mathbf 1}(y)-a\log(a/W)+(1+\gE)a$. For $\psi\neq\mathbf 1$,
+$WG_\psi(y)=WR_\psi(y)+a\ell(\psi)$.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:balance}]
+Insert Lemma~\ref{lem:cut} into Lemma~\ref{lem:askexp}. This gives
+$f\cdot\ASK=f\cdot\De+\Sigma_1+\Sigma_2$, where
+\[
+\Sigma_1=\sum_{g\notin\Phi}\bigl(a\log a-a\log W_g-(1+\gE)a\bigr),\qquad
+\Sigma_2=\sum_{\psi\neq\mathbf 1}\bigl(-a\ell(\psi)\bigr)\sum_{g\notin\Phi}\overline{\psi(g)}.
+\]
+Since $|G\setminus\Phi|=f$ and $\pa_t$ is a bijection onto $\Phi$,
+$\Sigma_1=f(a\log a-(1+\gE)a)-a\sum_{\rho\in\Phi}\log w(\rho)$. By Lemma~\ref{lem:colour},
+$\Sigma_2=(-a\ell(\chi_C))(-f)=fa\ell(\chi_C)$. Dividing by $f$ gives $\ASK=\De+\MAIN$.
+\end{proof}
+
+\begin{remark}
+In the formal development, $\ASK$ is defined with a truncation parameter $N$ (primes and exponents
+up to $N$), and the identity is proved under $a/w\le N$. Under that condition the truncated and
+untruncated sums agree.
+\end{remark}
+% ======================================================================
+\section{Isolation and balance: Theorem B}\label{sec:B}
+% ======================================================================
+
+\subsection{Hosts at a scale}
+
+\begin{definition}\label{def:host}
+Let $x\ge3$ and $\eps>0$. A \emph{host at scale $x$} consists of the following data.
+\begin{itemize}
+\item A finite abelian group $H$, with $n=|H|$, $G=E_0\times H$ and $f=2n$; an arithmetic datum
+  $D$ on $G$; a finite set $S\subset\N$; and a function $\ell:\Gh\to\CC$.
+\item An integer $m\ge1$, a subgroup $A_0\le H$, finite sets $T,T_2\subseteq H$ with $n_T=|T|$ and
+  $n_{T_2}=|T_2|$, numbers $a_t$ for $t\in T$, and weights $w_{u,j}:\Phi\to(0,\infty)$ for $u\in A_0$
+  and $1\le j\le m$.
+\item A set $K\subseteq\Gh$ of \emph{kept} characters.
+\item Real numbers $b,b',k,a_E,\eta,X',\vartheta$.
+\end{itemize}
+For $u\in A_0$ the \emph{thick places} are $\Theta_u=\{\iota'(s+u):s\in T_2\}\subseteq\Phi$, and we put
+\[
+\Gh_{A_0}=\{\psi\in\Gh:\ \psi(\iota(s))=1\ \text{for all } s\in A_0\}.
+\]
+Given constants $C\ge0$, $C_E\ge0$, $K_0\ge0$, $c\in[-1,1]$ and $M>0$, the host is
+\emph{$(C,\eps,C_E,K_0,c,M)$-admissible} if the following hold.
+\begin{enumerate}[label=\textup{(B\arabic*)}, start=0, leftmargin=3.2em]
+\item\label{B0} $D$ satisfies the host conditions (H1)--(H4) relative to $S$.
+\item\label{B1} $b>0$, $b'>0$, $\eta\ge0$, $X'>0$ and $b'X'\le xb$. For all $u\in A_0$ and $j$:
+  $b\le w_{u,j}(\rho)\le b+\eta+1$ for $\rho\in\Theta_u$, and $w_{u,j}(\rho)\le2b'$ for
+  $\rho\in\Phi\setminus\Theta_u$.
+\item\label{B2} $|a_t/b-x|\le1$ for all $t\in T$.
+\item\label{B3} $\vartheta\ge0$, and $|G_\psi(y)|\le\vartheta\,y$ for every $\psi\in\Gh$ and every
+  $y\ge X'/3$.
+\item\label{B4} $2f(x+1)\vartheta\le1/x$ and $6f(x+1)(\eta+1)\le b/x$.
+\item\label{B5} $0\le a_E\le2xb$, $n_T\ge x^{-\eps/8}n/2$, $n_{T_2}\ge x^{-\eps}n$,
+  $x^{1/2-\eps}\le m\le x^{1/2+\eps/2}$ and $xm\le k\le n^2x^{1/2-\eps}$.
+\item\label{B6} $T_2\subseteq A_0$.
+\item\label{B7} $\mathbf 1\in K\subseteq\Gh_{A_0}$ and $\psi(\varsigma)=1$ for $\psi\in K$;
+  $|\Gh_{A_0}|\le M$; for $\psi\in K$ not trivial on $\iota(H)$,
+  $\bigl|\sum_{t\in T}\psi(\iota(t))-c\,n_T\bigr|\le Mx^{\eps-1}n_T$; $|\ell(\psi)|\le K_0$ for
+  $\psi\in K\setminus\{\mathbf 1\}$; and $|\ell(\psi)|\le C_E\log x$ for $\psi\in\Gh_{A_0}\setminus K$.
+\item\label{B8} (\emph{Gap inequality}) For every $u\in A_0$,
+\[
+\sum_{t\in T}\sum_{j=1}^{m}\Bigl(\ASK(a_t,t,w_{u,j})-\re\MAIN(a_t,w_{u,j})\Bigr)\le x^{C\eps}\,\mathcal E,
+\]
+where
+\[
+\mathcal E=n_Ta_E\Bigl(1+\frac{m^2}{k}\Bigr)+m\Bigl(2nmb\,x^{\eps}+\frac{n_{T_2}\,k\,b\,x^{2\eps}}{n^2}\Bigr).
+\]
+\end{enumerate}
+\end{definition}
+
+For a host as above put
+\[
+G_K(y)=\sum_{\psi\in K}\mathrm{wt}(\psi)\re G_\psi(y),\qquad
+\mathrm{wt}(\psi)=\begin{cases}1,&\psi\text{ trivial on }\iota(H),\\ c,&\text{otherwise},\end{cases}
+\qquad
+\Sigma_{\mathrm{rest}}(y)=\sum_{\psi\in\Gh_{A_0}\setminus K}|G_\psi(y)|.
+\]
+
+\begin{theorem}[Theorem B]\label{thm:B}
+Let $C\ge0$, $\eps>0$, $C_E\ge0$, $K_0\ge0$ and $M>0$. There is $x_1=x_1(C,\eps,C_E,K_0,M)$ such
+that for every $x\ge x_1$, every $c\in[-1,1]$ and every $(C,\eps,C_E,K_0,c,M)$-admissible host at
+scale $x$,
+\[
+G_K(x)\le x^{1/2+(C+3)\eps}+\Sigma_{\mathrm{rest}}(x).
+\]
+\end{theorem}
+
+One can take $x_1=\max\bigl(3,\ 26^{8/(3\eps)},\ (MA_1)^4\bigr)$, where
+$A_1=5+C_d+K_0+M(4+C_d+K_0)+4C_E$ and $C_d=C_M+1$ with $C_M$ from \ref{F1}.
+
+\begin{remark}
+The integer $m$ enters Theorem~\ref{thm:B} only as the number of weight systems $w_{u,\cdot}$ and
+through $\mathcal E$. The theorem knows nothing about theta lifts. In the formal proof $m$ is the
+length of the chain of lifts and $j$ indexes the lifts (Section~\ref{sec:C}).
+\end{remark}
+
+\subsection{Analytic lemmas}
+
+Throughout this section $D$ is an arithmetic datum, $\ell:\Gh\to\CC$ is arbitrary, and
+$C_d=C_M+1$.
+
+\begin{lemma}\label{lem:deriv}
+For $y,z\ge1$, $|G_\zeta(y)-G_\zeta(z)|\le C_d|y-z|$. For $\psi\neq\mathbf 1$,
+\[
+|G_\psi(y)-G_\psi(z)|\le|y-z|\bigl(\log\max(y,z)+C_d+|\ell(\psi)|\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+Each function $y\mapsto\Lambda(n)\psi_D(n)(y/n-1)_+$ is continuous and piecewise linear, with slope
+$\Lambda(n)\psi_D(n)/n$ for $y>n$ and $0$ for $y<n$. So $R_\psi$ is locally Lipschitz with
+$|R_\psi'(y)|\le\sum_{n\le y}\Lambda(n)/n\le\log y+C_M$ for almost every $y\ge1$, by \ref{F1}. This
+gives the second claim. For the first, $G_\zeta'(y)=\sum_{n<y}\Lambda(n)/n-\log y+\gE$ for almost
+every $y\ge1$, which has absolute value at most $C_M+\gE\le C_d$ by \ref{F1}.
+\end{proof}
+
+\begin{corollary}\label{cor:triv}
+For $\psi\neq\mathbf 1$ and $x\ge1$, $|G_\psi(x)|\le x\bigl(\log x+C_d+|\ell(\psi)|\bigr)$.
+\end{corollary}
+
+\begin{proof}
+Since $\Lambda(1)=0$ we have $G_\psi(1)=\ell(\psi)$. Apply Lemma~\ref{lem:deriv} with $z=1$.
+\end{proof}
+
+\begin{lemma}\label{lem:lip}
+For $\psi\in\Gh$, $A>0$ and $w,w'>0$,
+\[
+\bigl|w\,G_\psi(A/w)-w'\,G_\psi(A/w')\bigr|\le\frac{3A}{\min(w,w')}\,|w-w'|.
+\]
+\end{lemma}
+
+\begin{proof}
+Let $\varphi(v)=vG_\psi(A/v)$ for $v>0$. For $\psi\neq\mathbf 1$,
+$\varphi(v)=\sum_n\Lambda(n)\psi_D(n)(A/n-v)_++A\ell(\psi)$. This is locally Lipschitz with
+$|\varphi'(v)|\le\sum_{n<A/v}\Lambda(n)\le2A/v$ almost everywhere, by \ref{F2}. For
+$\psi=\mathbf 1$, $\varphi(v)=\sum_n\Lambda(n)(A/n-v)_+-A\log(A/v)+(1+\gE)A$, and
+$|\varphi'(v)|\le\sum_{n<A/v}\Lambda(n)+A/v\le3A/v$. Integrate $|\varphi'|$ between $w$ and $w'$.
+\end{proof}
+
+\subsection{Replacement by the thick part}
+
+For $u\in A_0$, $t\in H$ and $A>0$ put
+\[
+\Th_u(A,t)=\frac1f\sum_{s\in T_2}\ \sum_{\psi\in\Gh}\overline{\psi\bigl(e(s+u-t)\bigr)}\;b\,G_\psi(A/b).
+\]
+
+\begin{lemma}\label{lem:thick}
+Assume \ref{B1} and \ref{B3}, and let $x\ge3$, $u\in A_0$, $1\le j\le m$, $t\in H$ and $A>0$ with
+$|A/b-x|\le1$. Then
+\[
+\re\Th_u(A,t)\le\re\De(A,t,w_{u,j})+2f\bigl(3(x+1)(\eta+1)+(x+1)b\vartheta\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+Write $w=w_{u,j}$ and $W_g=w(\pa_t(g))$. We have
+$\pa_t(e(s+u-t))=(1,1;0)+(1,0;s+u-t)+(0,0;t)=(0,1;s+u)=\iota'(s+u)$. Since $\pa_t$ is a bijection
+onto $\Phi$, the $g\notin\Phi$ with $\pa_t(g)\in\Theta_u$ are exactly the elements $e(s+u-t)$ with
+$s\in T_2$, and these are distinct for distinct $s$. Hence
+\[
+\De(A,t,w)-\Th_u(A,t)=\frac1f\sum_{g\notin\Phi}\sum_{\psi\in\Gh}\overline{\psi(g)}\,\Delta(g,\psi),
+\]
+where $\Delta(g,\psi)=W_gG_\psi(A/W_g)-bG_\psi(A/b)$ if $\pa_t(g)\in\Theta_u$, and
+$\Delta(g,\psi)=W_gG_\psi(A/W_g)$ otherwise. From $|A/b-x|\le1$ we get $(x-1)b\le A\le(x+1)b$. If
+$\pa_t(g)\in\Theta_u$, then $W_g\ge b$, and Lemma~\ref{lem:lip} together with \ref{B1} gives
+$|\Delta|\le(3A/b)(W_g-b)\le3(x+1)(\eta+1)$. Otherwise $W_g\le2b'$, so
+\[
+\frac{A}{W_g}\ge\frac{(x-1)b}{2b'}\ge\frac{(x-1)X'}{2x}\ge\frac{X'}3
+\]
+by \ref{B1} and $x\ge3$, and \ref{B3} gives $|\Delta|\le W_g\cdot\vartheta A/W_g\le(x+1)b\vartheta$.
+There are $f$ elements $g\notin\Phi$ and $|\Gh|=2f$ characters, so
+$|\De-\Th_u|\le2f\bigl(3(x+1)(\eta+1)+(x+1)b\vartheta\bigr)$.
+\end{proof}
+
+\begin{lemma}\label{lem:average}
+Assume \ref{B6}. For $t\in H$ and $A>0$,
+\[
+\sum_{u\in A_0}\Th_u(A,t)=|A_0|\,b\,\frac{n_{T_2}}{2n}\sum_{\psi\in\Gh_{A_0}}\psi(e(t))\,G_\psi(A/b).
+\]
+\end{lemma}
+
+\begin{proof}
+In $G$ we have $-e(s+u-t)=(1,0;t-s-u)=e(t)+\iota(-s)+\iota(-u)$, so
+$\overline{\psi(e(s+u-t))}=\psi(e(t))\psi(\iota(-s))\psi(\iota(-u))$. The sum
+$\sum_{u\in A_0}\psi(\iota(-u))$ is $|A_0|$ if $\psi\in\Gh_{A_0}$ and $0$ otherwise. For
+$\psi\in\Gh_{A_0}$ and $s\in T_2\subseteq A_0$ we have $\psi(\iota(-s))=1$. Summing over $s$
+contributes a factor $n_{T_2}$, and $f=2n$.
+\end{proof}
+
+\begin{lemma}\label{lem:core}
+Assume \ref{B0}--\ref{B4}, \ref{B6} and \ref{B8}, and $x\ge3$. Then
+\[
+m\,b\,\frac{n_{T_2}}{2n}\sum_{t\in T}\re\sum_{\psi\in\Gh_{A_0}}\psi(e(t))\,G_\psi(a_t/b)\ \le\ x^{C\eps}\mathcal E+\frac{2n_Tmb}{x}.
+\]
+\end{lemma}
+
+\begin{proof}
+By \ref{B2}, $a_t\ge(x-1)b>0$. Fix $u\in A_0$. For $t\in T$ and $1\le j\le m$,
+Lemma~\ref{lem:thick} with $A=a_t$, and Proposition~\ref{prop:balance} (which applies by
+\ref{B0}), give
+\[
+\re\Th_u(a_t,t)\le\ASK(a_t,t,w_{u,j})-\re\MAIN(a_t,w_{u,j})+2f\bigl(3(x+1)(\eta+1)+(x+1)b\vartheta\bigr).
+\]
+By \ref{B4} the last term is at most $b/x+b/x=2b/x$. Summing over $t$ and $j$ and using \ref{B8},
+\[
+m\sum_{t\in T}\re\Th_u(a_t,t)\le x^{C\eps}\mathcal E+\frac{2n_Tmb}{x}.
+\]
+Average over $u\in A_0$ and apply Lemma~\ref{lem:average}.
+\end{proof}
+
+\subsection{Moving the argument to \texorpdfstring{$x$}{x}}
+
+\begin{lemma}\label{lem:move}
+Assume \ref{B2} and \ref{B7}, and let $x\ge3$. Put
+$R=\log(x+1)+C_d+K_0+Mx^{\eps}(\log x+C_d+K_0)+C_E\log x$. Then
+\[
+\sum_{t\in T}\re\sum_{\psi\in\Gh_{A_0}}\psi(e(t))\,G_\psi(a_t/b)\ \ge\ n_T\bigl(G_K(x)-\Sigma_{\mathrm{rest}}(x)-MR\bigr).
+\]
+\end{lemma}
+
+\begin{proof}
+Put $y_t=a_t/b$, so $|y_t-x|\le1$ and $y_t\ge2$. For $\psi\in\Gh_{A_0}$ let
+$v(\psi)=\mathrm{wt}(\psi)\re G_\psi(x)$ if $\psi\in K$ and $v(\psi)=-|G_\psi(x)|$ otherwise, so
+that $\sum_{\psi\in\Gh_{A_0}}v(\psi)=G_K(x)-\Sigma_{\mathrm{rest}}(x)$. Since $R\ge0$ and
+$|\Gh_{A_0}|\le M$, it suffices to show for each $\psi\in\Gh_{A_0}$ that
+\begin{equation}\label{eq:perchar}
+\sum_{t\in T}\re\bigl(\psi(e(t))G_\psi(y_t)\bigr)\ge n_T\bigl(v(\psi)-R\bigr).
+\end{equation}
+\emph{$\psi=\mathbf 1$.} By Lemma~\ref{lem:deriv}, $G_\zeta(y_t)\ge G_\zeta(x)-C_d\ge v(\mathbf 1)-R$.
+
+\emph{$\psi\in K\setminus\{\mathbf 1\}$.} By \ref{B7}, $\psi(e(t))=\psi(\varsigma)\psi(\iota(t))=\psi(\iota(t))$.
+Write $c_\psi=\mathrm{wt}(\psi)$. Then
+\[
+\sum_t\psi(\iota(t))G_\psi(y_t)-c_\psi n_TG_\psi(x)=\sum_t\psi(\iota(t))\bigl(G_\psi(y_t)-G_\psi(x)\bigr)+\Bigl(\sum_t\psi(\iota(t))-c_\psi n_T\Bigr)G_\psi(x).
+\]
+By Lemma~\ref{lem:deriv} the first term has absolute value at most $n_T(\log(x+1)+C_d+K_0)$.
+If $\psi$ is trivial on $\iota(H)$, the second term vanishes. Otherwise, by \ref{B7} and
+Corollary~\ref{cor:triv}, it is at most $Mx^{\eps-1}n_T\cdot x(\log x+C_d+K_0)$ in absolute value.
+Taking real parts gives \eqref{eq:perchar}, since $c_\psi$ is real.
+
+\emph{$\psi\in\Gh_{A_0}\setminus K$.} Then $\psi\neq\mathbf 1$, and by Lemma~\ref{lem:deriv} and
+\ref{B7}, $\re(\psi(e(t))G_\psi(y_t))\ge-|G_\psi(y_t)|\ge-|G_\psi(x)|-(\log(x+1)+C_d+C_E\log x)\ge v(\psi)-R$.
+\end{proof}
+
+\subsection{The size lemma}
+
+\begin{lemma}\label{lem:size}
+Let $C\ge0$, $\eps>0$ and $x\ge3$ with $x^{3\eps/8}\ge26$. Let $n,n_T,n_{T_2},m$ be positive
+integers with $n_{T_2}\le n$, and let $b>0$, $k$, $a_E$ satisfy \ref{B5}. If a real number $\Gamma$
+satisfies
+\[
+n_T\,m\,b\,\frac{n_{T_2}}{2n}\bigl(\Gamma-4x^{1/2+\eps}\bigr)\le x^{C\eps}\mathcal E+\frac{2n_Tmb}{x},
+\]
+with $\mathcal E$ as in \ref{B8}, then $\Gamma\le x^{1/2+(C+3)\eps}$.
+\end{lemma}
+
+\begin{proof}
+Put $\delta_2=n_{T_2}/n\in[x^{-\eps},1]$. Dividing by $n_Tmb\,\delta_2/2>0$ gives
+\begin{equation}\label{eq:Gammabound}
+\Gamma\le4x^{1/2+\eps}+\frac{2x^{C\eps}}{\delta_2}\cdot\frac{\mathcal E}{n_Tmb}+\frac{4}{x\delta_2}.
+\end{equation}
+Divided by the size $n_Tmb$ of the main term, the four terms of $\mathcal E$ are bounded using
+\ref{B5}:
+\begin{align*}
+\frac{a_E}{mb}&\le\frac{2x}{m}\le2x^{1/2+\eps}, &
+\frac{a_E}{mb}\cdot\frac{m^2}{k}&=\frac{a_Em}{bk}\le\frac{2xm}{k}\le2,\\
+\frac{2nm\,x^{\eps}}{n_T}&\le4m\,x^{9\eps/8}\le4x^{1/2+13\eps/8}, &
+\frac{n_{T_2}k\,x^{2\eps}}{n^2n_T}&\le\frac{2k\,x^{17\eps/8}}{n^2}\le2x^{1/2+9\eps/8}.
+\end{align*}
+With $X=x^{1/2+13\eps/8}\ge1$ this gives $\mathcal E/(n_Tmb)\le10X$. Put
+$Y=x^{1/2+(C+21/8)\eps}$. Then the middle term of \eqref{eq:Gammabound} is at most
+$20x^{C\eps}x^{\eps}X=20Y$. Since $x^{-13\eps/8}=(x^{3\eps/8})^{-13/3}\le26^{-13/3}$, we have
+$4x^{1/2+\eps}\le4Yx^{-13\eps/8}\le Y/100$. Finally
+$4/(x\delta_2)\le4x^{\eps-1}\le4Yx^{-3/2}\le4Y/3^{3/2}<0.8Y$. Hence
+$\Gamma<26Y\le x^{3\eps/8}Y=x^{1/2+(C+3)\eps}$.
+\end{proof}
+
+\subsection{Proof of Theorem~\ref{thm:B}}
+
+Let $x\ge x_1$ with $x_1$ as stated after the theorem, and fix an admissible host. Put
+$\Gamma=G_K(x)-\Sigma_{\mathrm{rest}}(x)$. For $x\ge3$ we have $\log x\le4x^{1/4}$ and
+$\log(x+1)\le5x^{1/4}$, so the quantity $R$ of Lemma~\ref{lem:move} satisfies
+$R\le A_1x^{1/4+\eps}$. Since $x\ge(MA_1)^4$, this gives $MR\le x^{1/2+\eps}\le4x^{1/2+\eps}$.
+Lemmas~\ref{lem:move} and~\ref{lem:core}, multiplied through by the positive factor
+$mb\,n_{T_2}/(2n)$, give
+\[
+n_T\,m\,b\,\frac{n_{T_2}}{2n}\bigl(\Gamma-4x^{1/2+\eps}\bigr)\le x^{C\eps}\mathcal E+\frac{2n_Tmb}{x}.
+\]
+Here $n_T\ge1$ and $m\ge1$ by \ref{B5}, and $n_{T_2}\le n$ since $T_2\subseteq H$. Since
+$x^{3\eps/8}\ge26$, Lemma~\ref{lem:size} gives $\Gamma\le x^{1/2+(C+3)\eps}$.\qed
+% ======================================================================
+\section{Where the exponent comes from}\label{sec:balance}
+% ======================================================================
+
+The proof of Theorem~\ref{thm:B} turns the gap inequality into a bound for $G_K$ by dividing the
+error $x^{C\eps}\mathcal E$ by the size $n_T\,m\,b\,\delta_2/2$ of the main term
+(Lemma~\ref{lem:size}). This section isolates the part of that computation which fixes the exponent.
+
+\begin{proposition}\label{prop:terms}
+Let the parameters satisfy \ref{B5} and $n_{T_2}\le n$. Then
+\[
+\frac{\mathcal E}{n_Tmb}=\underbrace{\frac{a_E}{mb}}_{(\mathrm{T}1)}+\underbrace{\frac{a_Em}{bk}}_{(\mathrm{T}2)}+\underbrace{\frac{2nm\,x^{\eps}}{n_T}}_{(\mathrm{T}3)}+\underbrace{\frac{n_{T_2}k\,x^{2\eps}}{n^2n_T}}_{(\mathrm{T}4)},
+\]
+and $(\mathrm{T}1)\le2x/m$, $(\mathrm{T}2)\le2xm/k$, $(\mathrm{T}3)\le4m\,x^{9\eps/8}$ and
+$(\mathrm{T}4)\le2x^{17\eps/8}k/n^2$. If moreover $a_E\ge xb$ and $n_{T_2}\ge n_T\,x^{-\eps}$, then
+$(\mathrm{T}1)\ge x/m$, $(\mathrm{T}3)\ge2m$ and $(\mathrm{T}4)\ge x^{\eps}k/n^2$.
+\end{proposition}
+
+\begin{proof}
+The identity is the definition of $\mathcal E$. The upper bounds were proved in
+Lemma~\ref{lem:size}. The lower bounds follow from $a_E\ge xb$, from $n_T\le n$ (as $T\subseteq H$),
+and from $n_{T_2}\ge n_Tx^{-\eps}$.
+\end{proof}
+
+So, up to factors $x^{O(\eps)}$, the error relative to the main term is
+\[
+\frac{x}{m}+\frac{xm}{k}+m+\frac{k}{n^2}.
+\]
+The terms (T2) and (T4) are controlled by the second size parameter $k$, which only has to lie
+in the window $xm\le k\le n^2x^{1/2}$. That window is nonempty as soon as $n\ge x^{1/2}m^{1/2}$.
+The terms (T1) and (T3) involve $m$ alone, and they pull in opposite directions.
+
+\begin{proposition}\label{prop:optimum}
+For every $m>0$, $x/m+m\ge2\sqrt x$, with equality if and only if $m=\sqrt x$. Consequently, in
+any application of Lemma~\ref{lem:size} with $a_E\ge xb$, the quantity $\mathcal E/(n_Tmb)$ is at
+least $2\sqrt{2x}$. The exponent $1/2$ is therefore the best that the method can give, and it is
+attained only if $m=x^{1/2+O(\eps)}$.
+\end{proposition}
+
+\begin{proof}
+The first claim is the inequality of arithmetic and geometric means. By
+Proposition~\ref{prop:terms}, $\mathcal E/(n_Tmb)\ge x/m+2m\ge2\sqrt{2x}$. If
+$m\le x^{1/2-\eps'}$ then $(\mathrm{T}1)\ge x^{1/2+\eps'}$, and if $m\ge x^{1/2+\eps'}$ then
+$(\mathrm{T}3)\ge2x^{1/2+\eps'}$.
+\end{proof}
+
+The lower bound is consistent with what is known about $G_\zeta$. The zeros of $\zeta$ on the
+critical line force $G_\zeta(x)=\Omega(x^{1/2})$ (see \cite[Chapter~15]{montgomery-vaughan} for
+oscillation theorems of this kind), so no method can prove $G_\zeta(x)=O(x^{1/2-\eps'})$.
+
+\subsection{Compounding costs and the exponent \texorpdfstring{$2/3$}{2/3}}
+
+The outline~\cite{alpoge-remark} states that a computation of the cost of each lift would ``stop at
+$2/3$'' a priori. The following proposition shows what kind of accounting produces exactly that
+exponent.
+
+\begin{proposition}\label{prop:twothirds}
+Let $\mathcal E'$ be obtained from $\mathcal E$ by replacing the term $2nmb\,x^{\eps}$ with
+$2nm^2b\,x^{\eps}$, so that each of the $m$ weight systems carries a cost proportional to $m$ times
+the base cost. If $a_E\ge xb$, then $\mathcal E'/(n_Tmb)\ge x/m+2m^2\ge x^{2/3}$ for every
+$m\ge1$. The minimum of $x/m+2m^2$ is attained at $m=(x/4)^{1/3}$.
+\end{proposition}
+
+\begin{proof}
+As in Proposition~\ref{prop:terms}, $\mathcal E'/(n_Tmb)\ge x/m+2m^2$. The derivative
+$-x/m^2+4m$ vanishes at $m^3=x/4$, where the value is $(4^{1/3}+2\cdot4^{-2/3})x^{2/3}>x^{2/3}$.
+\end{proof}
+
+With $\mathcal E'$ in place of $\mathcal E$, the argument of Lemma~\ref{lem:size} would give
+$G_K(x)\le x^{2/3+O(\eps)}$ at best. In the formal proof (Section~\ref{sec:C}) the $m$ weight systems
+are the $m$ lifts of a chain, and the term $m\cdot2nmb\,x^{\eps}$ is the sum over the lifts of a
+fixed budget $B_0=2nmb\,x^{\eps}$ per lift. If each lift were charged for the whole chain below it,
+lift $j$ would cost about $jB_0$, and the total would be about $\frac{m^2}{2}B_0$ instead of $mB_0$.
+That is the situation of Proposition~\ref{prop:twothirds}, up to a constant. The formal proof avoids
+it by charging every local contribution to exactly one lift. We describe this in
+Section~\ref{sec:C}, but it is part of Theorem~\ref{thm:C} and is not proved here.
+% ======================================================================
+\section{The arithmetic input: Theorem C}\label{sec:C}
+% ======================================================================
+
+\subsection{Statement}
+
+Let $\psi$ be a primitive Dirichlet character of order $o$. Every $\xi$ in the cyclic group
+$\langle\psi\rangle$ is induced by a unique primitive character $\xi^*$, and $\xi\mapsto\xi^*$ is
+injective. The \emph{level} of $\psi$ is the character family
+\[
+F_\psi=\bigl(\mathbf 1,1\bigr)\ \cup\ \Bigl(\xi^*,\ \tfrac{1}{3o+1}\Bigr)_{\xi\in\langle\psi\rangle\setminus\{1\}},
+\]
+where $\mathbf 1$ is the trivial character of modulus $1$, so that
+$G_{F_\psi}=G_\zeta+(3o+1)^{-1}\sum_{\xi\neq1}\re G_{\xi^*}$. It contains $\psi=\psi^*$.
+
+\begin{theorem}[Theorem C; Alp\"oge, certified by the Lean kernel]\label{thm:C}
+Let $\psi$ be a primitive Dirichlet character of order $o$. There are $e\ge0$ and $\eps_1>0$ with
+the following property. For every $\eps\in(0,\eps_1)$ there are a set $W\subseteq\R$ and real
+numbers $x_0$, $C_E\ge0$ and $K_0\ge0$ such that:
+\begin{enumerate}[label=(\roman*)]
+\item for every $y$ there is $Y\ge y$ with $[Y,Y^{3/2}]\subseteq W$;
+\item for every $x\in W$ with $x\ge x_0$ there is an
+  $\bigl(e,\eps,C_E,K_0,\frac1{3o+1},4o\bigr)$-admissible host at scale $x$
+  (Definition~\ref{def:host}) such that $G_K(y)=G_{F_\psi}(y)$ for all $y\ge1$ and
+  $\Sigma_{\mathrm{rest}}(x)\le4o\,x^{1/2+\eps}$.
+\end{enumerate}
+\end{theorem}
+
+The constant $e$ does not depend on $\eps$. This matters, because the final exponent is
+$1/2+(e+4)\eps$ (Section~\ref{sec:GRH}).
+
+\subsection{Provenance}
+
+Theorem~\ref{thm:C} is not stated as a single theorem in the formal development. It is the
+composite of the following kernel-checked steps, which we have read in the source at commit
+\texttt{40e56bab}. The formal names are listed in Appendix~\ref{app:lean}.
+\begin{enumerate}
+\item The arithmetic construction, together with the supply of hosts on windows, gives for every
+  primitive $\psi$ the following statement for the level of $\psi$. There are $e_D$, $e_L$ and
+  $\eps_1>0$ such that, for every $\eps<\eps_1$, a family of hosts exists whose set of scales
+  contains windows of exponent $3/2$, and at every large scale in that set a tie condition holds
+  with constants independent of the scale. This is (i).
+\item From the tie condition at a scale $x$, the development constructs a frame, a host and a set
+  $T$ satisfying two bundles of hypotheses, called \lean{EAtH} and \lean{CoreAtH}.
+\item The proof of the formal analogue of Theorem~\ref{thm:B} (\lean{core_gm}) derives (B0)--(B8)
+  from these two bundles with $C=\max(e_D+e_L,0)+3$, $c=1/(3o+1)$ and $M=4o$. It derives (B8) from
+  a pointwise inequality per point and per lift. It also proves $G_K=G_{F_\psi}$ and the bound for
+  $\Sigma_{\mathrm{rest}}$. This is (ii), with $e=\max(e_D+e_L,0)+3$.
+\end{enumerate}
+The formulation above is our paraphrase of this composite. We have checked it against the source;
+a reader who wants certainty about the paraphrase, as opposed to the formal statements themselves,
+should compare Appendix~\ref{app:lean} with the archive.
+
+\subsection{How the formal proof establishes Theorem C}
+
+The following description is not used in any proof in this paper. It summarises the structure
+of the formal proof of Theorem~\ref{thm:C}, as read from the source; the account~\cite{dixit-account}
+gives each step with file and line references. We use the notation of Definition~\ref{def:host}.
+
+\emph{The host.} The group $H$ has order $n$ with $x^{2+8\eps}\le n\le2x^{2+8\eps}$, and the
+quadratic characters of the auxiliary primes $q\equiv3\pmod8$ and $d\equiv7\pmod{16}$ supply the
+characters of $E_0$. The auxiliary primes are chosen outside a small exceptional set given by a
+zero-density estimate~\cite[Chapter~10]{iwaniec-kowalski}. Their characters therefore satisfy
+square-root bounds at the scale $x$ without any hypothesis on their $L$-functions; bounds of this
+kind are what the estimate for $\Sigma_{\mathrm{rest}}$ in Theorem~\ref{thm:C}(ii) records. The thick set $T_2$ is a set without nontrivial linear relations
+$j(s_2-s_1)=i(s_3-s_1)$ with small coefficients, of Behrend type, of density
+$e^{-O(\sqrt{\log n\log L})}/L$.
+
+\emph{The weights.} The weights $w_{u,j}$ are the archimedean weights of a family of Hermitian
+lattices over a CM field of degree $f=2n$, indexed by \emph{words} $u$. The lattices are carried
+along a chain of $m$ theta lifts between unitary groups of signatures
+\[
+(k-1,m)\to(k,m-1)\to\cdots\to(k+m-1,0),
+\]
+one unit of signature per lift. The index $j$ of the weight system is the lift. The sizes are
+$m=2\lceil\frac12x^{1/2-\eps/16}\rceil$ and $x^{9/2+10\eps}\le k\le2x^{9/2+10\eps}$. The value of
+$m$ is chosen, as Section~\ref{sec:balance} requires. The exponents of $n$ and $k$ then follow from
+the window of (B5) and from the fact that the family needs about $\exp(Cm^5fL)$ words, coded in $k$
+bits.
+
+\emph{The gap inequality.} For each word and each lift, the formal proof shows
+$\ASK\le\MAIN+(\text{error})$ by computing the Arakelov degree of one common lattice in two ways.
+At the finite places, the slope of a divisible lattice splits into local indices bounded below by
+the counts of Definition~\ref{def:ask}. This uses a congruence argument in an extension where $p$
+has a square root, which explains why only odd exponents $i$ appear. At the infinite places, the
+dual slope is bounded by a main term built from Chowla--Selberg periods~\cite{chowla-selberg}, which
+is where $\ell(\chi_C)$, a value of $L'/L$ at $s=1$, enters $\MAIN$. A slope inequality for a single
+lattice shared by all words joins the two sides. The common lattice is the intersection over all
+places of the images of local lattices under the composite of the $m$ lift steps. The Gram
+matrix of the words is the identity up to $\exp(-x^{\eps/8})$.
+
+\emph{The error terms.} In the formal error bracket, the term $n_Ta_E(1+m^2/k)$ comes from the top
+weights $a_t\approx xb$. The term $m\cdot2nmb\,x^{\eps}$ is a divisibility error: a height bound
+for a product of $m$ operators, one per lift, with a fixed budget $B_0=2nmb\,x^{\eps}$ per lift.
+Of the charges inside that budget, only one uses its full size: a Selmer-rank charge, equal to $m$
+lifts times a Bloch--Kato rank~\cite{bloch-kato} of $m$ per local piece. The rank is fixed at $m$
+by the Hodge--Tate weight pattern, whose $m$ small weights are the indefinite part of the starting
+signature. Every local piece is charged to exactly one lift. This is the accounting that avoids the
+compounding of Proposition~\ref{prop:twothirds}. The losses from Tate--Shafarevich groups along
+cyclotomic towers are bounded by $\exp(x^{\eps}/2)$ and absorbed. That bound uses formal proofs of
+the Ferrero--Washington theorem~\cite{ferrero-washington}, Poitou--Tate duality~\cite{nsw},
+Grothendieck--Messing deformation theory, local Bloch--Kato duality and the main theorem of complex
+multiplication~\cite{shimura}, all proved inside the development rather than assumed.
+
+\emph{What is not used.} The development also states many classical theorems that the final proof
+never applies. These include the full local Langlands correspondence for $\mathrm{GL}_n$,
+Ohsawa--Takegoshi $L^2$ extension and several representation-theoretic statements; only a weak
+assignment of local parameters is used. A load-bearing audit of the compiled development, and
+community pull requests that remove such statements, are described in~\cite{dixit-account}.
+
+\subsection{Verification record}
+
+Theorem~\ref{thm:C} rests on the correctness of the kernel check. The development has been accepted
+by the Lean kernel (\texttt{leanchecker}, including a complete single-threaded replay) and by the
+independent checkers \texttt{nanoda}, \texttt{con-leche} and \texttt{lean4lean}~\cite{sutherland}.
+The statement checked is Mathlib's \texttt{RiemannHypothesis} and the four statements about
+Dirichlet $L$-functions, with axioms \texttt{propext}, \texttt{Quot.sound} and
+\texttt{Classical.choice} only. Our independent rebuild of all $175{,}187$ modules reproduces the
+published kernel export of the final theorem byte for byte ($61{,}570{,}595{,}788$ bytes), so the
+declarations checked by the independent checkers are those produced from the published source.
+Of the compiled files, $76{,}968$ agree byte for byte with Sutherland's manifest. Each of the
+other $98{,}219$ stores the absolute build path, and a random sample of $300$ of them, recompiled
+at his build path, agrees byte for byte~\cite{dixit-repo}. The formal statements of the classical theorems used have been compared with
+the published theorems by several readers; whether each is as strong as its namesake is a separate
+question, which does not affect the correctness of the final theorem~\cite{dixit-account,jaswal}.
+% ======================================================================
+\section{Proof of the Corollary}\label{sec:GRH}
+% ======================================================================
+
+\begin{proof}[Proof of the Corollary from Theorems A, B and C]
+\emph{Primitive characters.} Let $\psi$ be primitive of order $o$, and let $s$ satisfy
+$\re s>1/2$. Let $e$ and $\eps_1$ be as in Theorem~\ref{thm:C}, and choose
+$\eps\in(0,\eps_1)$ with $\theta:=\frac12+(e+4)\eps<\min(\re s,1)$. Theorem~\ref{thm:C} provides
+$W$, $x_0$, $C_E$ and $K_0$. Let $x_1$ be the constant of Theorem~\ref{thm:B} for
+$(e,\eps,C_E,K_0,4o)$, and let $x_2\ge1$ be such that $1+4o\le x^{\eps}$ for $x\ge x_2$. For
+$x\in W$ with $x\ge\max(x_0,x_1,x_2)$, Theorems~\ref{thm:C} and~\ref{thm:B} give
+\[
+G_{F_\psi}(x)=G_K(x)\le x^{1/2+(e+3)\eps}+4o\,x^{1/2+\eps}\le(1+4o)\,x^{1/2+(e+3)\eps}\le x^{\theta}.
+\]
+Given $Y_0$, Theorem~\ref{thm:C}(i) yields $Y\ge\max(Y_0,x_0,x_1,x_2)$ with $[Y,Y^{3/2}]\subseteq W$, so
+$G_{F_\psi}(y)\le y^{\theta}$ on $[Y,Y^{3/2}]$. Theorem~\ref{thm:A} with $\delta=1/2$ and $C=1$ shows
+that $L(s',\xi^*)\ne0$ for every member $\xi^*$ of $F_\psi$ and every $s'$ with $\re s'>\theta$. In
+particular $L(s,\psi)\neq0$, and, taking $\psi$ trivial of modulus $1$, $\zeta(s)\neq0$.
+
+\emph{General characters.} If $\chi$ modulo $N$ is induced by the primitive character $\chi^*$, then
+$L(s,\chi)=L(s,\chi^*)\prod_{p\mid N}(1-\chi^*(p)p^{-s})$, and the finite product has no zeros in
+$\re s>0$. If $\chi$ is principal then $\chi^*=\mathbf 1$, and $L(s,\chi)$ has the pole of $\zeta$ at
+$s=1$ and no zeros with $\re s>1/2$.
+
+\emph{The Riemann Hypothesis.} The zeros of $\zeta$ with $\re s\le0$ are the trivial zeros
+$-2,-4,\dots$, and by the functional equation the nontrivial zeros are symmetric about
+$\re s=1/2$. Since there are none with $\re s>1/2$, there are none with $\re s<1/2$ either.
+\end{proof}
+
+% ======================================================================
+\section{What remains for a complete human proof}\label{sec:remarks}
+% ======================================================================
+
+The Corollary is proved in this paper only modulo Theorem~\ref{thm:C}, which is certified by a
+machine. A complete human-readable proof of the Generalized Riemann Hypothesis along these lines
+would also have to supply the following.
+\begin{enumerate}
+\item A conventional proof of Theorem~\ref{thm:C}. The formal proof consists of the steps
+  summarised in Section~\ref{sec:C}: the degree identity, the divisibility inequality with its
+  per-lift budget, the Selmer-rank bound, the common lattice, local divisibility and
+  near-orthogonality of the words, and the Tate--Shafarevich window. Each is a substantial
+  argument.
+\item Conventional proofs, or exact literature references, for the classical inputs proved inside
+  the development: Ferrero--Washington, Poitou--Tate duality, local Bloch--Kato duality,
+  Grothendieck--Messing theory and complex multiplication. In each case one must check that the
+  formal statement is the published theorem, or a consequence of it.
+\item Explicit constants. The development proves the existence of the constants $e$, $\eps_1$,
+  $x_0$ and so on without computing them. The Corollary does not need their values, because
+  $\eps\to0$ removes them from the exponent, but an effective version of the argument would.
+\end{enumerate}
+The interface of Definition~\ref{def:host} is designed so that these tasks can be carried out
+independently of the analytic part treated here.
+
+% ======================================================================
+\section*{Acknowledgements}
+% ======================================================================
+
+The formal proof, and hence every idea in this paper, is due to Levent Alp\"oge. This paper builds
+on public work by others since 20 November 2026: Andrew Sutherland's verification record; the
+expositions of Bartosz Naskr\k{e}cki and Manvir Jaswal; Jonas Whidden's readings on the Lean Zulip
+and JoseClaudioSJr's reader's map, which first described the balance $x/m+m$ and the windowed
+Landau step; and the reviewers and contributors of the community repository
+\texttt{leanprover-community/riemann-hypothesis}, in particular David Loeffler. Errors of
+interpretation are the author's.
+
+\paragraph{Use of AI tools.} Claude (Anthropic) was used to search the formal source, to compare
+statements with their formal counterparts, and to draft parts of the text. All proofs were checked
+by the author, and every correspondence claimed in Appendix~\ref{app:lean} was checked against the
+source. The author takes full responsibility for the content.
+
+\paragraph{License.} This paper is distributed under CC BY 4.0.
+% ======================================================================
+\begin{thebibliography}{99}
+% ======================================================================
+\bibitem{alpoge-remark} L.~Alp\"oge, note accompanying the Lean development, 20 November 2026,
+  \url{https://alpo.ge/remark.pdf}.
+\bibitem{bloch-kato} S.~Bloch and K.~Kato, \emph{$L$-functions and Tamagawa numbers of motives}, in:
+  The Grothendieck Festschrift, Vol.~I, Progr. Math. 86, Birkh\"auser, Boston, 1990, 333--400.
+\bibitem{chowla-selberg} S.~Chowla and A.~Selberg, \emph{On Epstein's zeta-function}, J. reine angew.
+  Math. 227 (1967), 86--110.
+\bibitem{davenport} H.~Davenport, \emph{Multiplicative Number Theory}, 3rd ed., revised by
+  H.~L.~Montgomery, Graduate Texts in Mathematics 74, Springer, New York, 2000.
+\bibitem{dixit-account} I.~Dixit, \emph{The Riemann Hypothesis via a chain of theta lifts: a
+  human-readable account of the Lean proof}, version 1.1, 23 November 2026,
+  \url{https://ishaan2006.github.io/rh-lean-reproduction/}.
+\bibitem{dixit-repo} I.~Dixit, \emph{Reproducing and examining the Lean proof of the Riemann
+  Hypothesis}, build scripts, logs and data, \url{https://github.com/ishaan2006/rh-lean-reproduction},
+  November 2026.
+\bibitem{ferrero-washington} B.~Ferrero and L.~C.~Washington, \emph{The Iwasawa invariant $\mu_p$
+  vanishes for abelian number fields}, Ann. of Math. (2) 109 (1979), 377--395.
+\bibitem{iwaniec-kowalski} H.~Iwaniec and E.~Kowalski, \emph{Analytic Number Theory}, American
+  Mathematical Society Colloquium Publications 53, American Mathematical Society, Providence, RI, 2004.
+\bibitem{jaswal} M.~Jaswal, \emph{The Riemann hypothesis for Dirichlet $L$-functions [after Levent
+  Alp\"oge]}, preprint, 21 November 2026, \url{https://doi.org/10.5281/zenodo.24410057}.
+\bibitem{johnston-trudgian} D.~R.~Johnston and T.~Trudgian, \emph{A round of Pintz to celebrate
+  oscillations in sums}, arXiv:2511.09978.
+\bibitem{landau} E.~Landau, \emph{Handbuch der Lehre von der Verteilung der Primzahlen}, Teubner,
+  Leipzig, 1909.
+\bibitem{lean4} L.~de Moura and S.~Ullrich, \emph{The Lean~4 theorem prover and programming
+  language}, in: Automated Deduction (CADE-28), Lecture Notes in Computer Science 12699, Springer,
+  2021, 625--635.
+\bibitem{mathlib} The mathlib Community, \emph{The Lean mathematical library}, in: Proceedings of
+  the 9th ACM SIGPLAN International Conference on Certified Programs and Proofs (CPP 2020), ACM, 2020,
+  367--381.
+\bibitem{montgomery-vaughan} H.~L.~Montgomery and R.~C.~Vaughan, \emph{Multiplicative Number Theory
+  I. Classical Theory}, Cambridge Studies in Advanced Mathematics 97, Cambridge University Press,
+  Cambridge, 2007.
+\bibitem{naskrecki} B.~Naskr\k{e}cki, \texttt{riemann-rev}: status dashboard, proof guide and book,
+  \url{https://github.com/nasqret/riemann-rev}, November 2026.
+\bibitem{nsw} J.~Neukirch, A.~Schmidt and K.~Wingberg, \emph{Cohomology of Number Fields}, 2nd ed.,
+  Grundlehren der mathematischen Wissenschaften 323, Springer, Berlin, 2008.
+\bibitem{rosser-schoenfeld} J.~B.~Rosser and L.~Schoenfeld, \emph{Approximate formulas for some
+  functions of prime numbers}, Illinois J. Math. 6 (1962), 64--94.
+\bibitem{shimura} G.~Shimura, \emph{Introduction to the Arithmetic Theory of Automorphic Functions},
+  Princeton University Press, Princeton, 1971.
+\bibitem{sutherland} A.~V.~Sutherland, build and verification page for the Lean development,
+  \url{https://math.mit.edu/~drew/grh/}, November 2026.
+\end{thebibliography}
+
+\appendix
+
+% ======================================================================
+\section{Correspondence with the formal development}\label{app:lean}
+% ======================================================================
+
+All names refer to the published archive (commit \texttt{40e56bab}; source sha256
+\texttt{9631b4f0\ldots c7fc}). Paths are relative to \texttt{src/}, with
+\texttt{Dev/AA/DL} abbreviating \texttt{Development/AutomorphicArithmetic/DedekindLFunctions},
+\texttt{Dev/AA/PC} abbreviating \texttt{Development/AutomorphicArithmetic/PrimitiveCosets}, and
+\texttt{SWB} abbreviating \texttt{Formalism/SizeWindowBrackets}. Every declaration listed is in the
+dependency closure of the final theorem, as recorded in the list of $1{,}484{,}733$ names published
+with~\cite{dixit-repo}. Where a statement here is a simplification of the formal one, this is noted.
+
+\begin{small}
+\begin{longtable}{@{}p{38mm}p{58mm}p{50mm}@{}}
+\toprule
+Here & Formal declaration & Location \\
+\midrule
+\endhead
+Def.~\ref{def:family}, $G_\chi$, $G_F$ & \lean{Deduction.CharFamily}, \lean{Gchi}, \lean{Gm} & \lean{Dev/AA/DL/CharFamily.lean} \\
+Lemmas~\ref{lem:mellin}, \ref{lem:poledata} & \lean{Deduction.poleData}, \lean{PoleData} & \lean{Dev/AA/DL/LandauTheorems/poleData.lean:248} \\
+Lemma~\ref{lem:taylor} & \lean{Deduction.landau_coeff} & \lean{.../LandauCoeff.lean:10} \\
+Lemma~\ref{lem:positivity} & \lean{Deduction.landau_window_ineq} & \lean{.../landauWindowIneq.lean:27} \\
+Lemma~\ref{lem:tails} & \lean{Deduction.landau_tails} (different constants) & \lean{.../landauTails.lean:80} \\
+Lemma~\ref{lem:cauchy} & \lean{Deduction.landau_pole_asym}, \lean{landau_cauchy} & \lean{.../LandauPoleAsym.lean:19}, \lean{LandauCauchy.lean:9} \\
+Lemma~\ref{lem:nearest} & \lean{Deduction.landau_dichotomy}, \lean{landau_nearest} & \lean{.../LandauDichotomy.lean:24}, \lean{LandauNearest.lean:36} \\
+Theorem~\ref{thm:A} & \lean{Deduction.zeroFree_of_rpow_window} via \lean{lemmaL}, \lean{landau_window}; integrated hypothesis \lean{WindowHyp} & \lean{.../ZeroFreeOfRpowWindow.lean:11}, \lean{landauWindow.lean:83} \\
+Def.~\ref{def:datum}, (H1)--(H4) & \lean{ArithData}, \lean{Deduction.CH.HostFactsS} & \lean{SWB/FirstPrimeNeSecondPrime.lean:38}, \lean{Dev/AA/DL/SplitInertia.lean:14} \\
+Def.~\ref{def:Gpsi} & \lean{primVal}, \lean{GPsi} & \lean{SWB/FirstPrimeNeSecondPrime.lean} \\
+Def.~\ref{def:ask} & \lean{ASK}, \lean{askP}, \lean{askD}, \lean{IsInert}, \lean{MAIN}, \lean{De}, \lean{partner} (with truncation $N$) & \lean{SWB/FirstPrimeNeSecondPrime.lean:84--96} \\
+Lemmas~\ref{lem:orth}--\ref{lem:cut} & \lean{orthogonality_ramified}, \lean{colour_sum}, \lean{CharacterBalance.askExp}, \lean{sum_cut}, \lean{inner_eq} & \lean{SWB/ChainSlopeWindows/StronglyIrreducible.lean}, \lean{Dev/AA/DL/LandauTheorems/ChBalance.lean} \\
+Proposition~\ref{prop:balance} & \lean{Deduction.ch_balance} & \lean{Dev/AA/DL/LandauTheorems/ChBalance.lean:200} \\
+Def.~\ref{def:host}, (B1)--(B8) & \lean{SizesA}, \lean{ThinScales}, \lean{CostWindows}, \lean{RestSize}, \lean{CharsA}, \lean{gapA}, \lean{errorBracketSizeWindows} & \lean{Dev/AA/DL/SplitInertia.lean}, \lean{SWB/SChain.lean:50--53}, \lean{SWB/ErrorFormsWeakWindowsFalse.lean:133} \\
+$G_K$, $\Sigma_{\mathrm{rest}}$, $\Gh_{A_0}$ & \lean{GmA}, \lean{SigA}, \lean{PsiA}, \lean{wtA} & \lean{Dev/AA/DL/SplitInertia.lean} \\
+Theorem~\ref{thm:B} & \lean{Deduction.ch_core} & \lean{Dev/AA/DL/LandauTheorems/ChCore.lean:343} \\
+Lemma~\ref{lem:deriv}, Cor.~\ref{cor:triv} & \lean{derivative_integral_all} (\lean{DerivInt}), \lean{CharacterBalanceMoves.triv} & \lean{.../LipschitzWeightAndMinimum.lean:966}, \lean{ChCore.lean:167} \\
+Lemma~\ref{lem:lip} & \lean{lipschitz_weight_all} (\lean{LipW}) & \lean{.../LipschitzWeightAndMinimum.lean:957} \\
+Lemmas~\ref{lem:thick}, \ref{lem:average}, \ref{lem:core} & \lean{CharacterBalanceMoves.th_le}, \lean{sum_Th}, \lean{core} & \lean{Dev/AA/DL/LandauTheorems/ChCore.lean} \\
+Lemma~\ref{lem:move} & \lean{CharacterBalanceMoves.one_char}, \lean{move}, \lean{sum_vv} & \lean{.../ChCore.lean} \\
+Lemma~\ref{lem:size} & \lean{proposition_size_bound} (\lean{GrowthSizeBound}, \lean{SizeWindows}) & \lean{SWB/ChainSlopeWindows/LipschitzWeightAndMinimum.lean:507} \\
+Theorem~\ref{thm:C}(i) & \lean{UpperTheory.Top.zeroFreeAll_of_topG}, \lean{TopG}, \lean{HostExW}, \lean{ChebyshevInequalityAtWindowScale}, \lean{ChainTied} & \lean{Development/AutomorphicArithmetic/CharacterBoxes/ZeroFreeAllOfTopG.lean:26} \\
+Theorem~\ref{thm:C}(ii) & \lean{tiedCore_of_chainTied}, \lean{windowInequality_of_artinInputs}, \lean{core_gm}, \lean{Deduction.ch_top}, \lean{hostFactsS}, \lean{charsA}, \lean{gmA_eq}, \lean{sigA_le}, \lean{EAtH}, \lean{CoreAtH} & \lean{Dev/AA/PC/}, \lean{Dev/AA/DL/LandauTheorems/ChTop.lean:37} \\
+$F_\psi$ & \lean{Formalism.HC.Level.cyc}, \lean{Level.Gm} & \lean{Formalism/SharpRestriction/RamificationFrobenius/TotientGaloisClasses/ExplicitFormula}\allowbreak\lean{ErrorOfHostConditions.lean} \\
+Section~\ref{sec:GRH} & \lean{formB}, \lean{level_of_tiedWin}, \lean{zeroFreeOn_of_tiedWin_cyc}, \lean{everyCharacter}, \lean{rh_of_every}, \lean{riemannHypothesis} & \lean{Dev/AA/PC/Imports.lean:8}, \lean{.../TotientGaloisClasses/TopWin.lean:68, 90}, \lean{Main.lean} \\
+\bottomrule
+\end{longtable}
+\end{small}
+
+\end{document}
