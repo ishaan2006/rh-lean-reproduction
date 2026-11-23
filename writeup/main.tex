@@ -88,7 +88,7 @@
 \title{The Riemann Hypothesis via a chain of theta lifts:\\
 a human-readable account of the Lean proof}
 \author{Ishaan Dixit}
-\date{20 November 2026}
+\date{23 November 2026 (v1.1)}
 
 \begin{document}
 \maketitle
@@ -1352,7 +1352,7 @@ The results will be posted as an update to this document.
 \renewcommand{\arraystretch}{1.15}
 \begin{tabular}{@{}p{55mm}p{90mm}@{}}
 \toprule
-Check & Result (20--21 November 2026)\\
+Check & Result (20--23 November 2026)\\
 \midrule
 Source scan & 0 \texttt{sorry}, \texttt{admit}, axiom declarations, \texttt{native\_decide}, \texttt{reduceBool}; 5 build-time code hits (informational)\\
 Full build & 175{,}187 modules, 183{,}893 jobs, OK, 401 minutes on 94 cores\\
@@ -1361,6 +1361,8 @@ Axioms & \lean{propext}, \lean{Quot.sound}, \lean{Classical.choice} only; \textt
 Olean comparison & 76{,}968 byte-identical to Sutherland's manifest, including \texttt{Main.olean}; 98{,}219 differ, every one embedding the absolute build path; 0 differ without a path. Recompiled at Sutherland's build path, a random sample of 300 of the 98{,}219 is byte-identical to the manifest, 300 of 300\\
 Export hash & byte-identical match to the published export: 61{,}570{,}595{,}788 bytes, sha256 \texttt{5ea74b91\ldots 244e} (\texttt{lean4export} v4.33.0, commit \texttt{15f6055e}, 89 minutes)\\
 Kernel replay & \texttt{Main} with imports trusted: exit code 0 (1 minute). Full replay of everything \texttt{Main} depends on (\texttt{leanchecker -{}-fresh Main}, single-threaded): ran to completion in about 10 h 17 min (06:21 to 16:38 UTC, 21 Nov) with no error reported; its exit code was not recorded. Others report full replays too: Sutherland's \texttt{leanchecker}, 175{,}187 of 175{,}187 modules; Simon DeDeo, likewise\\
+Formal-conjectures & Google DeepMind's \lean{RiemannHypothesis} and \lean{GRH} (PR~\#88) compile against our build with only the three standard axioms; \texttt{con-leche -{}-compare} (\texttt{274f0138}, \texttt{-{}-verified}) accepts both (182~s). Single-export \texttt{con-leche} accepts all 1{,}468{,}418 declarations of \texttt{Main} (177~s, 46.4~GiB)\\
+Load-bearing audit & \texttt{PropAudit.lean} on the compiled closure (1{,}265{,}279 project constants, 64{,}730 tracked types/propositions): of 610 \texttt{*.Published}/\lean{OpenLiterature} items, 276 are unreachable, 261 applied, 60 carried-only, 9 zero-proof (6 are \lean{Set} definitions). Inside the live closure, 12 types/propositions are inert (including \lean{LocLanglands.IsRec}, \lean{WeightedAtlas} [215 refs], \lean{OTY.Cover}/\lean{Etale}, \lean{AdaptedBasis}/\lean{PlueckerData}) and 10 definitions have body \lean{True}. Dropping unread hypothesis fields disconnects 14 classical theories ($\sim$2{,}600+ live declarations) from \texttt{Main} (PRs~\#384, \#395, \#398)\\
 \bottomrule
 \end{tabular}
 \end{center}
