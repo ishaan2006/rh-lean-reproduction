@@ -950,12 +950,74 @@ $K(\nu,\nu)=0$, giving $d(\nu)=\|K(\nu,\nu)-I_{C_\nu}\|_{HS}^2\le e_0 d(\nu)<d(\
 contradiction.
 \end{proof}
 
+\begin{lemma}[Genus-mass comparability proviso, \texttt{mass\_corollary}, \texttt{proviso\_e}]\label{lem:proviso}
+Let $f,k\in\N$ with $1\le f\le k$, let $T\ge2$, $\Gamma>1$, $D^\ast>0$, and $d^\ast>0$, and set
+\[
+X=\Bigl(\frac{D^\ast}{d^\ast}\Bigr)^{1/(fk)},\qquad
+Y=T^\ast=X\,\Gamma^{-2/(fk)}.
+\]
+Suppose that the word prime $T=T(\nu)$ lies in the window
+\begin{equation}\label{eq:Twin}
+Y\le T\le Y\Bigl(1+\frac{1}{fk}\Bigr),
+\end{equation}
+and that the genus-mass rank identity $d(\nu)=d^\ast(T^k-1)^f$ holds. Then:
+\begin{enumerate}[label=(\roman*)]
+\item $\frac12\,D^\ast\Gamma^{-2}\le d(\nu)\le e\,D^\ast\Gamma^{-2}$;
+\item $\log X-\frac{2\log\Gamma}{fk}\le\log T\le\log 2+\log X$;
+\item in particular, $d(\nu)>0$ and the comparability proviso \lean{ChosenProviso} holds with
+  explicit constant $C_0=e$:
+  \begin{equation}\label{eq:proviso_e}
+  e^{-1}\le\frac{d(\nu)\,\Gamma^2}{D^\ast}\le e.
+  \end{equation}
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+By definition of $X$ and $Y$, we have $X^{fk}=D^\ast/d^\ast$ and hence
+$d^\ast Y^{fk}=d^\ast X^{fk}\Gamma^{-2}=D^\ast\Gamma^{-2}$. Put $N=fk\ge1$.
+
+For the upper bound in (i), $1+1/N\le e^{1/N}$ gives $(1+1/N)^N\le e$
+(\lean{one_add_inv_pow_le_exp_one}). Using $T^k-1\le T^k$ and the upper half of \eqref{eq:Twin},
+\[
+(T^k-1)^f\le T^{fk}\le Y^{fk}\Bigl(1+\frac{1}{fk}\Bigr)^{fk}\le e\,Y^{fk}.
+\]
+Multiplying by $d^\ast>0$ and substituting $d(\nu)=d^\ast(T^k-1)^f$ and
+$d^\ast Y^{fk}=D^\ast\Gamma^{-2}$ yields $d(\nu)\le e\,D^\ast\Gamma^{-2}$.
+
+For the lower bound in (i), $1\le f\le k$ and $k-1<2^{k-1}$ imply $2f\le 2k\le 2\cdot 2^{k-1}=2^k$.
+Since $T\ge2$, we have $2f\le 2^k\le T^k$, so $f/T^k\le 1/2$ and $1/T^k\le 1$. By Bernoulli's
+inequality $(1-z)^f\ge 1-fz$ for $0\le z\le 1$,
+\[
+\Bigl(1-\frac{1}{T^k}\Bigr)^f\ge 1-\frac{f}{T^k}\ge\frac12.
+\]
+Combining this with $Y^{fk}\le T^{fk}$ from the lower half of \eqref{eq:Twin},
+\[
+(T^k-1)^f=T^{fk}\Bigl(1-\frac{1}{T^k}\Bigr)^f\ge\frac12\,T^{fk}\ge\frac12\,Y^{fk}.
+\]
+Multiplying by $d^\ast$ gives $d(\nu)\ge\frac12\,D^\ast\Gamma^{-2}$, completing (i).
+
+For (ii), since $\Gamma>1$ and $N\ge1$ we have $\Gamma^{-2/N}\le 1$, so $Y\le X$ and hence
+$T\le Y(1+1/N)\le 2Y\le 2X$. Taking logarithms in $Y\le T\le 2X$ yields (ii).
+
+Finally, for (iii), $e\ge 1+1=2$ gives $e^{-1}\le 1/2$. Multiplying (i) by $\Gamma^2/D^\ast>0$
+therefore yields \eqref{eq:proviso_e}.
+\end{proof}
+
+\noindent In the live Lean closure, the genus-mass rank identity $d(\nu)=d^\ast(T^k-1)^f$
+(\lean{LinkB.RankM}) is supplied by \ref{C8} from three ingredients: the Hermitian class-number
+formula \lean{ClassNumberFormula}$_2$ (\lean{classNumber_closed}), adelic quotient volume
+independence of signature \lean{VolSigIndep} (\lean{volSigIndep_and_classItemsAt_of_massRatioUnderVolume}),
+and the splitting/level-tie hypotheses \lean{RankTiesF} (\lean{rank_conditions_iff_lowest_space}:
+the host primes $g_0,g_1$ and word primes $T(\nu)$ split in the totally real subfield $F^+$,
+together with \lean{Mu0Tie}). Lemma~\ref{lem:proviso} then closes \lean{ChosenProviso} completely
+without any further automorphic input.
+
 \begin{proposition}[Verification of \texttt{LinkS} and (S8)--(S10)]\label{prop:S8S10}
 Assume \ref{C8} and put $\Gamma=\exp(C_\Gamma m^5 f L)$. Then for $x\ge x_0(\eps)$:
 \begin{enumerate}[label=(\roman*)]
 \item \textup{(Comparability proviso)} Every word $\nu\in\mathcal W(u)$ satisfies
-  $C_0^{-1}\le d(\nu)\Gamma^2/D^\ast\le C_0$ (\lean{ChosenProviso}, via
-  \lean{ClassNumberFormula}$_2$); in particular $d(\nu)>0$ since $C_0>0$.
+  $e^{-1}\le d(\nu)\Gamma^2/D^\ast\le e$ (\lean{ChosenProviso} with $C_0=e$, by
+  Lemma~\ref{lem:proviso}); in particular $d(\nu)>0$.
 \item \textup{(Four Gram clauses and \lean{LinkS})} From the four kernel clauses
   (\lean{ClKppOff}, \lean{ClKppDiag}, \lean{ClOff}, \lean{ClDiag}), residual evaluation
   (\lean{ResidEv}), and the point-counting bound (\lean{CountAllPointsClass}), there exist
@@ -973,8 +1035,9 @@ Assume \ref{C8} and put $\Gamma=\exp(C_\Gamma m^5 f L)$. Then for $x\ge x_0(\eps
 \end{proposition}
 
 \begin{proof}
-Part (i) is \lean{chosenProviso_4f} from the class-number volume comparison \ref{C8}, part (ii) is
-\lean{theoremS_link_concrete} (\lean{LinkSPos.lean:151}), and part (iii) is \lean{LinkIRR}
+Part (i) follows directly from Lemma~\ref{lem:proviso} (\lean{proviso_e}, yielding
+\lean{chosenProviso_4f} from \lean{LinkB.RankM} and the word prime window \lean{D.T_win}), part
+(ii) is \lean{theoremS_link_concrete} (\lean{LinkSPos.lean:151}), and part (iii) is \lean{LinkIRR}
 (\lean{GlobalTheoremInputs.lean:64}). For $x\ge1$ we have $\sqrt{e_0}\le\exp(-x^{\eps/8})<1$, so
 $e_0<1$; since $d(\nu)>0$ by (i), Lemma~\ref{lem:diagnondeg} gives $c_0(\nu)>0$ and
 $D_{\mathrm{all}}>0$ (\lean{matKF_of}, \lean{rrRankF_of}). For $x\ge x_0(\eps)$, part~(iii) gives
@@ -1269,7 +1332,7 @@ Lemmas~\ref{lem:heightchain}--\ref{lem:linkNgd}, Thm.~\ref{thm:S1} & \lean{heigh
 Lemmas~\ref{lem:lettersplace}--\ref{lem:C2off}, Prop.~\ref{prop:S2S5} & \lean{letters_place}, \lean{nuAbs_place_fine}, \lean{degree_fine}, \lean{C2off_of}, \lean{secondComplement_of_inputs}, \lean{C2atG_of} & \lean{FockDegreeGapBound.lean:204}, \lean{NuAbsPlaceFine.lean:101, 136, 177}, \lean{WeightDegreeSizes.lean:400, 460} \\
 Prop.~\ref{prop:S6} & \lean{NprimeMuR}, \lean{LinkMu}, \lean{Places_at}, \lean{slopesN_at_of} & \lean{SR/GlobalTheoremInputs.lean:69}, \lean{SR/GlobalSchurBounds/TopDensityNGeSixteen.lean:1529} \\
 Lemmas~\ref{lem:kWord}--\ref{lem:orbitsum}, Thm.~\ref{thm:S7} & \lean{LinkG_at}, \lean{key_minor_dvd}, \lean{kW_ord}, \lean{key3Ord}, \lean{caseD_arith}, \lean{caseE_arith}, \lean{St.starAll_of}, \lean{gain_bound_all_of_star} & \lean{KeyMinorDvd.lean:181, 207, 273}, \lean{PartnerCountOfCentral.lean:539, 587, 884}, \lean{NotSingularOfCentral.lean:777} \\
-Lemma~\ref{lem:diagnondeg}, Prop.~\ref{prop:S8S10} & \lean{unfolding_constant_pos_of_diagonal}, \lean{dall_pos}, \lean{matKF_of}, \lean{LinkS_at}, \lean{LinkIRR}, \lean{ChosenProviso}, \lean{theoremS_link_concrete} & \lean{TopDensityNGeSixteen.lean:1343, 1357, 1411}, \lean{SR/GlobalTheoremInputs.lean:64}, \lean{LinkSPos.lean:151} \\
+Lemmas~\ref{lem:diagnondeg}--\ref{lem:proviso}, Prop.~\ref{prop:S8S10} & \lean{unfolding_constant_pos_of_diagonal}, \lean{dall_pos}, \lean{mass_corollary}, \lean{proviso_e}, \lean{RankTiesF}, \lean{ClassNumberFormula}$_2$, \lean{VolSigIndep}, \lean{matKF_of}, \lean{LinkS_at}, \lean{LinkIRR}, \lean{ChosenProviso}, \lean{theoremS_link_concrete} & \lean{OneAddInvPowLeExpOne.lean:56, 64}, \lean{MainSup.lean:135, 189}, \lean{ClassNumberClosed.lean:48}, \texttt{VolumeSignatureIndep\allowbreak AndClassNumberItems.lean:53}, \lean{LwRankTies.lean:54}, \lean{TopDensityNGeSixteen.lean:1343, 1357, 1411}, \lean{SR/GlobalTheoremInputs.lean:64}, \lean{LinkSPos.lean:151} \\
 Lemmas~\ref{lem:minuspart}--\ref{lem:pointHV}, Thm.~\ref{thm:VWin} & \lean{VWin}, \lean{VWinAt}, \lean{VVle}, \lean{vwin_of_counts}, \lean{ThmBcFree}, \lean{point_arith}, \lean{thmHV}, \lean{thmBab_of_lemmaK}, \lean{UpperTheory.V.FW.ferreroWashington} & \lean{ExistsPageN.lean:44}, \lean{ThmBcOfPsiBound.lean:220, 339}, \lean{PointArith.lean:47, 78}, \lean{FinalLe.lean:199}, \lean{ThmHV.lean:49} \\
 Section~\ref{sec:assembly} & \lean{ChainTied}, \lean{TieGlobal}, \lean{TieLocal}, \lean{TieArith}, \lean{supplyChi}, \lean{vwin_of_row} & \lean{SR/GlobalSchurBounds/TieGlobal.lean:97} \\
 \bottomrule
